@@ -12,6 +12,15 @@ do {
 raiz = Math.sqrt(entrada);
 console.log(raiz);
 
-/* for (let i = 0; i < raiz; i++) {
-        
-} */
+for (let i = 2; i <= raiz; i++) {
+    if (entrada % i == 0) {
+        isPrimo = false;
+        break;
+    }
+}
+
+if (isPrimo) {
+    alert("El numero es primo");
+} else {
+    alert("El numero NO es primo");
+}

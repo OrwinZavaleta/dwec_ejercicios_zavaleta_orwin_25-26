@@ -9,7 +9,7 @@ for (let i = 0; i < CANTIDAD_NOTAS; i++) {
     let entrada = 0;
 
     do {
-        entrada = Number(prompt(`Ingrese su nota ${i + 1}: `));
+        entrada = parseFloat(prompt(`Ingrese su nota ${i + 1}: `));
         console.log(entrada);
     } while (isNaN(entrada));
 
@@ -33,13 +33,13 @@ switch (true) {
         alert("Estas NOTABLE");
         console.log("Estas NOTABLE");
         break;
-    case (promedio < 10):
+    case (promedio <= 10):
         alert("Estas SOBRESALIENTE");
         console.log("Estas SOBRESALIENTE");
         break;
     default:
-        alert("Hubo un error");
-        console.log("Hubo un error");
+        alert("Tu media no corresponde");
+        console.log("Tu media no corresponde");
         break;
 }
 
