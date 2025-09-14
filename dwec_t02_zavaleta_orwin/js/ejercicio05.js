@@ -9,17 +9,27 @@ let entrada5 = parseFloat(prompt("Ingrese el numero 5: "));
 let media = (entrada1 + entrada2 + entrada3 + entrada4 + entrada5) / 5;
 let numerosMayores = "";
 
-switch (true) {
-    case (media < entrada1):
-        numerosMayores += ", "+entrada1;
-    case (media < entrada2):
-        numerosMayores += ", "+entrada2;
-    case (media < entrada3):
-        numerosMayores += ", "+entrada3;
-    case (media < entrada4):
-        numerosMayores += ", "+entrada4;
-    case (media < entrada5):
-        numerosMayores += ", "+entrada5;
+/* if (media < entrada1) {
+    numerosMayores += ", " + entrada1;
 }
+if (media < entrada2) {
+    numerosMayores += ", " + entrada2;
+}
+if (media < entrada3) {
+    numerosMayores += ", " + entrada3;
+}
+if (media < entrada4) {
+    numerosMayores += ", " + entrada4;
+}
+if (media < entrada5) {
+    numerosMayores += ", " + entrada5;
+} */
+numerosMayores += (media < entrada1) ? ", " + entrada1 : "";
+numerosMayores += (media < entrada2) ? ", " + entrada2 : "";
+numerosMayores += (media < entrada3) ? ", " + entrada3 : "";
+numerosMayores += (media < entrada4) ? ", " + entrada4 : "";
+numerosMayores += (media < entrada5) ? ", " + entrada5 : "";
 
-console.log("Los numeros mayores a la media son: "+numerosMayores);
+numerosMayores = numerosMayores.slice(2);
+
+console.log("Los numeros mayores a la media son: " + numerosMayores);
