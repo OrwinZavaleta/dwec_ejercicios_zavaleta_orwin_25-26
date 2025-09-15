@@ -32,4 +32,4 @@ numerosMayores += (media < entrada5) ? ", " + entrada5 : "";
 
 numerosMayores = numerosMayores.slice(2);
 
-console.log("Los numeros mayores a la media son: " + numerosMayores);
+console.log(`Los siguientes números introducidos son superiores a la media (${media}): ${numerosMayores}`);
