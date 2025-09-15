@@ -10,6 +10,8 @@ do {
 
 if ((entrada % 4 == 0 && entrada % 100 != 0) || entrada % 400 == 0) {
     console.log("Es bisiesto");
+    alert("Es bisiesto");
 } else if (entrada % 4 == 0) {
     console.log("NO Es bisiesto");
+    alert("NO Es bisiesto");
 }
