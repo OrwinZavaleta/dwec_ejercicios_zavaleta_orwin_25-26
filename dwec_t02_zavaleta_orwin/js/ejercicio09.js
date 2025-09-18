@@ -22,12 +22,14 @@ do {
 
 } while (isNaN(entrada1));
 
-console.log("Menú");
-console.log("---");
-console.log("1. Calcular si es múltiplo de 2.");
-console.log("2. Calcular si es múltiplo de 3.");
-console.log("3. Calcular si es múltiplo de 5.");
-console.log("0. Salir");
+console.log(`
+    Menú
+    ---
+    1. Calcular si es múltiplo de 2.
+    2. Calcular si es múltiplo de 3.
+    3. Calcular si es múltiplo de 5.
+    0. Salir
+    `);
 
 // Pedir operacion
 do {
