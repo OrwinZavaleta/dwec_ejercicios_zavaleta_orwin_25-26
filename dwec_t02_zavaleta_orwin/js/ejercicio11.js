@@ -3,8 +3,9 @@ console.log("T02 - Ejercicio 11");
 // Funciones
 function calcularFactorialImpar(num) {
     let factorial = 1;
-    for (let i = 1; i <= num; i+=2) {
-        factorial *= i;
+
+    if (num > 1) {
+        factorial = num * calcularFactorialImpar(num-1);
     }
     return factorial;
 }
