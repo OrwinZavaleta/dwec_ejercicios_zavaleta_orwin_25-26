@@ -8,21 +8,21 @@ let interes;
 
 // Pedir capital
 do {
-    capital = parseFloat(prompt("Ingrese el Capital: "));
+    capital = Number(prompt("Ingrese el Capital: "));
     console.log(capital);
 
 } while (isNaN(capital) || capital <= 0);
 
 // Pedir taza de interes anual
 do {
-    taza = parseFloat(prompt("Ingrese el la taza de interes anual (ej: 0.05): "));
+    taza = Number(prompt("Ingrese el la taza de interes anual (ej: 0.05): "));
     console.log(taza);
 
 } while (isNaN(taza) || taza <= 0 || taza > 1);
 
 // Pedir tiempo en años
 do {
-    tiempo = parseInt(prompt("Ingrese el tiempo an años: "));
+    tiempo = Number(prompt("Ingrese el tiempo an años: "));
     console.log(tiempo);
 
 } while (isNaN(tiempo) || tiempo <= 0);

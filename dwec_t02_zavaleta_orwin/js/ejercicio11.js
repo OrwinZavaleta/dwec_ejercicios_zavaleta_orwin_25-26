@@ -2,15 +2,15 @@ console.log("T02 - Ejercicio 11");
 
 // Funciones
 function calcularFactorialImpar(num) {
-    let factorial = 1;
     if (num%2==0) {
         num--;
     }
 
-    if (num > 1) {
-        factorial = num * calcularFactorialImpar(num-2);
+    if (num <= 1) {
+        return 1;
+    }else{
+        return num * calcularFactorialImpar(num-2);
     }
-    return factorial;
 }
 
 // Variables
