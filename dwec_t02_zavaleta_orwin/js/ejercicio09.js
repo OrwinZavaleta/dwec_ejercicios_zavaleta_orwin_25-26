@@ -1,13 +1,13 @@
 console.log("T02 - Ejercicio 09");
 
 // Funciones
-function multiplo2(num) {
+function isMultiplo2(num) {
     return num % 2 === 0;
 }
-function multiplo3(num) {
+function isMultiplo3(num) {
     return num % 3 === 0;
 }
-function multiplo5(num) {
+function isMultiplo5(num) {
     return num % 5 === 0;
 }
 // Variables
@@ -41,13 +41,13 @@ do {
 // Resolver la eleccion del usuario
 switch (opcion) {
     case 1:
-        salida = (multiplo2(entrada1)) ? "Es multiplo de 2" : "NO es multiplo de 2";
+        salida = (isMultiplo2(entrada1)) ? "Es multiplo de 2" : "NO es multiplo de 2";
         break;
     case 2:
-        salida = (multiplo3(entrada1)) ? "Es multiplo de 3" : "NO es multiplo de 3";
+        salida = (isMultiplo3(entrada1)) ? "Es multiplo de 3" : "NO es multiplo de 3";
         break;
     case 3:
-        salida = (multiplo5(entrada1)) ? "Es multiplo de 5" : "NO es multiplo de 5";
+        salida = (isMultiplo5(entrada1)) ? "Es multiplo de 5" : "NO es multiplo de 5";
         break;
     default:
         salida = "Saliendo ...";

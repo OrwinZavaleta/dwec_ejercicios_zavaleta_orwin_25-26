@@ -6,7 +6,7 @@ let min;
 let numIntermedios = [];
 
 // Funcion para calcular el menos
-function calcular_menor(num1, num2) {
+function calcularMenor(num1, num2) {
     return (num1 < num2) ? num1 : num2;
 }
 
@@ -21,7 +21,7 @@ do {
 } while (isNaN(entrada1) || isNaN(entrada2));
 
 
-min = calcular_menor(entrada1, entrada2);
+min = calcularMenor(entrada1, entrada2);
 max = entrada1 + entrada2 - min;
 
 for (let i = min+1; i < max; i++) {

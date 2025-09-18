@@ -1,7 +1,7 @@
 console.log("T02 - Ejercicio 10");
 
 // Funciones
-function factorial(num) {
+function calcularFactorial(num) {
     let factorial = 1;
     for (let i = 2; i <= num; i++) {
         factorial *= i;
@@ -20,7 +20,7 @@ do {
 
 } while (isNaN(entrada1) || entrada1 < 0);
 
-resultado = factorial(entrada1);
+resultado = calcularFactorial(entrada1);
 
 console.log(`El factorial del numero ${entrada1} es: ${resultado}`);
 alert(`El factorial del numero ${entrada1} es: ${resultado}`);
