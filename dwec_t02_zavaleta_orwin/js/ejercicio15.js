@@ -44,13 +44,13 @@ function rellenarSalarioBruto(horasTrabajadas, turnos) {
 }
 
 function calcularNetoIndividual(brutoIndividual) {
-    switch (true) {
-        case (brutoIndividual < 600):
-            return (brutoIndividual * 0.92);
-        case (brutoIndividual < 1000):
-            return (brutoIndividual * 0.90);
-        default:
-            return (brutoIndividual * 0.88);
+    if (brutoIndividual < 600) {
+        return (brutoIndividual * 0.92);
+    } else if (brutoIndividual < 1000) {
+        return (brutoIndividual * 0.90);
+    } else {
+        return (brutoIndividual * 0.88);
+
     }
 }
 
