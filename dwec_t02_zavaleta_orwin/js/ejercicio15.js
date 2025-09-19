@@ -88,6 +88,7 @@ while (salir == 's' || salir == 'S') {
     // Pedir horas trabajadas
     let horasTrabajadasD = Number(prompt("Ingrese las horas trabajadas: "));
     console.log(horasTrabajadasD);
+
     if (!validarHoras(horasTrabajadasD)) {
         alert("Hora no valida");
         continue;
@@ -96,16 +97,17 @@ while (salir == 's' || salir == 'S') {
     // Pedir turnos
     let turnoD = prompt("Ingrese el turno (Mañanas (m o M), Tardes (t o T) o Noches (n o N)): ");
     console.log(turnoD);
+
     if (!validarTurno(turnoD)) {
         alert("Turno no valido");
         continue;
     }
 
-    salir = prompt("Desea seguir añadiendo mas trabajadores: (s o S, otra entrada es salir)");
-
     // Solo se guarda si nada salio mal
     horasTrabajadas.push(horasTrabajadasD);
     turnos.push(turnoD);
+
+    salir = prompt("Desea seguir añadiendo mas trabajadores: (s o S, otra entrada es salir)");
 }
 
 console.log(horasTrabajadas);
