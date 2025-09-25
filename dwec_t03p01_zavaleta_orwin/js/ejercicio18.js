@@ -29,14 +29,16 @@ function calcularEdad(dia, mes, anyo) { //retorna los
     return edad / (1000 * 60 * 60 * 24 * 365);
 }
 
-function diasParaCumpleanyos(dia, mes, anyo) { //retorna los dias que faltan y si es hoy devuelve 0
+function diasParaCumpleanyos(dia, mes) { //retorna los dias que faltan y si es hoy devuelve 0
     const fechaActual = new Date();
     let anyoActual = fechaActual.getFullYear();
     let cumpleanyos = new Date(anyoActual, mes - 1, dia)
 
-    let diasFaltantes = cumpleanyos - fechaActual;
+    let diasFaltantes;
 
-    if (diasFaltantes < 0) {
+    if (fechaActual < cumpleanyos) {
+        diasFaltantes = cumpleanyos - fechaActual;
+    } else {
         diasFaltantes = new Date(anyoActual + 1, mes - 1, dia) - fechaActual;
     }
 
@@ -81,18 +83,14 @@ if (fechaSeparda) {
     let mes = (fechaSeparda[1]);
     let anyo = (fechaSeparda[2]);
 
-    if (dia.length == 2 && mes.length == 2 && anyo.length == 4 && validarFecha(dia, mes, anyo)) {
 
-        console.log("Tu edad es: " + Math.floor(calcularEdad(dia, mes, anyo)));
-        let diasFaltantes = Math.round(diasParaCumpleanyos(dia, mes, anyo));
+    console.log("Tu edad es: " + Math.floor(calcularEdad(dia, mes, anyo)));
+    let diasFaltantes = Math.round(diasParaCumpleanyos(dia, mes));
 
-        if (diasFaltantes == 0) {
-            console.log("Felicidades, es tu cumpleaños");
-        } else {
-            console.log(`Faltan ${diasFaltantes} dias para tu cumpleaños.`);
-        }
-
+    if (diasFaltantes == 0) {
+        console.log("Felicidades, es tu cumpleaños");
     } else {
-        console.log("Fecha introducida no correcta...(Existencia)");
+        console.log(`Faltan ${diasFaltantes} dias para tu cumpleaños.`);
     }
+
 }

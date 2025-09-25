@@ -20,7 +20,7 @@ function calcularMeses(fecha1, fecha2) {
 
     if (msegundosDiferencia < 1) msegundosDiferencia *= -1;
 
-    return Math.round(msegundosDiferencia / (1000 * 60 * 60 * 24 * 30));
+    return Math.floor(msegundosDiferencia / (1000 * 60 * 60 * 24 * 30));
 
 }
 
@@ -67,25 +67,16 @@ if (fechaSeparda1 && fechaSeparda2) {
     let dia1 = (fechaSeparda1[0]);
     let mes1 = (fechaSeparda1[1]);
     let anyo1 = (fechaSeparda1[2]);
-    
+
     let dia2 = (fechaSeparda2[0]);
     let mes2 = (fechaSeparda2[1]);
     let anyo2 = (fechaSeparda2[2]);
+    // accion a realizar
 
-    if (dia1.length == 2 && mes1.length == 2 && anyo1.length == 4 && validarFecha(dia1, mes1, anyo1) &&
-        dia2.length == 2 && mes2.length == 2 && anyo2.length == 4 && validarFecha(dia2, mes2, anyo2)) {
+    const fecha1 = new Date(anyo1, mes1, dia1);
+    const fecha2 = new Date(anyo2, mes2, dia2);
 
-        // accion a realizar
+    let cantidadMeses = calcularMeses(fecha1, fecha2);
 
-        const fecha1 = new Date(anyo1, mes1, dia1);
-        const fecha2 = new Date(anyo2, mes2, dia2);
-
-        let cantidadMeses = calcularMeses(fecha1, fecha2);
-
-        console.log("La cantidad de meses de diferencia es: " + cantidadMeses);
-
-
-    } else {
-        console.log("Fecha introducida no correcta...(Existencia)");
-    }
+    console.log("La cantidad de meses de diferencia es: " + cantidadMeses);
 }
