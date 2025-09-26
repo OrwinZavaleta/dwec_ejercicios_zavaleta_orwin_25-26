@@ -9,7 +9,7 @@ function validarMiReal(cadena) {
          return false;
      } */
 
-    return (patron.test(cadena)) ? true : false;
+    return patron.test(cadena);
 
 }
 
