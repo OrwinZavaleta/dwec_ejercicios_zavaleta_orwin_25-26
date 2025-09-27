@@ -10,14 +10,21 @@ function validarMiReal(cadena) {
      } */
 
     return patron.test(cadena);
+}
 
+function convertirMiReal(num) {
+    if (num.includes(",")) {
+        return Number(num.replace(",", "."));
+    } else {
+        return Number(num);
+    }
 }
 
 let entrada = prompt("Ingrese el precio: ");
 
 if (validarMiReal(entrada)) {
     console.log("El valor es valido, ingresado");
-
+    console.log(convertirMiReal(entrada));
 } else {
     console.log("El valor no es valido");
 
