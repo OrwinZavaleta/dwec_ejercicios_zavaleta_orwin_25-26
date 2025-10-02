@@ -1,9 +1,11 @@
 console.log("T03P03 - Ejercicio 01");
 
 let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
-let arr_buffer = structuredClone(arr);  // Para hacer una copia profunda (Disponible desde 2022)
-let arr_anterior = [];
+/* let arr_buffer = structuredClone(arr);  // Para hacer una copia profunda (Disponible desde 2022)
+let arr_anterior = []; */
 let response;
+let final = undefined;
+let inicio = undefined;
 
 do {
     response = prompt("Quieres borrar el ultimo elemento del array(u), o el primero(p), o ambos(up/pu) o ninguno(n) o deshacer(d) al ultimo estado: ").toLowerCase();
@@ -12,7 +14,8 @@ do {
         case "u":
             console.log("Eliminas ultimo");
             if (arr.length >= 1) {
-                arr.pop() // ELimina el ultimo
+                final = arr.pop();// ELimina el ultimo
+                inicio = undefined;
             } else {
                 console.log("No se pueden borrar mas elementos.");
             }
@@ -20,7 +23,8 @@ do {
         case "p":
             console.log("Eliminas primero");
             if (arr.length >= 1) {
-                arr.shift() // Elimina el primero y mueve los demas
+                inicio = arr.shift();// Elimina el primero y mueve los demas
+                final = undefined;
             } else {
                 console.log("No se pueden borrar mas elementos.");
             }
@@ -28,8 +32,8 @@ do {
         case "up":
         case "pu":
             if (arr.length >= 2) {
-                arr.pop() // ELimina el ultimo
-                arr.shift() // Elimina el primero y mueve los demas
+                final = arr.pop() // ELimina el ultimo
+                inicio = arr.shift() // Elimina el primero y mueve los demas
             } else {
                 console.log("No se pueden borrar 2 elementos ya que quedan menos de 2.");
             }
@@ -43,7 +47,13 @@ do {
         case "d":
             console.log("deshacer");
 
-            arr = structuredClone(arr_anterior);
+            if (final !== undefined) {
+                arr.push(final)
+            }
+
+            if (inicio !== undefined) {
+                arr.unshift(inicio)
+            }
 
             break;
         default:
@@ -54,8 +64,9 @@ do {
     console.log("Array actual: ");
     console.log(arr);
 
-    arr_anterior = structuredClone(arr_buffer);
-    arr_buffer = structuredClone(arr);
+    // TODO: 2 variables que vuardan el estado antes de borrado del inicio y final, si no se hizo nada, se guarda undefine, y se restaura y si es undefine no hay nada
+    /*  arr_anterior = structuredClone(arr_buffer);
+     arr_buffer = structuredClone(arr); */
 } while (arr.length > 0 && response != "n");
 
 
