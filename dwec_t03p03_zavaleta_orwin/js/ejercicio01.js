@@ -11,11 +11,19 @@ do {
     switch (response) {
         case "u":
             console.log("Eliminas ultimo");
-            arr.pop() // ELimina el ultimo
+            if (arr.length >= 1) {
+                arr.pop() // ELimina el ultimo
+            } else {
+                console.log("No se pueden borrar mas elementos.");
+            }
             break;
         case "p":
             console.log("Eliminas primero");
-            arr.shift() // Elimina el primero y mueve los demas
+            if (arr.length >= 1) {
+                arr.shift() // Elimina el primero y mueve los demas
+            } else {
+                console.log("No se pueden borrar mas elementos.");
+            }
             break;
         case "up":
         case "pu":
