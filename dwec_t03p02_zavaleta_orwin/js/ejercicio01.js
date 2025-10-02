@@ -2,7 +2,7 @@ console.log("T03P02 - Ejercicio 01");
 
 // Los convierte a numeros y si es un valor no valido, devuelve undefined
 function validarNumeros(valor) {
-    if (isNaN(valor) && Number(valor) != valor) {
+    if (isNaN(valor)) {
         console.error(`El valor ${valor} no es un numero.`);
         return;
     } else {
@@ -68,7 +68,7 @@ function oraculo(edad = 0, nivelPoder = 0, numeroBatallas = 0) {
     // console.log(variaciones);
 
     return devolverMensaje(media, valorMin, valorMax, variaciones);
-    
+
 }
 
 // Crear una funcion autoivocada con varios valores de oraculo
@@ -76,5 +76,6 @@ function oraculo(edad = 0, nivelPoder = 0, numeroBatallas = 0) {
 (function () {
     console.log(oraculo(2, "pepe", 4));
     console.log(oraculo(6, 123, 17));
-    console.log(oraculo(4, 54, 4));
-})()
+    debugger;
+    console.log(oraculo(4, 54, 4, "54", "54.6", "hola", "4e"));
+})();
