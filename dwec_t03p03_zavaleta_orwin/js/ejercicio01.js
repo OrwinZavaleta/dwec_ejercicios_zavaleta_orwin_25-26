@@ -47,12 +47,18 @@ do {
         case "d":
             console.log("deshacer");
 
+            if (final !== undefined && inicio !== undefined) {
+                console.log("No se puede deshacer.");
+            }
+
             if (final !== undefined) {
                 arr.push(final)
+                final = undefined;
             }
 
             if (inicio !== undefined) {
                 arr.unshift(inicio)
+                inicio = undefined;
             }
 
             break;
