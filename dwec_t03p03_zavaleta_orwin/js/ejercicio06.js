@@ -21,7 +21,7 @@ function toCapitalize(string) {
 let entrada = prompt("ingrese el nombre de una persona").toLocaleLowerCase();
 // let coincidencias = nombres.filter((e) => e == entrada);
 
-let coincidencias = [];
+const coincidencias = [];
 
 
 nombres.forEach((n, i) => {

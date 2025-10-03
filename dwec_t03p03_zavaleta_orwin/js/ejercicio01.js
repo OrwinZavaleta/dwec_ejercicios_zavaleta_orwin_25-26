@@ -1,6 +1,6 @@
 console.log("T03P03 - Ejercicio 01");
 
-let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 /* let arr_buffer = structuredClone(arr);  // Para hacer una copia profunda (Disponible desde 2022)
 let arr_anterior = []; */
 let response;
