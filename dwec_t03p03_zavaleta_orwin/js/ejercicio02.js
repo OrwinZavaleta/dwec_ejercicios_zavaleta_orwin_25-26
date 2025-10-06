@@ -30,7 +30,6 @@ function calcuarlSuperioresMedia(array, media) {
     return array.filter((element) => element > media);
 }
 
-// TODO: Falta completar la ordenacion
 function ordenarArray(array, orden = "asc") { // el orden puede ser asc o desc
     const arrayOrdenado = [];
 
@@ -107,4 +106,3 @@ console.log(`El conjunto ordenado es: `);
 mostrarArrayOrdenado(entradas, "asc");
 console.log(`El conjunto ordenado descendentemente es: `);
 mostrarArrayOrdenado(entradas, "desc");
-console.log(``);
