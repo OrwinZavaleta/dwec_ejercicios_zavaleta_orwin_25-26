@@ -129,6 +129,10 @@ function agregarJornada(matriz) {
     console.log("Jornada agregada correctamente.");
 }
 
+// =========================================================
+// ================== Inicio del programa ==================
+// =========================================================
+
 let entrada = -1;
 do {
 
