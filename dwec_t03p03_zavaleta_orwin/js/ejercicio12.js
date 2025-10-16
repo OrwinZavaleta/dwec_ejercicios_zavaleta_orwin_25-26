@@ -91,19 +91,40 @@ function devolverIndiceCategoria(categorias, categoria) {
     return val;
 }
 
+function listarTodosToDo(categorias) {
+    let lista = "Lista (No se puede hacer nada, cualquier tecla para salir.)\n";
+    let contador = 1;
+    categorias.forEach(categoria => {
+        categoria[1].forEach(tarea => {
+            if (tarea[1] == "toDo") {
+                lista += `\t${contador}. ${tarea[0]} (${categoria[0]}).\n`;
+                contador++;
+            }
+        });
+    });
+
+    // lista += `\t${contador}. Salir`
+
+    prompt(lista);
+
+    mostrarMenuCategorias(categorias);
+}
+
 function mostrarMenuCategorias(categorias) {
-    let entrada = mostrarCategorias(categorias);
+    let entrada = mostrarCategorias(categorias, true);
     if (entrada > 0 && entrada <= categorias.length) {
         // Lo que se tenga que hacer con las caategorias.
         mostrarMenuTareas(categorias, (entrada - 1));
     } else if (entrada == categorias.length + 1) {
         return;
+    } else if (entrada == categorias.length + 2) {
+        listarTodosToDo(categorias);
     } else {
         console.log("Esa categoria no existe");
     }
 }
 
-function mostrarCategorias(categorias) {
+function mostrarCategorias(categorias, listar = false) {
     // Para generar el menu en funcion de cuantas tareas haya
     let menu = `
     Menú 2
@@ -113,10 +134,12 @@ function mostrarCategorias(categorias) {
         menu += `\t${i + 1}. ${element[0]}\n`;
     });
 
-    menu += "\t" + (categorias.length + 1) + ". Atrás";
+    menu += "\t" + (categorias.length + 1) + ". Atrás\n";
+
+    if (listar) menu += "\t" + (categorias.length + 2) + ". Listar las tareas toDo.";
 
     // recibir entrada
-    let entrada = recibirEntrada(menu, (categorias.length + 1), false);
+    let entrada = recibirEntrada(menu, (categorias.length + 2), false);
     console.log(entrada);
 
     return entrada;
