@@ -8,33 +8,47 @@ function agregarDeshacerPila(tarea) {
     if (pilaDeshacer.length == 5) {
         console.log("Elementos en el limite, se pierde el ultimo deshacer.");
         pilaDeshacer.shift();
-    }else{
+    } else {
         pilaDeshacer.push(tarea);
         console.log(pilaDeshacer);
     }
-    
+
 }
 
 function deshacerPila(pila) {
     pila.forEach(element => {
-        if (typeof element[0] == "object" &&  element[0] instanceof Array) {
+        if (typeof element[0] == "object" && element[0] instanceof Array) {
             deshacerPila(element);
-        }else{
+        } else {
             element[1] = "toDo";
         }
     });
 }
 
+function comprobarCategoriaExiste(categorias, categoria) { // categoria es un string
+    let existe = false;
+    for (let i = 0; i < categorias.length && existe == false; i++) {
+        const element = categorias[i];
+
+        if (element[0] == categoria) existe = true;
+    }
+
+    return existe;
+}
 
 
 function agregarNuevaCategoria(categorias) { // retorna el indice
-    let categoria = prompt("Ingrese el nombre de esta categoria");
+    let categoria;
+
+    do {
+        categoria = prompt("Ingrese el nombre de esta categoria");
+    } while (comprobarCategoriaExiste(categorias, categoria));
 
     let aux = [categoria, []];
 
     categorias.push(aux);
 
-    return devolverIndiceCategoria(categorias, categoria);
+    return devolverIndiceCategoria(categorias, categoria); // devuelve un indice
 }
 function agregarTarea(categorias, categoriaId = null, tarea) {
     if (categoriaId != null) {
@@ -70,11 +84,11 @@ function cambiarEstadoTarea(tarea) {
 }
 
 function devolverIndiceCategoria(categorias, categoria) {
-
-    for (let i = 0; i < categorias.length; i++) {
-        if (categorias[i][0] == categoria) return i;
+    let val = null;
+    for (let i = 0; i < categorias.length && val == null; i++) {
+        if (categorias[i][0] == categoria) val = i;
     }
-    return null;
+    return val;
 }
 
 function mostrarMenuCategorias(categorias) {
@@ -109,10 +123,13 @@ function mostrarCategorias(categorias) {
 }
 
 function comprobarTodosCategoriaDone(tareasArray) {
-    tareasArray.forEach(element => {
-        if (element[1] == "toDo") return false;
-    });
-    return true;
+    let enc = false;
+    for (let i = 0; i < tareasArray.length && enc == false; i++) {
+        const element = tareasArray[i];
+        if (element[1] == "toDo") enc = true;
+
+    }
+    return !enc;
 }
 
 function borrarCategoria(categorias) {
@@ -191,7 +208,7 @@ function mostrarMenuTareas(categorias, categoriaId) { // la categoria es un indi
 
         mostrarMenuCategorias(categorias);
     } else if (entrada == tareas.length + 4) {
-console.log("entra");
+        console.log("entra");
 
         deshacerPila(pilaDeshacer);
         mostrarMenuTareas(categorias, categoriaId);
@@ -244,7 +261,6 @@ function recibirEntrada(mensaje, max, muchos = false) {// Si muchos es true se d
 const categorias = [
     ["cata1", [["tar1", "toDo"], ["tar2", "toDo"]]]
 ];
-// TODO: verificar que la vategoria no se repita
 let entrada = null;
 do {
     if (categorias.length == 0) {
