@@ -1,0 +1,297 @@
+console.log("T03P03 - Ejercicio 12");
+
+// Primer ampliacion.
+
+const pilaDeshacer = [];
+
+function agregarDeshacerPila(tarea) {
+    if (pilaDeshacer.length == 5) {
+        console.log("Elementos en el limite, se pierde el ultimo deshacer.");
+        pilaDeshacer.shift();
+    }else{
+        pilaDeshacer.push(tarea);
+        console.log(pilaDeshacer);
+    }
+    
+}
+
+function deshacerPila(pila) {
+    pila.forEach(element => {
+        if (typeof element[0] == "object" &&  element[0] instanceof Array) {
+            deshacerPila(element);
+        }else{
+            element[1] = "toDo";
+        }
+    });
+}
+
+
+
+function agregarNuevaCategoria(categorias) { // retorna el indice
+    let categoria = prompt("Ingrese el nombre de esta categoria");
+
+    let aux = [categoria, []];
+
+    categorias.push(aux);
+
+    return devolverIndiceCategoria(categorias, categoria);
+}
+function agregarTarea(categorias, categoriaId = null, tarea) {
+    if (categoriaId != null) {
+        categorias[categoriaId][1].push(tarea);
+    }
+}
+
+function pedirTarea(categorias, categoriaId = null) {
+    let entrada = null;
+    do {
+
+        entrada = prompt("Ingrese el nombre de la tarea.(S para dejar de añadir.)");
+        if (entrada.toLocaleLowerCase() == "s") entrada = null;
+
+        if (categoriaId != null && entrada != null) {
+            let tarea = [];
+            tarea.push(entrada);
+            tarea.push("toDo");
+
+            agregarTarea(categorias, categoriaId, tarea);
+        } else {
+            console.log("no se puede agregar la tarea, error.");
+        }
+    } while (entrada != null);
+}
+
+function cambiarEstadoTarea(tarea) {
+    if (tarea[1] == "Done") {
+        console.log("La tarea ya esta hecha.");
+    } else {
+        tarea[1] = "Done";
+    }
+}
+
+function devolverIndiceCategoria(categorias, categoria) {
+
+    for (let i = 0; i < categorias.length; i++) {
+        if (categorias[i][0] == categoria) return i;
+    }
+    return null;
+}
+
+function mostrarMenuCategorias(categorias) {
+    let entrada = mostrarCategorias(categorias);
+    if (entrada > 0 && entrada <= categorias.length) {
+        // Lo que se tenga que hacer con las caategorias.
+        mostrarMenuTareas(categorias, (entrada - 1));
+    } else if (entrada == categorias.length + 1) {
+        return;
+    } else {
+        console.log("Esa categoria no existe");
+    }
+}
+
+function mostrarCategorias(categorias) {
+    // Para generar el menu en funcion de cuantas tareas haya
+    let menu = `
+    Menú 2
+    ======\n`;
+
+    categorias.forEach((element, i) => {
+        menu += `\t${i + 1}. ${element[0]}\n`;
+    });
+
+    menu += "\t" + (categorias.length + 1) + ". Atrás";
+
+    // recibir entrada
+    let entrada = recibirEntrada(menu, (categorias.length + 1), false);
+    console.log(entrada);
+
+    return entrada;
+}
+
+function comprobarTodosCategoriaDone(tareasArray) {
+    tareasArray.forEach(element => {
+        if (element[1] == "toDo") return false;
+    });
+    return true;
+}
+
+function borrarCategoria(categorias) {
+    let entradaId = mostrarCategorias(categorias) - 1;
+
+    let confirmacion = prompt("desea borrar la tarea? (s)");
+    if (confirmacion.toLocaleLowerCase() == "s") {
+        if (categorias[entradaId][1].length == 0 || comprobarTodosCategoriaDone(categorias[entradaId][1])) {
+            categorias.splice(entradaId, 1);
+        } else {
+            console.log("No se pudo borrar la categoria. No cumple los requisitos.");
+        }
+    }
+}
+
+function borrarTarea(categorias, categoriaId) {
+    let entrada = mostrarTareas(categorias, categoriaId, false) - 1;
+
+    let confirmacion = prompt("desea borrar la tarea? (s)");
+    if (confirmacion.toLocaleLowerCase() == "s") {
+        categorias[categoriaId][1].splice(entrada, 1);
+    }
+}
+
+function mostrarTareas(categorias, categoriaId, mostrarBorrar = true) {
+    let tareas = categorias[categoriaId][1];
+
+    let mostrar = `Menu 3. ${categorias[categoriaId][0]}(Puede seleccionar muchas tareas separadas por comas).\n=====\n`;
+    tareas.forEach((element, i) => {
+        mostrar += `\t${i + 1}. ${element[0]} (${element[1]})\n`;
+    });
+
+    if (mostrarBorrar) {
+        mostrar += `\t${tareas.length + 1}. Añadir nueva tarea.\n`;
+        mostrar += `\t${tareas.length + 2}. Borrar tarea.\n`;
+        mostrar += `\t${tareas.length + 3}. Atras.\n`;
+        mostrar += `\t${tareas.length + 4}. Deshacer ultimos Done realizados.\n`;
+    } else {
+        mostrar += `\t${tareas.length + 1}. Atras.\n`;
+    }
+    let entrada = recibirEntrada(mostrar, (tareas.length + 4), true);
+
+    return entrada;
+}
+
+function mostrarMenuTareas(categorias, categoriaId) { // la categoria es un indice
+    let tareas = categorias[categoriaId][1];
+    let entrada = mostrarTareas(categorias, categoriaId);
+
+    if (typeof entrada == "object" && entrada instanceof Array) {
+        let aux = []
+        entrada.forEach((e) => {
+            cambiarEstadoTarea(tareas[e - 1]);
+            aux.push(tareas[e - 1]);
+        });
+        agregarDeshacerPila(aux);
+        mostrarMenuTareas(categorias, categoriaId);
+
+    } else if (entrada > 0 && entrada <= tareas.length) {
+
+        cambiarEstadoTarea(tareas[entrada - 1]);
+        agregarDeshacerPila(tareas[entrada - 1]);
+        mostrarMenuTareas(categorias, categoriaId);
+
+    } else if (entrada == tareas.length + 1) {
+
+        pedirTarea(categorias, categoriaId);
+        mostrarMenuTareas(categorias, categoriaId);
+
+    } else if (entrada == tareas.length + 2) {
+
+        borrarTarea(categorias, categoriaId);
+        mostrarMenuTareas(categorias, categoriaId);
+
+    } else if (entrada == tareas.length + 3) {
+
+        mostrarMenuCategorias(categorias);
+    } else if (entrada == tareas.length + 4) {
+console.log("entra");
+
+        deshacerPila(pilaDeshacer);
+        mostrarMenuTareas(categorias, categoriaId);
+    } else {
+        console.log("Esa tarea no existe");
+    }
+
+    //console.log(mostrar);
+}
+
+function validarNumero(numero, max) {
+    return (numero == null || isNaN(numero) || numero <= 0 || numero > max);
+}
+
+function recibirEntrada(mensaje, max, muchos = false) {// Si muchos es true se devuelve un array, si es false se devuelve un numero
+    let entrada = null
+    if (!muchos) {
+
+        do {
+            entrada = Number(prompt(mensaje));
+
+        } while (validarNumero(entrada, max));
+    } else {
+        let esValido = true;
+
+        do {
+            entrada = prompt(mensaje);
+            if (entrada.includes(",")) {
+                entrada = entrada.split(",");
+                entrada.map((e) => e.trim());
+                entrada.forEach(element => {
+                    if (validarNumero(element, max)) esValido = false;
+                });
+
+            } else {
+                entrada = Number(entrada);
+                if (validarNumero(entrada, max)) esValido = false;
+            }
+        } while (!esValido);
+
+    }
+
+    return entrada;
+}
+
+// =========================================================
+// ================== Inicio del programa ==================
+// =========================================================
+
+const categorias = [
+    ["cata1", [["tar1", "toDo"], ["tar2", "toDo"]]]
+];
+// TODO: verificar que la vategoria no se repita
+let entrada = null;
+do {
+    if (categorias.length == 0) {
+        console.log("No hay categorias. Por favor ingrese la primera.");
+        let categoriaId = agregarNuevaCategoria(categorias);
+        let peticion = recibirEntrada(`Menú 0
+            ======
+            1. Crear una nueva categoria.
+            2. Añadir nueva tarea a esta categoria creada.
+            3. Ir al menu principal.
+            `, 3);
+
+        switch (peticion) {
+            case 1:
+                agregarNuevaCategoria(categorias);
+                break;
+            case 2:
+                pedirTarea(categorias, categoriaId);
+                break;
+            case 3:
+                console.log("Regresando al menu principal.");
+                break;
+        }
+
+    } else {
+        entrada = recibirEntrada(`
+            Menú 1
+            ======
+            1. Listar categorías
+            2. Añadir nueva Categoría
+            3. Borrar categoría (Solo si todo es toDo o esta vacia)
+            4. Salir.
+            `, 4)
+
+        switch (entrada) {
+            case 1:
+                mostrarMenuCategorias(categorias);
+                break;
+            case 2:
+                agregarNuevaCategoria(categorias);
+                break;
+            case 3:
+                borrarCategoria(categorias);
+                break;
+            case 4:
+                console.log("Saliendo del programa.");
+                break;
+        }
+    }
+} while (entrada != 4);
