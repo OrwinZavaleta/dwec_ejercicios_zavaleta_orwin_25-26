@@ -135,7 +135,7 @@ function comprobarTodosCategoriaDone(tareasArray) {
 function borrarCategoria(categorias) {
     let entradaId = mostrarCategorias(categorias) - 1;
 
-    let confirmacion = prompt("desea borrar la tarea? (s)");
+    let confirmacion = prompt("desea borrar la categoria? (s)");
     if (confirmacion.toLocaleLowerCase() == "s") {
         if (categorias[entradaId][1].length == 0 || comprobarTodosCategoriaDone(categorias[entradaId][1])) {
             categorias.splice(entradaId, 1);
@@ -182,16 +182,21 @@ function mostrarMenuTareas(categorias, categoriaId) { // la categoria es un indi
     if (typeof entrada == "object" && entrada instanceof Array) {
         let aux = []
         entrada.forEach((e) => {
-            cambiarEstadoTarea(tareas[e - 1]);
+            //     cambiarEstadoTarea(tareas[e - 1]);
             aux.push(tareas[e - 1]);
         });
-        agregarDeshacerPila(aux);
+
+        administrarTarea(categorias, aux);
+
+        // agregarDeshacerPila(aux); 
         mostrarMenuTareas(categorias, categoriaId);
 
     } else if (entrada > 0 && entrada <= tareas.length) {
 
-        cambiarEstadoTarea(tareas[entrada - 1]);
-        agregarDeshacerPila(tareas[entrada - 1]);
+        // cambiarEstadoTarea(tareas[entrada - 1]);
+        // agregarDeshacerPila(tareas[entrada - 1]); 
+
+        administrarTarea(categorias, tareas[entrada - 1]);
         mostrarMenuTareas(categorias, categoriaId);
 
     } else if (entrada == tareas.length + 1) {
@@ -254,12 +259,67 @@ function recibirEntrada(mensaje, max, muchos = false) {// Si muchos es true se d
     return entrada;
 }
 
+function asignarTareaCategoria(tareas, categoriaId, categorias) {
+    if (typeof tareas[0] == "object" && tareas[0] instanceof Array) {
+        categorias[categoriaId][1].push(...tareas);
+    } else {
+        categorias[categoriaId][1].push(tareas);
+    }
+}
+
+function mostrarAdministrarTarea(tareas) { //Hecho
+
+    let texto = "";
+
+    if (typeof tareas[0] == "object" && tareas[0] instanceof Array) {
+        tareas.forEach(element => {
+            texto += element[0] + ",";
+        });
+    } else {
+        texto += tareas[0];
+    }
+
+    let entrada = recibirEntrada(`Menú 4. Tareas seleccionadas: ${texto}
+    ======
+    1. Pasar a 'done'
+    2. Asignar otras categorías.
+    3. Atrás
+    `, 3, false);
+
+    return entrada;
+}
+
+function administrarTarea(categorias, tareas) {
+    let entrada = mostrarAdministrarTarea(tareas);
+
+    switch (entrada) {
+        case 1: // Hecho
+            if (typeof tareas[0] == "object" && tareas[0] instanceof Array) {
+                tareas.forEach((e) => {
+                    cambiarEstadoTarea(e);
+                });
+                agregarDeshacerPila(tareas);
+            } else {
+                cambiarEstadoTarea(tareas);
+                agregarDeshacerPila(tareas);
+            }
+            break;
+        case 2:
+            let categoriaId = mostrarCategorias(categorias);
+            asignarTareaCategoria(tareas, categoriaId - 1, categorias);
+            break;
+        case 3:
+            break;
+    }
+}
+
 // =========================================================
 // ================== Inicio del programa ==================
 // =========================================================
 
 const categorias = [
-    ["cata1", [["tar1", "toDo"], ["tar2", "toDo"]]]
+    ["cata1", [["tar1", "toDo"], ["tar2", "toDo"]]],
+    ["cata2", [["p1", "toDo"], ["p1", "toDo"]]]
 ];
 let entrada = null;
 do {
