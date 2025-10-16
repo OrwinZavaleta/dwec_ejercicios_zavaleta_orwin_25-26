@@ -259,11 +259,33 @@ function recibirEntrada(mensaje, max, muchos = false) {// Si muchos es true se d
     return entrada;
 }
 
+function comprobarTareaExisteCategoria(tareas, categoriaId, categorias) {
+    let existe = false;
+    for (let i = 0; i < categorias[categoriaId][1].length && existe == false; i++) {
+        const element = categorias[categoriaId][1][i];
+
+        if (element[0] == tareas[0]) existe = true;
+    }
+
+    return existe;
+}
+
 function asignarTareaCategoria(tareas, categoriaId, categorias) {
+    const arrayTareas = categorias[categoriaId][1];
     if (typeof tareas[0] == "object" && tareas[0] instanceof Array) {
-        categorias[categoriaId][1].push(...tareas);
+        tareas.forEach(element => {
+            if (!comprobarTareaExisteCategoria(element, categoriaId, categorias)) {
+                arrayTareas.push(element);
+            } else {
+                console.log(`LA tarea ${element[0]} ya existe en esta categoria.`);
+            }
+        });
     } else {
-        categorias[categoriaId][1].push(tareas);
+        if (!comprobarTareaExisteCategoria(tareas, categoriaId, categorias)) {
+            arrayTareas.push(tareas);
+        } else {
+            console.log(`LA tarea ${tareas[0]} ya existe en esta categoria.`);
+        }
     }
 }
 
