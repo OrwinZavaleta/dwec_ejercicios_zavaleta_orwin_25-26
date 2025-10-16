@@ -351,7 +351,9 @@ function administrarTarea(categorias, tareas) {
             break;
         case 2:
             let categoriaId = mostrarCategorias(categorias);
-            asignarTareaCategoria(tareas, categoriaId - 1, categorias);
+            if (categoriaId != 3) {
+                asignarTareaCategoria(tareas, categoriaId - 1, categorias);
+            }
             break;
         case 3:
             break;
