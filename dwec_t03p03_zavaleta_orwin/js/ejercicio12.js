@@ -138,20 +138,25 @@ function devolverIndiceCategoria(categorias, categoria) {
     return val;
 }
 
-function listarTodosToDo(categorias) { //TODO: cuando una tarea pertenece a mas de una cateria se ve repetida
-    // TODO: todo esto se debe modificar para que use actualizarTareasCategoria
+function listarTodosToDo(categorias) {
     let lista = "Lista (No se puede hacer nada, cualquier tecla para salir.)\n";
     let contador = 1;
-    categorias.forEach(categoria => {
-        categoria[1].forEach(tarea => {
-            if (tarea[1] == "toDo") {
-                lista += `\t${contador}. ${tarea[0]} (${categoria[0]}).\n`;
-                contador++;
-            }
-        });
+    // categorias.forEach(categoria => {
+    //     categoria[1].forEach(tarea => {
+    //         if (tarea[1] == "toDo") {
+    //             lista += `\t${contador}. ${tarea[0]} (${categoria[0]}).\n`;
+    //             contador++;
+    //         }
+    //     });
+    // });
+
+    tareasCategorias.forEach(tarea => {
+
+        lista += `\t${contador}. ${tarea[0][0]} (${tarea[1]})\n`;
+        contador++;
+
     });
 
-    // lista += `\t${contador}. Salir`
 
     prompt(lista);
 
