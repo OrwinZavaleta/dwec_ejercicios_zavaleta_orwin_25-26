@@ -3,6 +3,51 @@ console.log("T03P03 - Ejercicio 12");
 // Primer ampliacion.
 
 const pilaDeshacer = [];
+const tareasCategorias = []; //Es la solucion que tengo al poder saber cuales tienen mas de una categoria y poder mostrarlas en la ampliacion 4 y 5
+/* 
+    [      //es referencia
+        [[tarea1, estado], [cat1, cat2]],
+    ]                       //son cadenas
+*/
+
+function actualizarTareasCategoria(categoria, tarea = null, borrado = false) { // TODO: revisar bugs que surjan
+    let encontrado = false;
+    let indiceTareaEliminada = null;
+    let indiceTareaCategoriaPorAgregar = null;
+    if (tareasCategorias.length == 0 && tarea != null) {
+        tareasCategorias.push([tarea, [categoria]]); // Creo que no se puede eliminar de una categoria
+        encontrado = true;
+    } else if (tarea == null) {
+        for (let i = 0; i < tareasCategorias.length; i++) {
+            const element = tareasCategorias[i];
+            if (element.length == 1) {
+                indiceTareaEliminada = i;
+            }
+        }
+    } else {
+        for (let i = 0; i < tareasCategorias.length && encontrado == false; i++) {
+            const element = tareasCategorias[i];
+            if (element[0][0] == tarea[0]) {
+                indiceTareaCategoriaPorAgregar = i;
+                // element[1].push(categoria);
+                encontrado = true;
+            }
+
+            /* if (element.length == 1) {
+                indiceTareaEliminada = i;
+            } */
+        }
+        if (indiceTareaCategoriaPorAgregar != null) tareasCategorias[indiceTareaCategoriaPorAgregar][1].push(categoria);
+        if (indiceTareaEliminada != null) tareasCategorias.splice(indiceTareaEliminada, 1);
+    }
+
+    // if (borrado && tarea != null) tareasCategorias[];
+
+    if (!encontrado && tarea != null) tareasCategorias.push([tarea, [categoria]]);
+
+    console.log(tareasCategorias);
+
+}
 
 function agregarDeshacerPila(tarea) {
     if (pilaDeshacer.length == 5) {
@@ -23,6 +68,7 @@ function deshacerPila(pila) {
             element[1] = "toDo";
         }
     });
+    pilaDeshacer.length = 0;
 }
 
 function comprobarCategoriaExiste(categorias, categoria) { // categoria es un string
@@ -53,6 +99,7 @@ function agregarNuevaCategoria(categorias) { // retorna el indice
 function agregarTarea(categorias, categoriaId = null, tarea) {
     if (categoriaId != null) {
         categorias[categoriaId][1].push(tarea);
+        actualizarTareasCategoria(categorias[categoriaId][0], tarea); // para la ampliacion 3
     }
 }
 
@@ -91,7 +138,8 @@ function devolverIndiceCategoria(categorias, categoria) {
     return val;
 }
 
-function listarTodosToDo(categorias) {
+function listarTodosToDo(categorias) { //TODO: cuando una tarea pertenece a mas de una cateria se ve repetida
+    // TODO: todo esto se debe modificar para que use actualizarTareasCategoria
     let lista = "Lista (No se puede hacer nada, cualquier tecla para salir.)\n";
     let contador = 1;
     categorias.forEach(categoria => {
@@ -175,6 +223,8 @@ function borrarTarea(categorias, categoriaId) {
     if (confirmacion.toLocaleLowerCase() == "s") {
         categorias[categoriaId][1].splice(entrada, 1);
     }
+
+    actualizarTareasCategoria(categorias[categoriaId][0]); // parte de la ampliacion 2
 }
 
 function mostrarTareas(categorias, categoriaId, mostrarBorrar = true) {
@@ -299,6 +349,7 @@ function asignarTareaCategoria(tareas, categoriaId, categorias) {
         tareas.forEach(element => {
             if (!comprobarTareaExisteCategoria(element, categoriaId, categorias)) {
                 arrayTareas.push(element);
+                actualizarTareasCategoria(categorias[categoriaId][0], element); // para la ampliacion 3
             } else {
                 console.log(`LA tarea ${element[0]} ya existe en esta categoria.`);
             }
@@ -306,6 +357,7 @@ function asignarTareaCategoria(tareas, categoriaId, categorias) {
     } else {
         if (!comprobarTareaExisteCategoria(tareas, categoriaId, categorias)) {
             arrayTareas.push(tareas);
+            actualizarTareasCategoria(categorias[categoriaId][0], tareas); // para la ampliacion 3
         } else {
             console.log(`LA tarea ${tareas[0]} ya existe en esta categoria.`);
         }
@@ -366,8 +418,17 @@ function administrarTarea(categorias, tareas) {
 
 const categorias = [
     ["cata1", [["tar1", "toDo"], ["tar2", "toDo"]]],
-    ["cata2", [["p1", "toDo"], ["p1", "toDo"]]]
+    ["cata2", [["p1", "toDo"], ["p2", "toDo"]]]
 ];
+
+(function () { // solo actuara cuando ya haya elementos en la categia desde el inicio del programa
+    categorias.forEach(categoria => {
+        categoria[1].forEach(tarea => {
+            actualizarTareasCategoria(categoria[0], tarea);
+        });
+    });
+})()
+
 let entrada = null;
 do {
     if (categorias.length == 0) {
