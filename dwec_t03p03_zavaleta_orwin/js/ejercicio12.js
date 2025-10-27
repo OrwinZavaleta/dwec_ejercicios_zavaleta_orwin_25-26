@@ -10,7 +10,7 @@ const tareasCategorias = []; //Es la solucion que tengo al poder saber cuales ti
     ]                       //son cadenas
 */
 
-function actualizarTareasCategoria(categoria, tarea = null, borrado = false) { // TODO: revisar bugs que surjan
+function actualizarTareasCategoria(categoria, tarea = null, borrado = false) { 
     let encontrado = false;
     let indiceTareaEliminada = null;
     let indiceTareaCategoriaPorAgregar = null;

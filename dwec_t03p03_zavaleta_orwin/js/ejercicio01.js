@@ -70,7 +70,7 @@ do {
     console.log("Array actual: ");
     console.log(arr);
 
-    // TODO: 2 variables que vuardan el estado antes de borrado del inicio y final, si no se hizo nada, se guarda undefine, y se restaura y si es undefine no hay nada
+    // 2 variables que vuardan el estado antes de borrado del inicio y final, si no se hizo nada, se guarda undefine, y se restaura y si es undefine no hay nada
     /*  arr_anterior = structuredClone(arr_buffer);
      arr_buffer = structuredClone(arr); */
 } while (arr.length > 0 && response != "n");
