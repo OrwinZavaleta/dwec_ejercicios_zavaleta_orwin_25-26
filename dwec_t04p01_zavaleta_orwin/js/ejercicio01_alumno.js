@@ -62,7 +62,7 @@ function Alumno(dni, nombre, fechaNacimiento, sexo) {
     this._dni = dni;
     this._nombre = nombre;
     this._notaFinal = null;
-    this._fechaNacimiento = fechaNacimiento;
+    this._fechaNacimiento = new Date(fechaNacimiento);
     this._sexo = sexo;
 
     this.mostrarInformacion = function () {
@@ -76,10 +76,8 @@ function Alumno(dni, nombre, fechaNacimiento, sexo) {
     };
 
     this.calcularEdad = function () { // me llega bien hecho (2025-12-31)
-        let fechaNac = new Date(this._fechaNacimiento);
-
         let fechaAct = new Date();
-        let aux = Math.floor((fechaAct - fechaNac) / (1000 * 60 * 60 * 24 * 365));
+        let aux = Math.floor((fechaAct - this.fechaNacimiento) / (1000 * 60 * 60 * 24 * 365));
         return aux;
     }
 
