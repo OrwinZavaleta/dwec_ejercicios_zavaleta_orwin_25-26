@@ -30,7 +30,7 @@ function funcionPrueba2() {
     7. salir
     `;
 
-    let maxNumAlum = prompt("Ingrese el maximo numero de alumnos para esta aula: ");
+    let maxNumAlum = mostrarMenu("Ingrese el maximo numero de alumnos para esta aula: ");
 
     const aula1 = new Aula(maxNumAlum, 2345, "un curso muy complicado", 3);
 
@@ -70,12 +70,12 @@ function funcionPrueba2() {
     } while (entrada != 7);
 }
 
-function mostrarMenu(menu, min = -Infinity) {
+function mostrarMenu(menu, max = Infinity) {
     let entrada = null;
     do {
         entrada = prompt(menu);
 
-        if (isNaN(entrada) || entrada < 1 || entrada > min) entrada = null;
+        if (isNaN(entrada) || Number(entrada) < 1 || Number(entrada) > max) entrada = null;
     } while (entrada == null);
 
     return entrada;
