@@ -61,6 +61,44 @@ function mostrarMenu(menu, max = Infinity, min = 1) {
     return entrada;
 }
 
+function pedirAsignatura() {
+    let menu = "Asignaturas:(puede elegir mas de 1 separandolas por \",\") \n"
+    let aux = asignaturas.filter(e => e.tipo == "Optativa");
+    aux.forEach((e, index) => menu += `${index + 1}. ${e.nombre} = ${e.curso} curso\n`);
+    return aux[mostrarMenu(menu, aux.length, 1)];
+}
+// TODO: resmplazar el mostrar menu por este metodo para poder manejar multiples entradas por comas
+function recibirEntrada(mensaje, max, min, muchos = false) {// Si muchos es true se devuelve un array, si es false se devuelve un numero
+    let entrada = null
+    if (!muchos) {
+        do {
+            entrada = Number(prompt(mensaje));
+
+        } while (validarNumero(entrada, max, min));
+    } else {
+        let esValido = true;
+        do {
+            entrada = prompt(mensaje);
+            if (entrada.includes(",")) {
+                entrada = entrada.split(",");
+                entrada.map((e) => e.trim());
+                entrada.forEach(element => {
+                    if (validarNumero(element, max)) esValido = false;
+                });
+
+            } else {
+                entrada = Number(entrada);
+                if (validarNumero(entrada, max, min)) esValido = false;
+            }
+        } while (!esValido);
+    }
+    return entrada;
+}
+
+function validarNumero(numero, max, min = 1) {
+    return (numero == null || isNaN(numero) || Number(numero) <= min || Number(numero) > max);
+}
+
 function Aula(maxAlumnos, id, descripcion, curso) {
     this._id = id;
     this._descripcion = descripcion;
@@ -95,6 +133,9 @@ function Aula(maxAlumnos, id, descripcion, curso) {
         let n2 = mostrarMenu("Ingrese la nota 2");
         let n3 = mostrarMenu("Ingrese la nota 3");
         alumno.cambiarNotas(n1, n2, n3);
+
+        let asignatura = pedirAsignatura();
+        alumno.agregarAsignatura(asignatura);
 
         return alumno;
     }
@@ -365,5 +406,3 @@ Aula.prototype.validarSexo = function () {
 
     return sexo;
 }
-
-// TODO: crear las 4 aulas con objetos literales

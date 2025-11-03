@@ -10,13 +10,21 @@ function Alumno(dni, nombre, fechaNacimiento, sexo) {
     this._asignaturasOptativas = []; // guardo la referencia al objeto
 
     this.mostrarInformacion = function () {
-        console.log(`Dni: ${this._dni},
-                 Nombre: ${this._nombre}, 
-                 edad: ${this._edad}, 
-                 fechaNacimiento: ${this._fechaNacimiento}, 
-                 notaFinal: ${this._notaFinal},
-                 sexo: ${this._sexo}`);
+        let res = `Dni: ${this.dni},
+        Nombre: ${this.nombre}, 
+        edad: ${this.edad}, 
+        fechaNacimiento: ${this.fechaNacimiento}, 
+        notaFinal: ${this.notaFinal},
+        sexo: ${this.sexo}
+        asignaturas: 
+            `;
 
+
+        this.asignaturasOptativas.forEach(e => {
+            res += `\t${e.nombre} - curso ${e.curso}`;
+        });
+
+        console.log(res);
     };
 
     this.calcularEdad = function () { // me llega bien hecho (2025-12-31)
@@ -115,6 +123,14 @@ Object.defineProperty(Alumno.prototype, "tri3", {
         this._tri3 = tri3;
     },
 });
+Object.defineProperty(Alumno.prototype, "asignaturasOptativas", {
+    get: function () {
+        return this._asignaturasOptativas;
+    },
+    set: function (asignaturasOptativas) {
+        this._asignaturasOptativas = asignaturasOptativas;
+    },
+});
 Object.defineProperty(Alumno.prototype, "notaFinal", {
     get: function () {
         return this._notaFinal;
@@ -146,4 +162,4 @@ Alumno.prototype.agregarAsignatura = function (asignatura) {
 // DONE: maximo matriculado en 6 asignaturas (4 obligatorias, 2 optativas)
 // por defecto todos matriculado en las mismas 4 asignaturas obligatorias dependiendo del aula
 // las 2 optativas se eligen de un listado de adignaturas (pueden ser de 1,2,3,4)
-// TODO: esto se hace cuando se piden los alumnos
+// DONE: esto se hace cuando se piden los alumnos

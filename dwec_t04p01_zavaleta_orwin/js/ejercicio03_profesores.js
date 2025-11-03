@@ -6,7 +6,7 @@ console.log("T04P01 - Ejercicio 03_profesores");
 // TODO: hay que hacerlo mediante un menu de asignacion
 
 // TODO: consultar que alumnos estan en la asignatura que imparte el profesor
-// TODO: optener un listado de los suspensos y aprobados con nota media. y con porcentajes
+// TODO: obtener un listado de los suspensos y aprobados con nota media. y con porcentajes
 
 const profesores = [
     {
