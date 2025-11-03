@@ -26,9 +26,9 @@ function validarFecha(fecha) { // la fecha como string
 
     if (fechaSeparda && esValida) {
 
-        dia = (fechaSeparda[0]);
+        anyo = (fechaSeparda[0]);
         mes = (fechaSeparda[1]);
-        anyo = (fechaSeparda[2]);
+        dia = (fechaSeparda[2]);
 
         if (dia.length == 2 && mes.length == 2 && anyo.length == 4) {
             dia = Number(dia);
@@ -50,12 +50,15 @@ function validarFecha(fecha) { // la fecha como string
     return [esValida, anyo, mes, dia];
 }
 
-function calcularEdadFuera(dia, mes, anyo) {
-    const fecha = new Date(anyo, mes - 1, dia);
+function mostrarMenu(menu, max = Infinity, min = 1) {
+    let entrada = null;
+    do {
+        entrada = prompt(menu);
 
-    let edad = new Date() - fecha;
+        if (isNaN(entrada) || Number(entrada) < min || Number(entrada) > max) entrada = null;
+    } while (entrada == null);
 
-    return edad / (1000 * 60 * 60 * 24 * 365);
+    return entrada;
 }
 
 function Aula(maxAlumnos, id, descripcion, curso) {
@@ -65,6 +68,12 @@ function Aula(maxAlumnos, id, descripcion, curso) {
     this._numAlumnos = 0;
     this._curso = curso; // solo puede tenre los valores 1, 2, 3 y 4
     this._alumnos = [];
+    this._grupos = {
+        grupo0: [],
+        grupo1: [],
+        // grupo1: ["123sda", "asdsda3"],
+        // grupo2 : ["123sda", "asdsda3"]
+    };
 
     this.haySitioAlumnos = function (cant = 1) {
         return ((this.numAlumnos + Number(cant)) <= this.maxAlumnos);
@@ -77,14 +86,14 @@ function Aula(maxAlumnos, id, descripcion, curso) {
     this.pedirDatosUnAlumno = function () {
         // crea un alumno y lo devuelve
         let nombre = prompt("Ingrese el nombre del alumno");
-        let dni = prompt("Ingrese el dni del alumno");
-        let fechaNacimiento = prompt("Ingrese la fecha de nacimiento del alumno");
-        let sexo = prompt("Ingrese el sexo del alumno");
+        let dni = this.validarDni();
+        let fechaNacimiento = this.validarFechaIngresada();
+        let sexo = this.validarSexo();
         const alumno = new Alumno(dni, nombre, fechaNacimiento, sexo);
 
-        let n1 = prompt("Ingrese la nota 1");
-        let n2 = prompt("Ingrese la nota 2");
-        let n3 = prompt("Ingrese la nota 3");
+        let n1 = mostrarMenu("Ingrese la nota 1");
+        let n2 = mostrarMenu("Ingrese la nota 2");
+        let n3 = mostrarMenu("Ingrese la nota 3");
         alumno.cambiarNotas(n1, n2, n3);
 
         return alumno;
@@ -92,6 +101,9 @@ function Aula(maxAlumnos, id, descripcion, curso) {
 
     this.insertarAlumnos = function (alumnos) {
         this.alumnos.push(...alumnos);
+
+        this.alumnos.forEach(e => this.grupos.grupo0.push(e.dni));
+
         this.numAlumnos += alumnos.length;
     }
 
@@ -212,3 +224,144 @@ Object.defineProperty(Aula.prototype, "curso", {
     }
 });
 
+Object.defineProperty(Aula.prototype, "grupos", {
+    get: function () {
+        return this._grupos;
+    },
+    set: function (grupos) {
+        this._grupos = grupos;
+    }
+});
+
+// Apliacion 1
+
+Aula.prototype.mostrarAlumosGrupo = function () {
+    for (const name in this.grupos) {
+        const value = this.grupos[name];
+
+        console.log(`${name} : `);
+
+        // Guardos los dni, y luego busco por el dni y los imprimo
+        value.forEach(dni => {
+            const alum = this.alumnos.find(o => o.dni === dni);
+
+            alum.mostrarInformacion();
+        });
+    }
+}
+
+Aula.prototype.agregarAlumnoGrupo = function (alumno, nameGrupo) {
+    for (const name in this.grupos) {
+        const element = this.grupos[name];
+
+        if ((indice = element.indexOf(alumno)) != -1) element.splice(indice, 1);
+    }
+    if (this.grupos.hasOwnProperty(nameGrupo)) {
+        this.grupos[nameGrupo].push(alumno);
+    } else {
+        this.grupos[nameGrupo] = [alumno]
+    }
+}
+
+Aula.prototype.eliminarGrupo = function (nameGrupo) {
+    delete this.grupos[nameGrupo]; // borra una clave y sus valores de un objeto
+}
+
+Aula.prototype.resumenGrupos = function () {
+    for (const name in this.grupos) {
+        if (!Object.hasOwn(this.grupos, name)) continue;
+
+        const values = this.grupos[name];
+
+        console.log(`${name}: ${values.length} alumnos`);
+    }
+}
+
+Aula.prototype.calcularMediaGrupo = function (name) {
+    let media = 0;
+    const value = this.grupos[name];
+
+    value.forEach(dni => {
+        const alum = this.alumnos.find(o => o.dni === dni);
+        media += alum.notaFinal;
+    });
+
+    media = media / value.length;
+
+    return media;
+}
+Aula.prototype.mayorNotaGrupo = function (name) {
+    const value = this.grupos[name];
+    let mayor = this.alumnos.find(o => o.dni === value[0]);
+
+    value.forEach(dni => {
+        const alum = this.alumnos.find(o => o.dni === dni);
+        if (mayor.notaFinal < alum.notaFinal) mayor = alum;
+    });
+
+    return mayor;
+}
+
+Aula.prototype.procentajeSuspensosGrupo = function (name) {
+    let cantidadDesaprobados = 0;
+    const value = this.grupos[name];
+
+    value.forEach(dni => {
+        const alum = this.alumnos.find(o => o.dni === dni);
+        if (!alum.estaAprobado()) cantidadDesaprobados++;
+    });
+
+    return (cantidadDesaprobados * 100) / value.length;
+}
+
+Aula.prototype.optenerNombresGrupos = function () {
+    return Object.keys(this.grupos);
+}
+
+Aula.prototype.optenerNombresAlumnos = function () {
+    let alumnos = [];
+    this.alumnos.forEach(e => {
+        alumnos.push([e.dni, e.nombre]);
+    });
+
+    return alumnos;
+}
+
+Aula.prototype.validarDni = function () {
+    let dni = null;
+    do {
+        dni = prompt("Ingrese el dni del alumno");
+
+        const dniRegex = /^\d{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/i;
+        if (!dniRegex.test(dni)) {
+            dni = null;
+        }
+    } while (dni == null);
+
+    return dni;
+}
+Aula.prototype.validarFechaIngresada = function () {
+    let fecha = null;
+    do {
+        fecha = prompt("Ingrese la fecha de nacimiento del alumno");
+
+        if (!validarFecha(fecha)[0]) {
+            fecha = null;
+        }
+    } while (fecha == null);
+
+    return fecha;
+}
+
+Aula.prototype.validarSexo = function () {
+    let sexo = null;
+    do {
+        sexo = prompt("Ingrese el sexo del alumno");
+
+        if (sexo != "h" && sexo != "m" && sexo != "o") {
+            sexo = null;
+        }
+    } while (sexo == null);
+
+    return sexo;
+}
