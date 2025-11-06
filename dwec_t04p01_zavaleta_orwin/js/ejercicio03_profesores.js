@@ -1,14 +1,8 @@
 console.log("T04P01 - Ejercicio 03_profesores");
 
-// DONE: 4 profesores
-// -todos imparten 2 asignaturas y en cursos distintos.
-// se comprueba en el momento de la asignacion
-// TODO: hay que hacerlo mediante un menu de asignacion
-
-// TODO: consultar que alumnos estan en la asignatura que imparte el profesor
 // TODO: obtener un listado de los suspensos y aprobados con nota media. y con porcentajes
 
-const profesores = [
+const profesores = [ // TODO: usar los metodos para usar los getter y setter
     {
         nombre: "Juan Jimenez",
         correo: "juanJ@gmail.com",

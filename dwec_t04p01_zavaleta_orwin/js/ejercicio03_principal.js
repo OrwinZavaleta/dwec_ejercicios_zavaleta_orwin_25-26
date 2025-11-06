@@ -1,5 +1,13 @@
 console.log("T04P01 - Ejercicio 03_principal");
 
+const aulas = [
+    new Aula("AU01", "Aula de primero", "40", 1),
+    new Aula("AU02", "Aula de segundo", "30", 2),
+    new Aula("AU03", "Aula de tercero", "20", 3),
+    new Aula("AU04", "Aula de cuarto", "10", 4),
+];
+
+
 function funcionPrueba1() {
     const alum1 = new Alumno(123, "pepe", "2007-02-23", "m");
     const alum2 = new Alumno(345, "ana", "2003-01-13", "f");
@@ -84,9 +92,6 @@ function mostrarMenu(menu, max = Infinity, min = 1) {
 
     return entrada;
 }
-
-funcionPrueba2();
-
 
 function funcionPrueba2ampliado(aula1) {
     let menu2 = `
@@ -189,30 +194,135 @@ function optenerAlumno(aula1) {
 }
 
 function funcionPrueba3() {
-    const aulas = [
-        {
-            id: "AU01",
-            descripcion: "Aula de primero",
-            maxAlumnos: "40",
-            curso: 1,
-        },
-        {
-            id: "AU02",
-            descripcion: "Aula de segundo",
-            maxAlumnos: "30",
-            curso: 2,
-        },
-        {
-            id: "AU03",
-            descripcion: "Aula de tercero",
-            maxAlumnos: "20",
-            curso: 3,
-        },
-        {
-            id: "AU04",
-            descripcion: "Aula de cuarto",
-            maxAlumnos: "10",
-            curso: 4,
-        },
-    ]
+    let menu = `
+    Menu
+    1. Agregar alumnos
+    2. Asignar asignatura a profesor
+    3. Consultar alumnos por profesor y asignatura
+    4. Asignar Notas por Profesor y Asignatura
+    5. Mostrar % aprobados por asignatura
+    6. Salir
+    `;
+
+    let entrada = -1;
+
+    do {
+        entrada = mostrarMenu(menu, 6, 1);
+        switch (Number(entrada)) {
+            case 1:
+                pedirDatosAlumno();
+                break;
+            case 2:
+                asignarProfesorAsignatura();
+                break;
+            case 3:
+                consultarAlumnosEnProfesorAsignatura();
+                break;
+            case 4:
+                break;
+            case 5:
+                obtenerTodosAprobadosSuspensos();
+                break;
+            case 6:
+                console.log("Saliendo...");
+                break;
+            default:
+                console.log("No entro a nada... extraño");
+
+        }
+
+    } while (entrada != 6);
+
+}
+
+document.addEventListener("DOMContentLoaded", e => {
+    document.querySelector("#empezar").addEventListener("click", () => funcionPrueba3());
+}); // El que activa el boton
+
+function pedirDatosAlumno() {
+    // crea un alumno y lo devuelve
+    let nombre = prompt("Ingrese el nombre del alumno");
+    const alumno = new Alumno(nombre);
+
+    let aula = listarPedirAulas();
+
+    aula.insertarAlumnos([alumno]);
+
+    for (let i = 0; i < 2; i++) {
+        let asignatura = pedirAsignatura(true);
+
+        asignatura.asignarAlumno(alumno); // TODO: que no se muestre la optativa que ya habia seleccionado
+    }// TODO: filter por no la asignatura anterior
+
+    return alumno;
+}
+
+function listarPedirAulas() {
+    let menu = "Selecciona el aula\n";
+
+    aulas.forEach((a, index) => {
+        menu += `\t${index + 1}. ${a.id} - ${a.curso} - ${a.descripcion}\n`
+    });
+
+    let entrada = mostrarMenu(menu, aulas.length, 1);
+
+    return aulas[entrada - 1];
+}
+function pedirAsignatura(optativa = false) {
+    let menu;
+    let aux;
+    if (optativa) {
+        menu = "Asignaturas optativas: \n"
+        aux = asignaturas.filter(e => e.tipo === "Optativa");
+    } else {
+        menu = "Asignaturas disponibles: \n"
+        aux = asignaturas;
+    }
+    aux.forEach((e, index) => menu += `${index + 1}. ${e.nombre} = ${e.curso} curso\n`);
+    return aux[mostrarMenu(menu, aux.length, 1) - 1];
+}
+
+function asignarProfesorAsignatura() {
+
+    let profesor = listarPedirProfesor();
+
+    let asignatura = pedirAsignatura(false);
+
+    agregarAsignaturaProfesor(profesor, asignatura);
+}
+
+function listarPedirProfesor() {
+    let menu = "Profesores:\n";
+    profesores.forEach((e, index) => menu += `${index + 1}. ${e.nombre}\n`);
+    return profesores[mostrarMenu(menu, profesores.length, 1) - 1]
+}
+
+function consultarAlumnosEnProfesorAsignatura() {
+    let profesor = listarPedirProfesor();
+
+    let asignatura = consultarAsignaturasProfesor(profesor);
+
+    let alumnos = asignatura.consultarAlumnos();
+
+    let menu = `Alumnos de ${asignatura.nombre}: \n (0 para regresar al menu)`
+    alumnos.forEach((e, index) => menu += `${index + 1}. ${e.nombre} \n`);
+    menu += "0. salir"
+
+    mostrarMenu(menu, 0, 0);
+
+    // funcionPrueba3();
+}
+
+function consultarAsignaturasProfesor(profesor) {
+    let menu = `Asignaturas de ${profesor.nombre}: \n`
+    let aux = profesor.asignaturas;
+    aux.forEach((e, index) => menu += `${index + 1}. ${e.nombre} = ${e.curso} curso\n`);
+    // menu += "0. Salir"
+    return aux[mostrarMenu(menu, aux.length, 0) - 1];
+}
+
+function obtenerTodosAprobadosSuspensos() {
+    aulas.forEach(e => {
+        e.mostrarDatos();
+    });
 }

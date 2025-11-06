@@ -3,41 +3,112 @@ console.log("T04P01 - Ejercicio 03_asignaturas");
 const asignaturas = [
     // otras asignaturas obligatorias
     {
-        curso: 2,
-        nombre: "Algebra",
-        tipo: "Obligatoria",
+        _curso: 2,
+        _nombre: "Algebra",
+        _tipo: "Obligatoria",
+        _matriculados: [],
     },
     {
-        curso: 2,
-        nombre: "Geometría",
-        tipo: "Obligatoria",
+        _curso: 2,
+        _nombre: "Geometría",
+        _tipo: "Obligatoria",
+        _matriculados: [],
     },
     {
-        curso: 2,
-        nombre: "Literatura",
-        tipo: "Obligatoria",
+        _curso: 1,
+        _nombre: "Literatura",
+        _tipo: "Obligatoria",
+        _matriculados: [],
     },
     {
-        curso: 2,
-        nombre: "Química",
-        tipo: "Obligatoria",
+        _curso: 1,
+        _nombre: "Química",
+        _tipo: "Obligatoria",
+        _matriculados: [],
     },
-    // otras asignaturas obligatorias
     // aqui van las optativas
     {
-        curso: 2,
-        nombre: "Dibujo Técnico",
-        tipo: "Optativa",
+        _curso: 2,
+        _nombre: "Dibujo Técnico",
+        _tipo: "Optativa",
+        _matriculados: [],
     },
     {
-        curso: 1,
-        nombre: "Introducción a la Programación",
-        tipo: "Optativa",
+        _curso: 2,
+        _nombre: "Filosofia",
+        _tipo: "Optativa",
+        _matriculados: [],
     },
     {
-        curso: 3,
-        nombre: "Historia del Arte",
-        tipo: "Optativa",
+        _curso: 1,
+        _nombre: "Introducción a la Programación",
+        _tipo: "Optativa",
+        _matriculados: [],
+    },
+    {
+        _curso: 3,
+        _nombre: "Historia del Arte",
+        _tipo: "Optativa",
+        _matriculados: [],
     }
 ];
 
+function addGetSetCurso(obj) {
+    Object.defineProperty(obj, "curso", {
+        get: function () {
+            return this._curso;
+        },
+        set: function (curso) {
+            this._curso = curso;
+        }
+    });
+}
+function addGetSetNombre(obj) {
+    Object.defineProperty(obj, "nombre", {
+        get: function () {
+            return this._nombre;
+        },
+        set: function (nombre) {
+            this._nombre = nombre;
+        }
+    });
+}
+function addGetSetTipo(obj) {
+    Object.defineProperty(obj, "tipo", {
+        get: function () {
+            return this._tipo;
+        },
+        set: function (tipo) {
+            this._tipo = tipo;
+        }
+    });
+}
+function addGetSetMatriculados(obj) {
+    Object.defineProperty(obj, "matriculados", {
+        get: function () {
+            return this._matriculados;
+        },
+        set: function (matriculados) {
+            this._matriculados = matriculados;
+        }
+    });
+}
+function asignarAlumno(obj) {
+    obj.asignarAlumno = function (alumno) {
+        this.matriculados.push(alumno);
+    }
+}
+function consultarAlumnos(obj) {
+    obj.consultarAlumnos = function () {
+        return this.matriculados;
+    }
+}
+
+asignaturas.forEach(e => {
+    addGetSetCurso(e);
+    addGetSetNombre(e);
+    addGetSetTipo(e);
+    addGetSetMatriculados(e);
+    asignarAlumno(e);
+    consultarAlumnos(e);
+});

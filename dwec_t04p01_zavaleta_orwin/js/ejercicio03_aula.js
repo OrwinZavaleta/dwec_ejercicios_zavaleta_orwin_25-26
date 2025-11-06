@@ -1,55 +1,5 @@
 console.log("T04P01 - Ejercicio 03_aula");
 
-function validarFecha(fecha) { // la fecha como string
-    let fechaSeparda;
-    let esValida = true;
-
-    if (fecha.length == 10) {
-
-        if (fecha.match("-")) {
-            fechaSeparda = fecha.split("-");
-        } else if (fecha.match("/")) {
-            fechaSeparda = fecha.split("/");
-        } else if (fecha.match(" ")) {
-            fechaSeparda = fecha.split(" ");
-        } else {
-            esValida &= false;
-        }
-    } else {
-        esValida &= false;
-    }
-
-    console.log(fechaSeparda);
-    let dia;
-    let mes;
-    let anyo;
-
-    if (fechaSeparda && esValida) {
-
-        anyo = (fechaSeparda[0]);
-        mes = (fechaSeparda[1]);
-        dia = (fechaSeparda[2]);
-
-        if (dia.length == 2 && mes.length == 2 && anyo.length == 4) {
-            dia = Number(dia);
-            mes = Number(mes);
-            anyo = Number(anyo);
-
-            const fechaOb = new Date(anyo, mes - 1, dia);
-
-            if (fechaOb.getMonth() === mes - 1 && fechaOb.getDate() === dia && fechaOb.getFullYear() === anyo) {
-                esValida &= true;
-            } else {
-                esValida &= false;
-            }
-        } else {
-            esValida &= false;
-        }
-    }
-
-    return [esValida, anyo, mes, dia];
-}
-
 function mostrarMenu(menu, max = Infinity, min = 1) {
     let entrada = null;
     do {
@@ -61,13 +11,6 @@ function mostrarMenu(menu, max = Infinity, min = 1) {
     return entrada;
 }
 
-function pedirAsignatura() {
-    let menu = "Asignaturas:(puede elegir mas de 1 separandolas por \",\") \n"
-    let aux = asignaturas.filter(e => e.tipo == "Optativa");
-    aux.forEach((e, index) => menu += `${index + 1}. ${e.nombre} = ${e.curso} curso\n`);
-    return aux[mostrarMenu(menu, aux.length, 1)];
-}
-// TODO: resmplazar el mostrar menu por este metodo para poder manejar multiples entradas por comas
 function recibirEntrada(mensaje, max, min, muchos = false) {// Si muchos es true se devuelve un array, si es false se devuelve un numero
     let entrada = null
     if (!muchos) {
@@ -99,7 +42,7 @@ function validarNumero(numero, max, min = 1) {
     return (numero == null || isNaN(numero) || Number(numero) <= min || Number(numero) > max);
 }
 
-function Aula(maxAlumnos, id, descripcion, curso) {
+function Aula(id, descripcion, maxAlumnos, curso) {
     this._id = id;
     this._descripcion = descripcion;
     this._maxAlumnos = maxAlumnos;
@@ -108,7 +51,6 @@ function Aula(maxAlumnos, id, descripcion, curso) {
     this._alumnos = [];
     this._grupos = {
         grupo0: [],
-        grupo1: [],
         // grupo1: ["123sda", "asdsda3"],
         // grupo2 : ["123sda", "asdsda3"]
     };
@@ -121,31 +63,16 @@ function Aula(maxAlumnos, id, descripcion, curso) {
         return this.numAlumnos != 0;
     }
 
-    this.pedirDatosUnAlumno = function () {
-        // crea un alumno y lo devuelve
-        let nombre = prompt("Ingrese el nombre del alumno");
-        let dni = this.validarDni();
-        let fechaNacimiento = this.validarFechaIngresada();
-        let sexo = this.validarSexo();
-        const alumno = new Alumno(dni, nombre, fechaNacimiento, sexo);
-
-        let n1 = mostrarMenu("Ingrese la nota 1");
-        let n2 = mostrarMenu("Ingrese la nota 2");
-        let n3 = mostrarMenu("Ingrese la nota 3");
-        alumno.cambiarNotas(n1, n2, n3);
-
-        let asignatura = pedirAsignatura();
-        alumno.agregarAsignatura(asignatura);
-
-        return alumno;
-    }
-
     this.insertarAlumnos = function (alumnos) {
         this.alumnos.push(...alumnos);
 
         this.alumnos.forEach(e => this.grupos.grupo0.push(e.dni));
 
         this.numAlumnos += alumnos.length;
+
+        // para asignarselos a las asignaturas
+
+        asignaturas.filter(e => e.curso == this.curso).forEach(e => e._matriculados.push(...alumnos)); // para este ejercicio llegan de 1 en 1
     }
 
     this.pedirDatos = function () {
@@ -171,6 +98,8 @@ function Aula(maxAlumnos, id, descripcion, curso) {
 
     this.mostrarDatos = function () {
         //  devuelve todos los datos de los alumnos en una cadena
+        console.log(this.id);
+        
         for (const alumno of this.alumnos) {
             alumno.mostrarInformacion();
         }
@@ -223,7 +152,6 @@ Object.defineProperty(Aula.prototype, "alumnos", {
         return this._alumnos;
     }
 });
-
 Object.defineProperty(Aula.prototype, "id", {
     get: function () {
         return this._id;
@@ -264,7 +192,6 @@ Object.defineProperty(Aula.prototype, "curso", {
         this._curso = curso;
     }
 });
-
 Object.defineProperty(Aula.prototype, "grupos", {
     get: function () {
         return this._grupos;
@@ -366,43 +293,4 @@ Aula.prototype.optenerNombresAlumnos = function () {
     });
 
     return alumnos;
-}
-
-Aula.prototype.validarDni = function () {
-    let dni = null;
-    do {
-        dni = prompt("Ingrese el dni del alumno");
-
-        const dniRegex = /^\d{8}[TRWAGMYFPDXBNJZSQVHLCKE]$/i;
-        if (!dniRegex.test(dni)) {
-            dni = null;
-        }
-    } while (dni == null);
-
-    return dni;
-}
-Aula.prototype.validarFechaIngresada = function () {
-    let fecha = null;
-    do {
-        fecha = prompt("Ingrese la fecha de nacimiento del alumno");
-
-        if (!validarFecha(fecha)[0]) {
-            fecha = null;
-        }
-    } while (fecha == null);
-
-    return fecha;
-}
-
-Aula.prototype.validarSexo = function () {
-    let sexo = null;
-    do {
-        sexo = prompt("Ingrese el sexo del alumno");
-
-        if (sexo != "h" && sexo != "m" && sexo != "o") {
-            sexo = null;
-        }
-    } while (sexo == null);
-
-    return sexo;
 }
