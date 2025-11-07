@@ -210,8 +210,8 @@ function funcionPrueba3() {
         entrada = mostrarMenu(menu, 6, 1);
         switch (Number(entrada)) {
             case 1:
-                pedirDatosAlumno();
-                break;
+                pedirDatosAlumno(); // TODO: que pueda llenar varios alumnos
+                break;//TODO: que se valide el limite de alumnos del aula
             case 2:
                 asignarProfesorAsignatura();
                 break;
@@ -219,7 +219,7 @@ function funcionPrueba3() {
                 consultarAlumnosEnProfesorAsignatura();
                 break;
             case 4:
-                asignarNotasAlumno();
+                asignarNotasAlumno();// TODO: se asigna las notas a toda el aula, no solo a uno
                 break;
             case 5:
                 obtenerTodosAprobadosSuspensos();
@@ -344,7 +344,7 @@ function consultarAsignaturasProfesor(profesor) {
     }
 }
 
-function obtenerTodosAprobadosSuspensos() {
+function obtenerTodosAprobadosSuspensos() { // TODO: mostrar los porcentajes de cada aula
 
     //TODO: comprobar que todos los alumnos tienen nota en todos los profesores
 

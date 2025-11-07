@@ -1,7 +1,7 @@
 console.log("T04P01 - Ejercicio 03_profesores");
 
 
-const profesores = [
+const profesores = [ // TODO: un profesor no puede enseñar la misma asignatura que otro
     {
         _nombre: "Juan Jimenez",
         _correo: "juanJ@gmail.com",
