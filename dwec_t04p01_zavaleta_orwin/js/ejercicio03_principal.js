@@ -253,7 +253,7 @@ function pedirDatosAlumno() {
     for (let i = 0; i < 2; i++) {
         asignatura = pedirAsignatura(true, asignaturaAnterior);
         asignaturaAnterior = asignatura;
-        asignatura.asignarAlumno(alumno); 
+        asignatura.asignarAlumno(alumno);
     }
 
     return alumno;
@@ -298,10 +298,10 @@ function asignarProfesorAsignatura() {
 
     if (profesor.asignaturas.length == 1) {
         asignatura = pedirAsignatura(false, profesor.asignaturas[0]);
-        agregarAsignaturaProfesor(profesor, asignatura);
+        profesor.agregarAsignatura(asignatura);
     } else if (profesor.asignaturas.length == 0) {
         asignatura = pedirAsignatura(false);
-        agregarAsignaturaProfesor(profesor, asignatura);
+        profesor.agregarAsignatura(asignatura);
     } else {
         console.log("El profesor ya tiene 2 asignaturas");
     }

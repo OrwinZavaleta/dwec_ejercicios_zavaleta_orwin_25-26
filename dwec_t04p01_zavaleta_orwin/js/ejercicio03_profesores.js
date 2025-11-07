@@ -1,30 +1,74 @@
 console.log("T04P01 - Ejercicio 03_profesores");
 
 
-const profesores = [ // TODO: usar los metodos para usar los getter y setter
+const profesores = [
     {
-        nombre: "Juan Jimenez",
-        correo: "juanJ@gmail.com",
-        asignaturas: []
+        _nombre: "Juan Jimenez",
+        _correo: "juanJ@gmail.com",
+        _asignaturas: []
     },
     {
-        nombre: "Ana Pérez",
-        correo: "ana.perez@academia.es",
-        asignaturas: []
+        _nombre: "Ana Pérez",
+        _correo: "ana.perez@academia.es",
+        _asignaturas: []
     },
     {
-        nombre: "Ricardo Soto",
-        correo: "rsoto@colegio.com",
-        asignaturas: []
+        _nombre: "Ricardo Soto",
+        _correo: "rsoto@colegio.com",
+        _asignaturas: []
     },
     {
-        nombre: "Elena Torres",
-        correo: "elenaT@mail.com",
-        asignaturas: []
+        _nombre: "Elena Torres",
+        _correo: "elenaT@mail.com",
+        _asignaturas: []
     }
 ];
 
-function agregarAsignaturaProfesor(profesor, asignatura) {
+function addProps(obj) {
+    Object.defineProperties(obj, {
+        nombre: {
+            get: function () {
+                return this._nombre;
+            },
+            set: function (nombre) {
+                this._nombre = nombre;
+            }
+        },
+        correo: {
+            get: function () {
+                return this._correo;
+            },
+            set: function (correo) {
+                this._correo = correo;
+            }
+        },
+        asignaturas: {
+            get: function () {
+                return this._asignaturas;
+            },
+            set: function (asignaturas) {
+                this._asignaturas = asignaturas;
+            }
+        },
+        agregarAsignatura: {
+            value: function (asignatura) {
+                if (this.asignaturas.length == 0) {
+                    this.asignaturas.push(asignatura);
+                } else {
+                    if (this.asignaturas.find(e => e.curso == asignatura.curso) !== undefined) {
+                        console.log("No puede tener dos asignaturas en el mismo curso.");
+                    } else {
+                        this.asignaturas.push(asignatura);
+                    }
+                }
+            }
+        }
+    });
+}
+
+profesores.forEach(e => addProps(e));
+
+/* function agregarAsignaturaProfesor(profesor, asignatura) {
     if (profesor.asignaturas.length == 0) {
         profesor.asignaturas.push(asignatura);
     } else {
@@ -34,4 +78,4 @@ function agregarAsignaturaProfesor(profesor, asignatura) {
             profesor.asignaturas.push(asignatura);
         }
     }
-}
+} */
