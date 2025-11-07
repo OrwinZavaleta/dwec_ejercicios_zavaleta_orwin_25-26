@@ -1,6 +1,5 @@
 console.log("T04P01 - Ejercicio 03_profesores");
 
-// TODO: obtener un listado de los suspensos y aprobados con nota media. y con porcentajes
 
 const profesores = [ // TODO: usar los metodos para usar los getter y setter
     {

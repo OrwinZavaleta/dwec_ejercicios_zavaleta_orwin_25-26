@@ -15,8 +15,8 @@ function Alumno(nombre) {
     };
 
 
-    this.asignarNota = function (asignaturas, nota) {
-        this.notas.set(asignaturas.nombre, nota);
+    this.asignarNota = function (asignatura, nota) {
+        this.notas.set(asignatura.nombre, nota);
     };
 
     this.obtenerNotaMedia = function () {
