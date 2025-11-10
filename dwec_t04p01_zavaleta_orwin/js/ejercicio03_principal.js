@@ -279,7 +279,7 @@ function listarPedirAulas() {
 
     return aulas[entrada - 1];
 }
-function pedirAsignatura(optativa = false, asignaturaAnterior = null) {
+function pedirAsignatura(optativa = false, asignaturaAnterior = null, asignaturasTomadas = null) {
     let menu;
     let aux;
     if (optativa) {
@@ -292,6 +292,9 @@ function pedirAsignatura(optativa = false, asignaturaAnterior = null) {
         menu = "Asignaturas disponibles: \n"
         if (asignaturaAnterior !== null) {
             aux = asignaturas.filter(e => e.curso !== asignaturaAnterior.curso);
+            if (asignaturasTomadas != null) {
+                aux = aux.filter(e => !optenerAsignaturasTomadas().includes(e)); // TODO: comprobar cual es el fallo que no quita las asignaturas ya tomadas
+            }
         } else {
             aux = asignaturas;
         }
@@ -353,10 +356,10 @@ function consultarAsignaturasProfesor(profesor) {
     }
 }
 
-function obtenerTodosAprobadosSuspensos() { 
+function obtenerTodosAprobadosSuspensos() {
     aulas.forEach(e => {
         e.mostrarDatos();
-        if (e.comprobarAlumnosNotasCompletas()) { 
+        if (e.comprobarAlumnosNotasCompletas()) {
             e.mostrarSuspensosAprobados();
         } else {
             console.log("Faltan llenar notas de algunos alumnos.");

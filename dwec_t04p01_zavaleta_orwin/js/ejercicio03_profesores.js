@@ -1,7 +1,7 @@
 console.log("T04P01 - Ejercicio 03_profesores");
 
 
-const profesores = [ // TODO: un profesor no puede enseñar la misma asignatura que otro
+const profesores = [
     {
         _nombre: "Juan Jimenez",
         _correo: "juanJ@gmail.com",
@@ -86,6 +86,14 @@ for (let i = 1; i < profesores.length; i++) {
         const func = profesores[0].agregarAsignatura.bind(e, asignatura); // solo devuelve la funcion, pero no la ejecuta
         return func();
     }
+}
+
+function optenerAsignaturasTomadas() {
+    const asignaturasTomadas = [];
+    profesores.forEach(e => {
+        asignaturasTomadas.push(...e.asignaturas);
+    });
+    return asignaturasTomadas;
 }
 
 /* function agregarAsignaturaProfesor(profesor, asignatura) {
