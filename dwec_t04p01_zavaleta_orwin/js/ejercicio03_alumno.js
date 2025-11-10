@@ -20,13 +20,21 @@ function Alumno(nombre) {
     };
 
     this.obtenerNotaMedia = function () {
-        let suma = 0;
+        if (this.comprobarNotasCompletas()) {
+            let suma = 0;
 
-        this.notas.forEach(e => {
-            suma += e;
-        });
+            this.notas.forEach(e => {
+                suma += e;
+            });
 
-        return suma / this.notas.size;
+            return suma / this.notas.size;
+        } else {
+            return "Le faltan notas";
+        }
+    }
+
+    this.comprobarNotasCompletas = function () {
+        return this.notas.size === 4;
     }
 
     /*     this.comparar = function (alumno) {

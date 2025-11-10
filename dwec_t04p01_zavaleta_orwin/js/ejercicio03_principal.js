@@ -88,7 +88,7 @@ function mostrarMenu(menu, max = Infinity, min = 1) {
         entrada = prompt(menu);
 
         if (isNaN(entrada) || Number(entrada) < min || Number(entrada) > max) entrada = null;
-    } while (entrada == null);
+    } while (entrada === null);
 
     return entrada;
 }
@@ -210,8 +210,8 @@ function funcionPrueba3() {
         entrada = mostrarMenu(menu, 6, 1);
         switch (Number(entrada)) {
             case 1:
-                pedirDatosAlumno(); // TODO: que pueda llenar varios alumnos
-                break;//TODO: que se valide el limite de alumnos del aula
+                pedirDatosAlumno();
+                break;
             case 2:
                 asignarProfesorAsignatura();
                 break;
@@ -219,7 +219,7 @@ function funcionPrueba3() {
                 consultarAlumnosEnProfesorAsignatura();
                 break;
             case 4:
-                asignarNotasAlumno();// TODO: se asigna las notas a toda el aula, no solo a uno
+                asignarNotasAlumno();
                 break;
             case 5:
                 obtenerTodosAprobadosSuspensos();
@@ -241,22 +241,31 @@ document.addEventListener("DOMContentLoaded", e => {
 }); // El que activa el boton
 
 function pedirDatosAlumno() {
-    // crea un alumno y lo devuelve
-    let nombre = prompt("Ingrese el nombre del alumno");
-    const alumno = new Alumno(nombre);
-    let asignaturaAnterior;
+    let cuantosAlumnos = 0;
+    do {
+        cuantosAlumnos = mostrarMenu("Cuantos alumnos va a ingresar: ", Infinity, 1);
+    } while (cuantosAlumnos <= 0);
 
-    let aula = listarPedirAulas();
+    // TODO: que se valide el limite de alumnos del aula
+    // TODO: como lo hago si no se a que aula iran
 
-    aula.insertarAlumnos([alumno]);
+    for (let i = 0; i < cuantosAlumnos; i++) {
 
-    for (let i = 0; i < 2; i++) {
-        asignatura = pedirAsignatura(true, asignaturaAnterior);
-        asignaturaAnterior = asignatura;
-        asignatura.asignarAlumno(alumno);
+        // crea un alumno y lo devuelve
+        let nombre = prompt("Ingrese el nombre del alumno");
+        const alumno = new Alumno(nombre);
+        let asignaturaAnterior;
+
+        let aula = listarPedirAulas();
+
+        aula.insertarAlumnos([alumno]);
+
+        for (let i = 0; i < 2; i++) {
+            asignatura = pedirAsignatura(true, asignaturaAnterior);
+            asignaturaAnterior = asignatura;
+            asignatura.asignarAlumno(alumno);
+        }
     }
-
-    return alumno;
 }
 
 function listarPedirAulas() {
@@ -266,7 +275,7 @@ function listarPedirAulas() {
         menu += `\t${index + 1}. ${a.id} - ${a.curso} - ${a.descripcion}\n`
     });
 
-    let entrada = mostrarMenu(menu, aulas.length, 1);
+    let entrada = Number(mostrarMenu(menu, aulas.length, 1));
 
     return aulas[entrada - 1];
 }
@@ -287,8 +296,8 @@ function pedirAsignatura(optativa = false, asignaturaAnterior = null) {
             aux = asignaturas;
         }
     }
-    aux.forEach((e, index) => menu += `${index + 1}. ${e.nombre} = ${e.curso} curso\n`);
-    return aux[mostrarMenu(menu, aux.length, 1) - 1];
+    aux.forEach((e, index) => menu += `${index + 1}. ${e.nombre} => ${e.curso} curso\n`);
+    return aux[Number(mostrarMenu(menu, aux.length, 1) - 1)];
 }
 
 function asignarProfesorAsignatura() {
@@ -344,12 +353,14 @@ function consultarAsignaturasProfesor(profesor) {
     }
 }
 
-function obtenerTodosAprobadosSuspensos() { // TODO: mostrar los porcentajes de cada aula
-
-    //TODO: comprobar que todos los alumnos tienen nota en todos los profesores
-
+function obtenerTodosAprobadosSuspensos() { 
     aulas.forEach(e => {
         e.mostrarDatos();
+        if (e.comprobarAlumnosNotasCompletas()) { 
+            e.mostrarSuspensosAprobados();
+        } else {
+            console.log("Faltan llenar notas de algunos alumnos.");
+        }
     });
 
     console.log();
@@ -363,14 +374,12 @@ function asignarNotasAlumno() {
     if (asignatura !== null) {
         let alumnos = asignatura.consultarAlumnos();
 
-        let menu = `Alumnos de ${asignatura.nombre}\n`
+        /* let menu = `Alumnos de ${asignatura.nombre}\n`
         alumnos.forEach((e, index) => menu += `${index + 1}. ${e.nombre} \n`);
-        menu += "0. salir"
+        menu += "0. salir" */
 
-        let alumnoSeleccionado = alumnos[mostrarMenu(menu, alumnos.length, 0) - 1];
-
-        alumnoSeleccionado.asignarNota(asignatura, mostrarMenu("Ingrese la nota (1-10)", 10, 1));
+        alumnos.forEach(alum => {
+            alum.asignarNota(asignatura, Number(mostrarMenu(`Ingrese la nota (1-10) de ${alum.nombre}`, 10, 1)));
+        });
     }
-
-
 }

@@ -70,9 +70,9 @@ function Aula(id, descripcion, maxAlumnos, curso) {
 
         this.numAlumnos += alumnos.length;
 
-        // para asignarselos a las asignaturas
+        // para asignarselos a las asignaturas 
 
-        asignaturas.filter(e => e.curso == this.curso).forEach(e => e._matriculados.push(...alumnos)); // para este ejercicio llegan de 1 en 1
+        asignaturas.filter(e => e.curso == this.curso && e.tipo == "Obligatoria").forEach(e => e.matriculados.push(...alumnos)); // para este ejercicio llegan de 1 en 1
     }
 
     this.pedirDatos = function () {
@@ -99,7 +99,7 @@ function Aula(id, descripcion, maxAlumnos, curso) {
     this.mostrarDatos = function () {
         //  devuelve todos los datos de los alumnos en una cadena
         console.log(this.id);
-        
+
         for (const alumno of this.alumnos) {
             alumno.mostrarInformacion();
         }
@@ -131,7 +131,7 @@ function Aula(id, descripcion, maxAlumnos, curso) {
     this.porcentajeSuspensos = function () {
         let cont = 0;
         for (const element of this.alumnos) {
-            if (!element.estaAprobado()) cont++;
+            if (element.obtenerNotaMedia() >= 5) cont++;
         }
 
         return cont * 100 / this.numAlumnos;
@@ -143,7 +143,15 @@ function Aula(id, descripcion, maxAlumnos, curso) {
         let aprobados = 100 - suspensos;
 
         console.log(`Suspensos: ${suspensos}% - Aprobados: ${aprobados}%`);
+    }
 
+    this.comprobarAlumnosNotasCompletas = function () { // Por optimizar
+        let completo = true;
+        for (const element of this.alumnos) {
+            completo &= element.comprobarNotasCompletas()
+        }
+        if (this.alumnos.length === 0) completo = false;
+        return completo;
     }
 }
 
