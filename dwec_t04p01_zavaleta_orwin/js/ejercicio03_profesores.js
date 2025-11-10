@@ -5,7 +5,18 @@ const profesores = [ // TODO: un profesor no puede enseñar la misma asignatura 
     {
         _nombre: "Juan Jimenez",
         _correo: "juanJ@gmail.com",
-        _asignaturas: []
+        _asignaturas: [],
+        agregarAsignatura: function (asignatura) {
+            if (this.asignaturas.length == 0) {
+                this.asignaturas.push(asignatura);
+            } else {
+                if (this.asignaturas.find(e => e.curso == asignatura.curso) !== undefined) {
+                    console.log("No puede tener dos asignaturas en el mismo curso.");
+                } else {
+                    this.asignaturas.push(asignatura);
+                }
+            }
+        }
     },
     {
         _nombre: "Ana Pérez",
@@ -50,7 +61,7 @@ function addProps(obj) {
                 this._asignaturas = asignaturas;
             }
         },
-        agregarAsignatura: {
+        /* agregarAsignatura: {
             value: function (asignatura) {
                 if (this.asignaturas.length == 0) {
                     this.asignaturas.push(asignatura);
@@ -62,11 +73,20 @@ function addProps(obj) {
                     }
                 }
             }
-        }
+        } */
     });
 }
 
 profesores.forEach(e => addProps(e));
+
+/* Truco para que cada objeto del array tenga el call */
+for (let i = 1; i < profesores.length; i++) {
+    const e = profesores[i];
+    e.agregarAsignatura = function (asignatura) {
+        const func = profesores[0].agregarAsignatura.bind(e, asignatura); // solo devuelve la funcion, pero no la ejecuta
+        return func();
+    }
+}
 
 /* function agregarAsignaturaProfesor(profesor, asignatura) {
     if (profesor.asignaturas.length == 0) {
