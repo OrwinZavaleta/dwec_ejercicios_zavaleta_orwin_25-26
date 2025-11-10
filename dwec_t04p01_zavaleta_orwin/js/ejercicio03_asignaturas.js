@@ -7,6 +7,9 @@ const asignaturas = [
         _nombre: "Algebra",
         _tipo: "Obligatoria",
         _matriculados: [],
+        consultarAlumnos: function () {
+            return this.matriculados;
+        }
     },
     {
         _curso: 2,
@@ -98,7 +101,7 @@ function asignarAlumno(obj) {
         this.matriculados.push(alumno);
     }
 }
-function consultarAlumnos(obj) {
+function consultarAlumnos(obj) { // Se trasladara a un solo objeto para usarlo con call()
     obj.consultarAlumnos = function () {
         return this.matriculados;
     }
@@ -110,5 +113,14 @@ asignaturas.forEach(e => {
     addGetSetTipo(e);
     addGetSetMatriculados(e);
     asignarAlumno(e);
-    consultarAlumnos(e);
+    // consultarAlumnos(e);
 });
+
+
+/* Truco para que cada objeto del array tenga el call */
+for (let i = 1; i < asignaturas.length; i++) {
+    const e = asignaturas[i];
+    e.consultarAlumnos = function () {
+        return asignaturas[0].consultarAlumnos.call(e);
+    }
+}

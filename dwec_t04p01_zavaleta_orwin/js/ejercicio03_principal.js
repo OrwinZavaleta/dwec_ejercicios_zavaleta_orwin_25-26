@@ -335,7 +335,7 @@ function consultarAlumnosEnProfesorAsignatura() {
 function consultarAsignaturasProfesor(profesor) {
     let menu = `Asignaturas de ${profesor.nombre}: \n`
     let aux = profesor.asignaturas;
-    if (aux.length > 1) {
+    if (aux.length >= 1) {
         aux.forEach((e, index) => menu += `${index + 1}. ${e.nombre} = ${e.curso} curso\n`);
         return aux[mostrarMenu(menu, aux.length, 0) - 1];
     } else {
