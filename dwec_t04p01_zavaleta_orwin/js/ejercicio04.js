@@ -158,6 +158,16 @@ console.log(personajes.reduce(function (acum, value) {
     return acum + value.numeroApariciones;
 }, 0));
 
+
+/* let acumulador = 0;
+array.forEach(element => {
+    acumulador += element.numeroApariciones;
+});
+
+for (let i = 0; i < array.length; i++) {
+    acumulador += array[i].numeroApariciones;
+} */
+
 // aa. Usa el método "reduce" para conseguir la media de todas las apariciones de todos los personajes.
 console.log(personajes.reduce(function (acum, value, index, array) {
     acum += value.numeroApariciones
@@ -197,7 +207,10 @@ let aux = personajes.reduce(function (acum, value) {
     return acum;
 }, {});
 
+console.log(aux);
+
 let valores = Object.entries(aux);
+console.log(valores);
 
 let promedios = {
     [valores[1][0]]: valores[1][1] / valores[0][1],

@@ -241,30 +241,34 @@ document.addEventListener("DOMContentLoaded", e => {
 }); // El que activa el boton
 
 function pedirDatosAlumno() {
+    let aula = listarPedirAulas();
+
     let cuantosAlumnos = 0;
     do {
         cuantosAlumnos = mostrarMenu("Cuantos alumnos va a ingresar: ", Infinity, 1);
     } while (cuantosAlumnos <= 0);
 
-    // TODO: que se valide el limite de alumnos del aula
-    // TODO: como lo hago si no se a que aula iran
+    if (aula.haySitioAlumnos(cuantosAlumnos)) {
+        // TODO: que se valide el limite de alumnos del aula
+        // TODO: seleccionar primero el aula y todos los laumnos a esa aula
 
-    for (let i = 0; i < cuantosAlumnos; i++) {
+        for (let i = 0; i < cuantosAlumnos; i++) {
 
-        // crea un alumno y lo devuelve
-        let nombre = prompt("Ingrese el nombre del alumno");
-        const alumno = new Alumno(nombre);
-        let asignaturaAnterior;
+            // crea un alumno y lo devuelve
+            let nombre = prompt("Ingrese el nombre del alumno");
+            const alumno = new Alumno(nombre);
+            let asignaturaAnterior;
 
-        let aula = listarPedirAulas();
+            aula.insertarAlumnos([alumno]);
 
-        aula.insertarAlumnos([alumno]);
-
-        for (let i = 0; i < 2; i++) {
-            asignatura = pedirAsignatura(true, asignaturaAnterior);
-            asignaturaAnterior = asignatura;
-            asignatura.asignarAlumno(alumno);
+            for (let i = 0; i < 2; i++) {
+                asignatura = pedirAsignatura(true, asignaturaAnterior);
+                asignaturaAnterior = asignatura;
+                asignatura.asignarAlumno(alumno);
+            }
         }
+    } else {
+        console.log("no hay sitio para tantos alumnos en la aula " + aula.id);
     }
 }
 
