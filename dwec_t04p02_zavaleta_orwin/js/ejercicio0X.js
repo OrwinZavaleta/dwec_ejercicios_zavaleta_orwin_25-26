@@ -1,1 +1,2 @@
-console.log("T04P02 - Ejercicio 0X");
+console.log("T04P02 - Ejercicio 01");
+
