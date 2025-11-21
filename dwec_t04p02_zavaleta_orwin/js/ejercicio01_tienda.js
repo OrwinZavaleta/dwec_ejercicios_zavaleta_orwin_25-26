@@ -1,4 +1,4 @@
-console.log("T04P02 - Ejercicio 01");
+console.log("T04P02 - Ejercicio 01 - Tienda");
 
 class Tienda {
     static IVA;
@@ -14,6 +14,7 @@ class Tienda {
     constructor(nombre) {
         this.lector = new LeerDatosPrompt();
         this.libros = new Libros();
+        this.autores = new Autores();
     }
 
     get nombre() { return this.#nombre; }
@@ -25,18 +26,53 @@ class Tienda {
     get lector() { return this.#lector; }
     set lector(lector) { this.#lector = lector; }
 
+    get autores() { return this.#autores; }
+    set autores(autores) { this.#autores = autores; }
+
     cargarDatosPrueba() {
+        const autoresPrueba = [
+            new Autor("Adoni"),
+            new Autor("Chun"),
+            new Autor("Marco Aurelio"),
+            new Autor("Frank"),
+        ]
+
+        this.autores.insertarAutores(autoresPrueba);
+
         const pruebas = [
-            new Libro(1, "Hadrosauropolis", "Ciencia Ficción", "Adoni", 13),
-            new Libro(2, "El problema de los 3 cuerpos", "Ciencia Ficción", "Chun", 23),
-            new Libro(3, "Meditaciones", "Ensayo", "Marco Aurelio", 9),
-            new Libro(4, "Dune", "Fantasía", "Frank", 25),
+            new Ebook(1, "Hadrosauropolis", "Ciencia Ficción", [this.autores.listadoAutores[0]], 13, 123, "epub"),
+            new LibroPapel(2, "El problema de los 3 cuerpos", "Ciencia Ficción", [this.autores.listadoAutores[1]], 23, 34, "23x43x5", 6),
+            new Ebook(3, "Meditaciones", "Ensayo", [this.autores.listadoAutores[2]], 9, 23, "mobi"),
+            new LibroPapel(4, "Dune", "Fantasía", [this.autores.listadoAutores[3]], 25, 4, "21x13x5", 8),
         ];
 
         this.libros.insertarLibros(pruebas);
+
+        this.libros.listadoLibros[0].modificarLibro(new Map([
+            ["nombre", "juanma"],
+            ["genero", "Ensayo"]
+        ]));
     }
 
-    mostrarCatalogoLibrosDisponibles(){ // TODO: arreglar
+    iniciar() {
+        this.cargarDatosPrueba();
+        // Lo que falte agregar
+    }
+    mostrarMenu() { }
+    pedirOpcionMenu() { }
+    pedirYcrearLibro() { }
+    pedirYcrearVariosLibros() { }
+    // pedirYcrearAutor(), pedirYcrearVariosAutores(), pedirYcrearClientes(), pedirYcrearVariosClientes(), …
+    mostrarCatálogoLibrosDisponibles() { }
+    actualizarStockLibros() { }
+    notificacionesStockLibrosMinimo() { }
+    mostrarPedidosAbiertoCliente() { }
+    borrarCliente() { }
+    hacerPedidoPorCliente() { }
+    mostrarPedidoPorID() { }
+
+
+    mostrarCatalogoLibrosDisponibles() { // TODO: arreglar
         return this.libros.obtenerCadenaLibrosMenu();
     }
 }

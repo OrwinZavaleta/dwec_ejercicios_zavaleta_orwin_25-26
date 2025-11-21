@@ -1,4 +1,4 @@
-console.log("T04P02 - Ejercicio 01");
+console.log("T04P02 - Ejercicio 01 - Leer Datos");
 
 class LeerDatos {
     leerEntero(mensaje_o_id) { throw new Error("Método no implementado."); }
@@ -52,19 +52,21 @@ class LeerDatosPrompt extends LeerDatos {
         } while (!valido);
         return valor;
     }
-    leerCadena(mensaje_o_id, longitud, patron) { // TODO: terminar la parte de patron
-        let entrada = prompt(mensaje_o_id).trim();
 
-        if (entrada.length < longitud) throw new Error("La cadena ingresada tiene menos de 1 caracter.");
+    leerCadena(mensaje_o_id, longitud = 1, patron = /^[\s\S]*$/) {
+        let entrada = prompt(mensaje_o_id).trim();
+        const pattern = new RegExp(patron);
+
+        if (Util.comprobarCadenaVacia(entrada) || entrada.length < longitud || !pattern.test(entrada)) throw new Error("La cadena ingresada no es valida.");
 
         return entrada;
     }
-    leerCadenaHasta(mensaje_o_id, longitud, patron) {
+    leerCadenaHasta(mensaje_o_id, longitud = 1, patron = /^[\s\S]*$/) {
         let valido = false;
         let valor;
         do {
             try {
-                valor = this.leerCadena(mensaje_o_id, longitud);
+                valor = this.leerCadena(mensaje_o_id, longitud, patron);
                 valido = true;
             } catch (error) {
                 valido = false;

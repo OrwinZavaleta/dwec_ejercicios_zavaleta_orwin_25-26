@@ -1,4 +1,4 @@
-console.log("T04P02 - Ejercicio 01");
+console.log("T04P02 - Ejercicio 01 - Libro");
 
 class Libro {
     static GENEROS_LITERARIOS = new Set([
@@ -17,37 +17,58 @@ class Libro {
     #isbn;
     #titulo;
     #genero;
-    #autor;
+    #autores;
     #precio;
 
     #descuento = 0;
 
-    constructor(isbn, titulo, genero, autor, precio) { // TODO: hacer las validaciones de los datos que llegan en los setters
+    constructor(isbn, titulo, genero, autores, precio) {
         this.isbn = isbn;
         this.titulo = titulo;
         this.genero = genero;
-        this.autor = autor;
+        this.autores = autores;
         this.precio = precio;
     }
 
     get isbn() { return this.#isbn; }
-    set isbn(isbn) { this.#isbn = isbn; }
+    set isbn(isbn) {
+        if (!Util.validarEntero(isbn)) {
+            throw new Error("El isbn no es un entero");
+        }
+        this.#isbn = isbn;
+    }
 
     get titulo() { return this.#titulo; }
-    set titulo(titulo) { this.#titulo = titulo; }
+    set titulo(titulo) {
+        if (!Util.validarTitulo(titulo)) {
+            throw new Error("El titulo no es valido");
+        }
+        this.#titulo = titulo;
+    }
 
     get genero() { return this.#genero; }
     set genero(genero) {
-        if (!GENEROS_LITERARIOS.has(genero)) {
+        if (!Libro.GENEROS_LITERARIOS.has(genero)) {
             throw new Error("El genero literario no es válido.");
         }
         this.#genero = genero;
     }
 
-    get autor() { return this.#autor; }
-    set autor(autor) { this.#autor = autor; }
+    get autores() { return this.#autores; }
+    set autores(autores) {
+        if (typeof autores === "object" && autores instanceof Array) {
+            autores.forEach(autor => {
+                if (typeof autor !== "object" || !autor instanceof Autor) {
+                    throw new Error("El parametro enviado no es un Autor");
+                }
+            });
+        } else {
+            throw new Error("El parametro enviado No es un array");
+        }
+        this.#autores = autores;
+    }
 
-    get precio() { return this.#precio; }
+    get precio() { return this.#precio * this.descuento; }
     set precio(precio) {
         if (!Util.validarPrecio(precio)) {
             throw new Error("El precio ingresado no es valido.");
@@ -61,7 +82,7 @@ class Libro {
 
 
     mostrarDatosLibro() {
-        return `ISBN: ${this.isbn} - TITULO: ${this.titulo} - AUTOR: ${this.autor} - PRECIO: ${this.precio}`;
+        return `ISBN: ${this.isbn} - TITULO: ${this.titulo} - AUTOR: ${this.autores.map(au => au.nombre)} - PRECIO: ${this.precio}`;
     }
 
     deshacerDescuentoLibro() {
@@ -84,8 +105,8 @@ class Ebook extends Libro {
     #tamanoArchivo; // En MB
     #formato;
 
-    constructor(isbn, titulo, genero, autor, precio, tamanoArchivo, formato) {
-        super(isbn, titulo, genero, autor, precio);
+    constructor(isbn, titulo, genero, autores, precio, tamanoArchivo, formato) {
+        super(isbn, titulo, genero, autores, precio);
         this.tamanoArchivo = tamanoArchivo;
         this.formato = formato;
     }
@@ -99,19 +120,24 @@ class Ebook extends Libro {
     }
 
     get formato() { return this.#formato; }
-    set formato(formato) { this.#formato = formato; } // TODO: validarlo
+    set formato(formato) {
+        if (!Util.validarFormato(formato, Ebook.FORMATOS)) {
+            throw new Error("El formato no es valido");
+        }
+        this.#formato = formato;
+    }
 
 
     descargar() {
         return "Descargando...";
     }
 
-    convertirFormato(formato) {
+    convertirFormato(formato) { // TODO: comprobar si e throw se recibe aca o en quien la llama
         this.formato = formato;
     }
 
     mostrarDatosLibro() {
-        return super.mostrarDatosLibro + ` - FORMATO: ${this.formato} - TAMAÑO DEL ARCHIVO: ${this.tamanoArchivo}`; // Puedo llamar al metodo del padre
+        return super.mostrarDatosLibro() + ` - FORMATO: ${this.formato} - TAMAÑO DEL ARCHIVO: ${this.tamanoArchivo}`; // Puedo llamar al metodo del padre
     }
 
     comprobarDisponibilidad() {
@@ -119,9 +145,9 @@ class Ebook extends Libro {
     }
 
     modificarLibro(mapaInfo) {
-        mapaInfo.forEach(value, key => {
+        for (const [key, value] of mapaInfo) {
             this[key] = value;
-        });
+        }
     }
 }
 
@@ -132,8 +158,8 @@ class LibroPapel extends Libro {
     #dimensiones; // Cadena con el patron ("NNxNNxNN")
     #stock;
 
-    constructor(isbn, titulo, genero, autor, precio, peso, dimensiones, stock) {
-        super(isbn, titulo, genero, autor, precio);
+    constructor(isbn, titulo, genero, autores, precio, peso, dimensiones, stock) {
+        super(isbn, titulo, genero, autores, precio);
         this.peso = peso;
         this.dimensiones = dimensiones;
         this.stock = stock;
@@ -149,7 +175,7 @@ class LibroPapel extends Libro {
 
     get dimensiones() { return this.#dimensiones; }
     set dimensiones(dimensiones) {
-        if (Util.validarDimensiones(dimensiones)) {
+        if (!Util.validarDimensiones(dimensiones)) {
             throw new Error("Las dimensiones no son validas.");
 
         }
@@ -158,7 +184,7 @@ class LibroPapel extends Libro {
 
     get stock() { return this.#stock; }
     set stock(stock) {
-        if (!Util.validarTamanoArchivo(stock)) { // TODO: Hacen lo mismo, para no crear otra funcion
+        if (!Util.validarStock(stock)) {
             throw new Error("El stock debe de ser un entero");
         }
         this.#stock = stock;
@@ -178,7 +204,7 @@ class LibroPapel extends Libro {
     }
 
     mostrarDatosLibro() {
-        return super.mostrarDatosLibro + ` - PESO: ${this.peso} - DIMENSIONES: ${this.dimensiones} - STOCK: ${this.stock}`;
+        return super.mostrarDatosLibro() + ` - PESO: ${this.peso} - DIMENSIONES: ${this.dimensiones} - STOCK: ${this.stock}`;
     }
 
     comprobarDisponibilidad() {
@@ -186,8 +212,8 @@ class LibroPapel extends Libro {
     }
 
     modificarLibro(mapaInfo) {
-        mapaInfo.forEach(value, key => {
+        for (const [key, value] of mapaInfo) {
             this[key] = value;
-        });
+        }
     }
 }
