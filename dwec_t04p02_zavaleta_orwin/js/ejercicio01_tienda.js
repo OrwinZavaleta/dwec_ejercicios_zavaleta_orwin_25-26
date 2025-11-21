@@ -48,8 +48,15 @@ class Tienda {
 
         this.libros.insertarLibros(pruebas);
 
+        // Asignar tambien los libros a los autores
+        autoresPrueba[0].insertarLibros([pruebas[0]]);
+        autoresPrueba[1].insertarLibros([pruebas[1]]);
+        autoresPrueba[2].insertarLibros([pruebas[2]]);
+        autoresPrueba[3].insertarLibros([pruebas[3]]);
+
+
         this.libros.listadoLibros[0].modificarLibro(new Map([
-            ["nombre", "juanma"],
+            ["titulo", "juanma"],
             ["genero", "Ensayo"]
         ]));
     }
@@ -60,7 +67,26 @@ class Tienda {
     }
     mostrarMenu() { }
     pedirOpcionMenu() { }
-    pedirYcrearLibro() { }
+    pedirYcrearLibro() {
+        let isbn = this.lector.leerEnteroHasta("Ingrese el ISBN del libro");
+        let titulo = this.lector.leerCadenaHasta("Ingrese el Titulo del libro");
+        let autor = this.lector.leerCadenaHasta("Ingrese el Autor del libro"); // TODO: Esto se hace por separado
+
+        let precio = this.lector.leerEnteroHasta("Ingrese el Precio del libro"); // TODO: preguntar si el precio es real
+        let genero = this.lector.leerCadenaHasta("Ingrese el Genero del libro");
+        // TODO: libro fisico o digital
+
+        if (!Util.validarEntero(isbn) || this.libros.existeLibroPorIsbn(isbn)) throw new Error("El isbn no es valido o ya esta registrado.");
+
+
+        if (!Util.validarTitulo(titulo)) throw new Error("Titulo no valido");
+        if (!Util.validarNombrePersona(autor)) throw new Error("El nombre del autor no es valido");
+        if (!Util.validarPrecio(precio)) throw new Error("El precio no es valido");
+        if (!Util.validarGenero(genero, Libro.GENEROS_LITERARIOS));
+
+        // TODO: completar
+
+    }
     pedirYcrearVariosLibros() { }
     // pedirYcrearAutor(), pedirYcrearVariosAutores(), pedirYcrearClientes(), pedirYcrearVariosClientes(), …
     mostrarCatálogoLibrosDisponibles() { }

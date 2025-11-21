@@ -10,7 +10,7 @@ class LeerDatos {
     leerCadenaHasta(mensaje_o_id) { throw new Error("Método no implementado."); }
 }
 
-class LeerDatosPrompt extends LeerDatos {
+class LeerDatosPrompt extends LeerDatos { // TODO: limpiar todos los datos desde aqui
     leerEntero(mensaje_o_id) {
         let entrada = prompt(mensaje_o_id);
         if (!Util.validarEntero(entrada)) throw new Error("El dato ingresado no es un entero.");
@@ -74,4 +74,6 @@ class LeerDatosPrompt extends LeerDatos {
         } while (!valido);
         return valor;
     }
+
+    // TODO: crear los leer Real
 }

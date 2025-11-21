@@ -48,7 +48,8 @@ class Libro {
 
     get genero() { return this.#genero; }
     set genero(genero) {
-        if (!Libro.GENEROS_LITERARIOS.has(genero)) {
+        // if (!Libro.GENEROS_LITERARIOS.has(genero)) { 
+        if (!Util.validarGenero(genero, Libro.GENEROS_LITERARIOS)) {
             throw new Error("El genero literario no es válido.");
         }
         this.#genero = genero;
@@ -82,7 +83,7 @@ class Libro {
 
 
     mostrarDatosLibro() {
-        return `ISBN: ${this.isbn} - TITULO: ${this.titulo} - AUTOR: ${this.autores.map(au => au.nombre)} - PRECIO: ${this.precio}`;
+        return `ISBN: ${this.isbn} - TITULO: ${this.titulo} - GENERO: ${this.genero} - AUTOR: ${this.autores.map(au => au.nombre)} - PRECIO: ${this.precio}`;
     }
 
     deshacerDescuentoLibro() {
@@ -90,6 +91,9 @@ class Libro {
     }
 
     aplicarDescuentoLibro(descuento) { // se pasa como decimales (ej: 0.12)
+        if (descuento > 1 || descuento < 0) {
+            throw new Error("El descuento ingresado no es valido.");
+        }
         this.descuento = descuento;
     }
 }
@@ -132,7 +136,7 @@ class Ebook extends Libro {
         return "Descargando...";
     }
 
-    convertirFormato(formato) { // TODO: comprobar si e throw se recibe aca o en quien la llama
+    convertirFormato(formato) {
         this.formato = formato;
     }
 
@@ -146,7 +150,16 @@ class Ebook extends Libro {
 
     modificarLibro(mapaInfo) {
         for (const [key, value] of mapaInfo) {
-            this[key] = value;
+            if (key === "isbn") {
+                continue;
+            }
+
+            if (this[key] !== undefined) {
+                this[key] = value;
+            } else {
+                throw new Error(`Clave ${key} no es valida`);
+
+            }
         }
     }
 }
@@ -196,6 +209,9 @@ class LibroPapel extends Libro {
     }
 
     reducirStock() {
+        if (this.stock <= 0) {
+            throw new Error("No existen mas unidades");
+        }
         this.stock--;
     }
 
@@ -213,7 +229,16 @@ class LibroPapel extends Libro {
 
     modificarLibro(mapaInfo) {
         for (const [key, value] of mapaInfo) {
-            this[key] = value;
+
+            if (key === "isbn") {
+                continue;
+            }
+
+            if (this[key] !== undefined) {
+                this[key] = value;
+            } else {
+                throw new Error(`Clave ${key} no es valida`);
+            }
         }
     }
 }

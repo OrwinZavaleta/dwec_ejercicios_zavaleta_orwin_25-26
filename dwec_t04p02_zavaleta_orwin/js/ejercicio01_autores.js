@@ -4,7 +4,7 @@ class Autores {
     #listadoAutores
 
     constructor() {
-        this.listadoAutores = [];
+        this.listadoAutores = [];// TODO: las instancias de objetos van en try catchF
     }
 
     get listadoAutores() { return this.#listadoAutores; }
@@ -24,7 +24,7 @@ class Autores {
         }, 0);
     }
 
-    buscarAutoresPorId(idAbuscar) {
+    buscarAutoresPorId(idAbuscar) { // TODO: si no encuentra nada devuelve un null
         return this.listadoAutores.find(autor => autor.id === idAbuscar);
     }
 

@@ -110,4 +110,6 @@ class Util {
         return entrada === null || entrada === "";
     }
 
+    // TODO: revisar los ejemplos de validar convertir y usarlas
+
 }

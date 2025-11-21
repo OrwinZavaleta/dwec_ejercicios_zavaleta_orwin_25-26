@@ -5,7 +5,7 @@ class Libros {
     #listadoLibros;
 
     constructor() {
-        this.listadoLibros = []; // TODO: las instancias de objetos van en try catch
+        this.listadoLibros = [];
     }
 
     get listadoLibros() { return this.#listadoLibros; }
@@ -27,11 +27,15 @@ class Libros {
     buscarLibroPorIsbn(isbnAbuscar) {
         return this.listadoLibros.find(libro => libro.isbn === isbnAbuscar);
     }
-    buscarLibroPorTitulo(tituloAbuscar) { // TODO: puede devilver un array
-        return this.listadoLibros.find(libro => libro.titulo === tituloAbuscar);
+    buscarLibroPorTitulo(tituloAbuscar) {
+        return this.listadoLibros.filter(libro => libro.titulo === tituloAbuscar);
     }
     modificarLibroPorIsbn(isbnAmodificar, mapaConInfo) {
-        this.buscarLibroPorIsbn(isbnAmodificar).modificarLibro(mapaConInfo);
+        const libro = this.buscarLibroPorIsbn(isbnAmodificar);
+        if (libro === null) {
+            throw new Error("El libro con ese isbn no existe.");
+        }
+        libro.modificarLibro(mapaConInfo);
     }
 
     // No se puede borrar libros
