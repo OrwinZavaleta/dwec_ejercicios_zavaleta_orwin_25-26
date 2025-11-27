@@ -10,11 +10,12 @@ class LeerDatos {
     leerCadenaHasta(mensaje_o_id) { throw new Error("Método no implementado."); }
 }
 
-class LeerDatosPrompt extends LeerDatos { // TODO: limpiar todos los datos desde aqui
+class LeerDatosPrompt extends LeerDatos {
+    static PATRON_VALIDAR_TODO = /^[\s\S]*$/;
     leerEntero(mensaje_o_id) {
         let entrada = prompt(mensaje_o_id);
         if (!Util.validarEntero(entrada)) throw new Error("El dato ingresado no es un entero.");
-        return entrada;
+        return Number(entrada);
     }
     leerEnteroHasta(mensaje_o_id) {
         let valido = false;
@@ -32,19 +33,19 @@ class LeerDatosPrompt extends LeerDatos { // TODO: limpiar todos los datos desde
     leerReal(mensaje_o_id) {
         let entrada = prompt(mensaje_o_id);
         if (!Util.validarReal(entrada)) throw new Error("El dato ingresado no es un real.");
-        return entrada;
+        return Number(entrada);
     }
-    leerEnteroEntre(mensaje_o_id, min, max) {
+    leerEnteroEntre(mensaje_o_id, min, max, funcionValidacion = () => true) {
         let entrada = prompt(mensaje_o_id);
-        if (!Util.validarEntero(entrada) || entrada < min || entrada > max) throw new Error("El dato ingresado no es valido o no esta en el rango.");
+        if (!Util.validarEntero(entrada) || entrada < min || entrada > max || !funcionValidacion(entrada)) throw new Error("El dato ingresado no es valido o no esta en el rango.");
         return entrada;
     }
-    leerEnteroEntreHasta(mensaje_o_id, min, max) {
+    leerEnteroEntreHasta(mensaje_o_id, min, max, funcionValidacion = () => true) {
         let valido = false;
         let valor;
         do {
             try {
-                valor = this.leerEnteroEntre(mensaje_o_id, min, max);
+                valor = this.leerEnteroEntre(mensaje_o_id, min, max, funcionValidacion);
                 valido = true;
             } catch (error) {
                 valido = false;
@@ -53,20 +54,39 @@ class LeerDatosPrompt extends LeerDatos { // TODO: limpiar todos los datos desde
         return valor;
     }
 
-    leerCadena(mensaje_o_id, longitud = 1, patron = /^[\s\S]*$/) {
+    leerRealEntre(mensaje_o_id, min, max, funcionValidacion = () => true) {
+        let entrada = prompt(mensaje_o_id);
+        if (!Util.validarReal(entrada) || entrada < min || entrada > max || !funcionValidacion(entrada)) throw new Error("El dato ingresado no es valido o no esta en el rango.");
+        return entrada;
+    }
+    leerRealEntreHasta(mensaje_o_id, min, max, funcionValidacion = () => true) {
+        let valido = false;
+        let valor;
+        do {
+            try {
+                valor = this.leerRealEntre(mensaje_o_id, min, max, funcionValidacion);
+                valido = true;
+            } catch (error) {
+                valido = false;
+            }
+        } while (!valido);
+        return valor;
+    }
+
+    leerCadena(mensaje_o_id, funcionValidacion = () => true, longitud = 1, patron = LeerDatosPrompt.PATRON_VALIDAR_TODO) {
         let entrada = prompt(mensaje_o_id).trim();
         const pattern = new RegExp(patron);
 
-        if (Util.comprobarCadenaVacia(entrada) || entrada.length < longitud || !pattern.test(entrada)) throw new Error("La cadena ingresada no es valida.");
+        if (Util.comprobarCadenaVacia(entrada) || entrada.length < longitud || !pattern.test(entrada) || !funcionValidacion(entrada)) throw new Error("La cadena ingresada no es valida.");
 
         return entrada;
     }
-    leerCadenaHasta(mensaje_o_id, longitud = 1, patron = /^[\s\S]*$/) {
+    leerCadenaHasta(mensaje_o_id, funcionValidacion = () => true, longitud = 1, patron = LeerDatosPrompt.PATRON_VALIDAR_TODO) {
         let valido = false;
         let valor;
         do {
             try {
-                valor = this.leerCadena(mensaje_o_id, longitud, patron);
+                valor = this.leerCadena(mensaje_o_id, funcionValidacion, longitud, patron);
                 valido = true;
             } catch (error) {
                 valido = false;
@@ -74,6 +94,4 @@ class LeerDatosPrompt extends LeerDatos { // TODO: limpiar todos los datos desde
         } while (!valido);
         return valor;
     }
-
-    // TODO: crear los leer Real
 }

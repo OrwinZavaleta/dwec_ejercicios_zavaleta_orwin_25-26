@@ -65,7 +65,7 @@ class Util {
     }
 
     static validarDireccion(direccion) {
-        return typeof nombre === "string" && nombre.length >= 3;
+        return typeof direccion === "string" && direccion.length >= 3;
     }
 
     static validarPrecio(precio) {
@@ -89,8 +89,12 @@ class Util {
         return pattern.test(dimensiones);
     }
 
-    static esMesPromocion(fecha, array_mes_promocion) { // TODO: como se pasara la fecha
-        array_mes_promocion.includes();
+    static esMesPromocion(fecha, array_mes_promocion) {
+        if (this.validarFecha(fecha)) {
+            const aux = new Date(fecha);
+            return array_mes_promocion.includes(aux.getMonth());
+        }
+        return false;
     }
 
     static validarFormato(formatoLeido, setFormatosValidos) {
@@ -110,6 +114,11 @@ class Util {
         return entrada === null || entrada === "";
     }
 
-    // TODO: revisar los ejemplos de validar convertir y usarlas
+    static validarNombreEnvio(titulo) {
+        return typeof titulo === "string" && titulo.length >= 1;
+    }
 
+    static validarDescuento(descuento) {
+        return descuento <= 1 && descuento >= 0;
+    }
 }

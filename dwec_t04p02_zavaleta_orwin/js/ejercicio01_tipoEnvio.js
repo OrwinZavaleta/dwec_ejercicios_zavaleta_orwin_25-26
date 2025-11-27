@@ -6,24 +6,52 @@ class TipoEnvio {
     #pesoMax;
     #precioSinIVA; // Solo gasto por envio
 
-    constructor(parameters) {
-
+    constructor(nombre, diasMaxEntrega, pesoMax, precioSinIVA) {
+        this.nombre = nombre;
+        this.diasMaxEntrega = diasMaxEntrega;
+        this.pesoMax = pesoMax;
+        this.precioSinIVA = precioSinIVA;
     }
 
     get nombre() { return this.#nombre; }
-    set nombre(nombre) { this.#nombre = nombre; }
+    set nombre(nombre) {
+        if (!Util.validarNombreEnvio(nombre)) {
+            throw new Error("El nombre del envio no es valido"); 
+        }
+        this.#nombre = nombre;
+    }
 
     get diasMaxEntrega() { return this.#diasMaxEntrega; }
-    set diasMaxEntrega(diasMaxEntrega) { this.#diasMaxEntrega = diasMaxEntrega; }
+    set diasMaxEntrega(diasMaxEntrega) {
+        if (!Util.validarDiasEnvio(diasMaxEntrega)) {
+            throw new Error("Los dias de entrega no es valido.");
+
+        }
+        this.#diasMaxEntrega = diasMaxEntrega;
+    }
 
     get pesoMax() { return this.#pesoMax; }
-    set pesoMax(pesoMax) { this.#pesoMax = pesoMax; }
+    set pesoMax(pesoMax) {
+        if (!Util.validarPeso(pesoMax)) {
+            throw new Error("El peso ingresado no es valido.");
+        }
+        this.#pesoMax = pesoMax;
+    }
 
     get precioSinIVA() { return this.#precioSinIVA; }
-    set precioSinIVA(precioSinIVA) { this.#precioSinIVA = precioSinIVA; }
+    set precioSinIVA(precioSinIVA) {
+        if (!Util.validarPrecio(precioSinIVA)) {
+            throw new Error("El precio no es valido.");
+        }
+        this.#precioSinIVA = precioSinIVA;
+    }
 
     mostrarDatosTipoEnvio() {
-        
+        return `ENVIO: NOMBRE: ${this.nombre} - DIAS MÁXIMO PARA ENTREGA: ${this.diasMaxEntrega} - PESO MÁXIMO: ${this.pesoMax} - PRECIO SIN IVA: ${this.precioSinIVA}`;
+    }
+
+    static validarTipoEnvio(tipoEnvio) {
+        return typeof tipoEnvio === "object" && tipoEnvio instanceof TipoEnvio;
     }
 }
 

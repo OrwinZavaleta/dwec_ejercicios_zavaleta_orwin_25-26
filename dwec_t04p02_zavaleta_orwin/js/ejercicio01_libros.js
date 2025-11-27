@@ -14,10 +14,13 @@ class Libros {
     existeLibroPorIsbn(isbnAbuscar) {
         return this.listadoLibros.some(libro => libro.isbn === isbnAbuscar);
     }
+    existeLibroPorTitulo(tituloAbuscar) {
+        return this.listadoLibros.some(libro => libro.titulo === tituloAbuscar);
+    }
 
     insertarLibros(libros) {
         return libros.reduce((acum, libro) => {
-            if (!this.existeLibroPorIsbn(libro)) {
+            if (Libro.validarLibro(libro) && !this.existeLibroPorIsbn(libro.isbn)) {
                 this.listadoLibros.push(libro);
                 acum++
             }
@@ -25,7 +28,9 @@ class Libros {
         }, 0);
     }
     buscarLibroPorIsbn(isbnAbuscar) {
-        return this.listadoLibros.find(libro => libro.isbn === isbnAbuscar);
+        const aux = this.listadoLibros.find(libro => libro.isbn === isbnAbuscar);
+        if (aux === undefined) return null;
+        return aux;
     }
     buscarLibroPorTitulo(tituloAbuscar) {
         return this.listadoLibros.filter(libro => libro.titulo === tituloAbuscar);

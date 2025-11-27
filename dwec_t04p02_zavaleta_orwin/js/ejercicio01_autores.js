@@ -4,7 +4,7 @@ class Autores {
     #listadoAutores
 
     constructor() {
-        this.listadoAutores = [];// TODO: las instancias de objetos van en try catchF
+        this.listadoAutores = [];
     }
 
     get listadoAutores() { return this.#listadoAutores; }
@@ -16,7 +16,7 @@ class Autores {
 
     insertarAutores(autores) {
         return autores.reduce((acum, autor) => {
-            if (!this.existeAutorPorNombre(autor)) {
+            if (Autor.validarAutor(autor) || !this.buscarAutoresPorId(autor.id)) {
                 this.listadoAutores.push(autor);
                 acum++
             }
@@ -24,12 +24,16 @@ class Autores {
         }, 0);
     }
 
-    buscarAutoresPorId(idAbuscar) { // TODO: si no encuentra nada devuelve un null
-        return this.listadoAutores.find(autor => autor.id === idAbuscar);
+    buscarAutoresPorId(idAbuscar) {
+        const aux = this.listadoAutores.find(autor => autor.id === idAbuscar);
+        if (aux === undefined) return null;
+        return aux;
     }
 
     buscarAutoresPorNombre(nombreAbuscar) {
-        return this.listadoAutores.find(autor => autor.nombre === nombreAbuscar);
+        const aux = this.listadoAutores.find(autor => autor.nombre === nombreAbuscar);
+        if (aux === undefined) return null;
+        return aux;
     }
 
     // no se modifican ni eliminan autores

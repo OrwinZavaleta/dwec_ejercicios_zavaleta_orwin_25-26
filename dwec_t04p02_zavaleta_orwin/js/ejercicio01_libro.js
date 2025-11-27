@@ -59,7 +59,7 @@ class Libro {
     set autores(autores) {
         if (typeof autores === "object" && autores instanceof Array) {
             autores.forEach(autor => {
-                if (typeof autor !== "object" || !autor instanceof Autor) {
+                if (!Autor.validarAutor(autor)) {
                     throw new Error("El parametro enviado no es un Autor");
                 }
             });
@@ -79,7 +79,12 @@ class Libro {
 
 
     get descuento() { return this.#descuento; }
-    set descuento(descuento) { this.#descuento = descuento; }
+    set descuento(descuento) {
+        if (!Util.validarDescuento(descuento)) {
+            throw new Error("El descuento ingresado no es valido.");
+        }
+        this.#descuento = descuento;
+    }
 
 
     mostrarDatosLibro() {
@@ -91,10 +96,11 @@ class Libro {
     }
 
     aplicarDescuentoLibro(descuento) { // se pasa como decimales (ej: 0.12)
-        if (descuento > 1 || descuento < 0) {
-            throw new Error("El descuento ingresado no es valido.");
-        }
         this.descuento = descuento;
+    }
+
+    static validarLibro(libro) {
+        return typeof libro === "object" && libro instanceof Libro;
     }
 }
 
@@ -162,6 +168,10 @@ class Ebook extends Libro {
             }
         }
     }
+
+    static validarEbook(ebook) {
+        return typeof ebook === "object" && ebook instanceof Ebook;
+    }
 }
 
 class LibroPapel extends Libro {
@@ -215,7 +225,7 @@ class LibroPapel extends Libro {
         this.stock--;
     }
 
-    amplicarStock(numUnididades) {
+    ampliarStock(numUnididades) {
         this.stock += numUnididades;
     }
 
@@ -224,7 +234,7 @@ class LibroPapel extends Libro {
     }
 
     comprobarDisponibilidad() {
-        return this.stock > 0;
+        return this.stock > LibroPapel.STOCK_MINIMO;
     }
 
     modificarLibro(mapaInfo) {
@@ -240,5 +250,8 @@ class LibroPapel extends Libro {
                 throw new Error(`Clave ${key} no es valida`);
             }
         }
+    }
+    static validarLibroPapel(libroPapel) {
+        return typeof libroPapel === "object" && libroPapel instanceof LibroPapel;
     }
 }

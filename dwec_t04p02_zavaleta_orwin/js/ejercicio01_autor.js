@@ -28,10 +28,13 @@ class Autor {
     set libros(libros) { this.#libros = libros; }
 
     mostrarDatosAutor() {
-        return `NOMBRE: ${this.nombre} ID: ${this.id}`;
+        return `NOMBRE: ${this.nombre} ID: ${this.id} LIBROS: ${this.libros.map(libro => libro.titulo)}`;
     }
 
     insertarLibro(libro) {
+        if (!Libro.validarLibro(libro)) {
+            throw new Error("El valor enviado no es una instancia de Libro");
+        }
         this.libros.push(libro);
     }
 
@@ -39,5 +42,9 @@ class Autor {
         return this.libros.length !== 0;
     }
 
-    static obtenerSiguienteId() { return ++this.ultimoId; }
+    static obtenerSiguienteId() { return ++Autor.ultimoId; }
+
+    static validarAutor(autor) {
+        return typeof autor === "object" && autor instanceof Autor;
+    }
 }
