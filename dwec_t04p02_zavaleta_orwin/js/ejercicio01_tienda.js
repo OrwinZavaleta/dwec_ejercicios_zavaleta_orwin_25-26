@@ -282,8 +282,8 @@ class Tienda {
         let nuevoStock = this.lector.leerEnteroHasta("Cuantos libros ha llegado");
         libro.ampliarStock(nuevoStock);
     }
-    notificacionesStockLibrosMinimo() {
-        return this.libros.listadoLibros.reduce((acum, libro) => {
+    notificacionesStockLibrosMinimo() { // TODO: revisar para que no aplique reduce 
+        return this.libros.listadoLibros.reduce((acum, libro) => { // TODO: mover a un metodo dentro de libros que retorne la disponibilidad
             if (libro instanceof LibroPapel) {
                 if (!libro.comprobarDisponibilidad()) acum += `${libro.titulo} tiene ${libro.stock} unidades.\n`;
             } else {

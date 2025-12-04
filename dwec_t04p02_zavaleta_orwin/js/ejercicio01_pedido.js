@@ -2,8 +2,9 @@ console.log("T04P02 - Ejercicio 01");
 
 class Pedido { // TODO: solo un cliente puede hacer un pedido, una persona que no es cliente primero se le da de alta como cliente.
     static ultimoIdAsignado = 1;
+    static DESCUENTO_FIN_ANYO = 0.10;
 
-    #id;
+    #id; // TODO: MODIFICAR LOS MAPAS PARA QUE GUARDEN ISBN
     #cliente;
     #librosPedido; // Mapa con isbn del libro pedido y numero de unidades. Ebook solo puede ser 1
     #fecha;
@@ -18,6 +19,12 @@ class Pedido { // TODO: solo un cliente puede hacer un pedido, una persona que n
         this.cliente = cliente;
         this.librosPedido = new Map();
         this.id = Pedido.obtenerSiguienteId()
+        this.fecha = new Date();
+        this.precioTotalSinEnvioSinIVA = 0;
+        this.precioTotalConEnvioSinIVA = 0;
+        this.precioTotalConEnvioConIVA = 0;
+        this.descuento = 0;
+        this.abierto = true;
     }
 
     get id() { return this.#id; }
@@ -94,7 +101,7 @@ class Pedido { // TODO: solo un cliente puede hacer un pedido, una persona que n
     hayLibros() {
         return this.librosPedido.length > 0;
     }
-    mostrarDatosPedido() {
+    mostrarDatosPedido(catalogoLibro) {
         let informacion = `Pedido Nº${this.id}\n`;
 
         this.librosPedido.forEach(libro => {
@@ -114,9 +121,9 @@ class Pedido { // TODO: solo un cliente puede hacer un pedido, una persona que n
         }
 
         if (libro instanceof Ebook) {
-            this.librosPedido.set(libro, 1);
+            this.librosPedido.set(libro.isbn, 1);
         } else {
-            this.librosPedido.set(libro, unidades);
+            this.librosPedido.set(libro.isbn, unidades);
         }
     }
 
@@ -124,12 +131,12 @@ class Pedido { // TODO: solo un cliente puede hacer un pedido, una persona que n
     Establece un objeto de tipo TipoEnvio que recibe como parámetro. Si un pedido solo tiene Ebook no puede tener un tipo de envío. Devuelve true o false.
     También se tiene que comprobar que el peso de los libros físicos es acorde al máximo de peso permitido en el tipo de envío.
     */
-    establecerTipoEnvio(tipoEnvio) { // TODO: preguntar por el peso maximo
+    establecerTipoEnvio(tipoEnvio, catalogoLibro) { // TODO: preguntar por el peso maximo
         if (!TipoEnvio.validarTipoEnvio(tipoEnvio)) {
             console.log("El tipo de envio pasado no es valido o no es instancia de la clase.");
         }
 
-        if (comprobarTodosEbook()) return false;
+        if (comprobarTodosEbook(catalogoLibro)) return false;
 
         this.tipoEnvioPedido = tipoEnvio;
     }
@@ -138,13 +145,17 @@ class Pedido { // TODO: solo un cliente puede hacer un pedido, una persona que n
     Los libros de tipo Ebook no generan gastos de envío. Si el pedido contiene únicamente ebooks, el coste del envío será siempre 0.
     Si el pedido incluye al menos un LibroPapel, el envío se calcula según el tipo de envío seleccionado.
     */
-    calcularTotal() { // TODO: revisar que se descuente el libro cuando se pide.
+    calcularTotal() { // TODO: revisar que se reduzca el libro cuando se pide.
         let precioTotal = 0;
 
+        if (this.fecha.getMonth() === 10 || this.fecha.getMonth() === 11) {
+            this.aplicarDescuento(Pedido.DESCUENTO_FIN_ANYO);
+        }
 
         this.librosPedido.forEach(libro => precioTotal += libro.precio);
 
         this.precioTotalSinEnvioSinIVA = precioTotal;
+
         if (!this.comprobarTodosEbook()) {
             this.precioTotalConEnvioSinIVA = this.precioTotalSinEnvioSinIVA + this.tipoEnvioPedido.precioSinIVA;
         }
@@ -157,7 +168,11 @@ class Pedido { // TODO: solo un cliente puede hacer un pedido, una persona que n
     Aplica un descuento al total del pedido, reduciendo el coste de los libros en el porcentaje especificado. Devuelve true / false si se ha podido aplicar correctamente. El descuento debe ser aplicado únicamente a los libros, no al coste del envío.
     Recuerda que además si el pedido se realiza en noviembre y diciembre, se aplica un descuento del 10% a cada libro individualmente, antes de calcular los gastos de envío. Esto se hace de forma automática. 
     */
-    aplicarDescuento(porcentaje) { }
+    aplicarDescuento(porcentaje, catalogoLibro) { // TODO: -MOVERLO A TIENDA-
+        this.obtenerLibrosPedidos(catalogoLibro).forEach(libro => {
+            libro.aplicarDescuentoLibro(porcentaje)// TODO: VERIFICAR
+        });
+    }
 
     static obtenerSiguienteId() { return ++Pedido.ultimoIdAsignado; }
 
@@ -165,14 +180,27 @@ class Pedido { // TODO: solo un cliente puede hacer un pedido, una persona que n
         return typeof pedido === "object" && pedido instanceof Pedido;
     }
 
-    comprobarTodosEbook() {
+    comprobarTodosEbook(catalogoLibro) {
         let todosEbook = true;
-        for (const [libro,] of this.librosPedido) {
+        for (const libro of this.obtenerLibrosPedidos(catalogoLibro)) {// TODO: VERIFICAR
             if (libro instanceof LibroPapel) {
                 todosEbook = false;
                 break;
             }
         }
         return todosEbook;
+    }
+
+    obtenerLibrosPedidos(catalogoLibro) {
+        // return catalogoLibro.filter(libro => this.librosPedido.keys().some(isbn => isbn === libro.isbn));
+        const aux = [];
+        this.librosPedido.forEach(isbn, cant => {
+            const libroEncontrado = catalogoLibro.buscarLibroPorIsbn(isbn);
+            if (libroEncontrado) {
+                aux.push(libroEncontrado);
+            }
+        });
+
+        return aux;
     }
 }
