@@ -74,7 +74,7 @@ function rellenarPrimera(listaSelect) {
 }
 
 function rellenarSiguiente(e, listaSelect, index) {
-    if (listaSelect.length - 1 !== index && index == 0) {
+    if (listaSelect.length - 1 !== index && index == 0) {  // TODO: por mejorar
         listaSelect[index + 1].innerHTML = "<option value=''>Seleccione...</option>";
         for (const key in objetoPruebas[e.target.value]) {
             listaSelect[index + 1].innerHTML += `<option value="${key}">${key.toUpperCase()}</option>`;
@@ -85,5 +85,9 @@ function rellenarSiguiente(e, listaSelect, index) {
         for (const key in objetoRA) {
             listaSelect[index + 1].innerHTML += `<option value="${key}">${objetoRA[key].toUpperCase()}</option>`;
         }
+
+    } else if (index == 2) {
+        document.querySelector("#resultado").innerHTML = `${listaSelect[0].value} - ${listaSelect[1].value} - ${listaSelect[2].value}`;
+
     }
 }
