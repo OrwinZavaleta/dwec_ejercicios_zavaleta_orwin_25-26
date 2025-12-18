@@ -75,11 +75,11 @@ class Tienda {
         this.autores.insertarAutores(autoresPrueba);
 
         const librosPruebas = [
-            new Ebook(1, "Hadrosauropolis", "Ciencia Ficción", [this.autores.listadoAutores[0]], 13, 123, "epub", "https://imgs.search.brave.com/N6sA_NUo4fv_1VOTeZJLcYI7Z7p2eY5STJBXGXbktWo/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMtbmEuc3NsLWlt/YWdlcy1hbWF6b24u/Y29tL2ltYWdlcy9J/LzgxTlAyVGI4RG9M/LmpwZw"),
+            new Ebook(1, "Hadrosauropolis", "Ciencia Ficción", [this.autores.listadoAutores[0], this.autores.listadoAutores[1]], 13, 123, "epub", "https://imgs.search.brave.com/N6sA_NUo4fv_1VOTeZJLcYI7Z7p2eY5STJBXGXbktWo/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMtbmEuc3NsLWlt/YWdlcy1hbWF6b24u/Y29tL2ltYWdlcy9J/LzgxTlAyVGI4RG9M/LmpwZw"),
             new LibroPapel(2, "El problema de los 3 cuerpos", "Ciencia Ficción", [this.autores.listadoAutores[1]], 23, 34, "23x43x5", 5, "https://imgs.search.brave.com/DqUZEhIwDKI9ulwkYKtXtzaYpheye_mtwYB5pio-q4U/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMuYm9va3NlbnNl/LmNvbS9pbWFnZXMv/NzM0LzY1OS85Nzg4/NDY2NjU5NzM0Lmpw/Zw"),
             new Ebook(3, "Meditaciones", "Ensayo", [this.autores.listadoAutores[2]], 9, 23, "mobi", "https://imgs.search.brave.com/AlhExVTE0i3XPMWdqds87hhWs0mMpm374FnNZTZTo8I/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tLm1l/ZGlhLWFtYXpvbi5j/b20vaW1hZ2VzL0kv/NDErZ2l3blI3aUwu/anBn"),
             new LibroPapel(4, "Dune", "Fantasía", [this.autores.listadoAutores[3]], 25, 4, "21x13x5", 8, "https://imgs.search.brave.com/0ngBt9l5A4fPiXEWsKCyOYqgVBwv3dNXd0ALR-sOk7c/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pbWFn/ZXMuc3F1YXJlc3Bh/Y2UtY2RuLmNvbS9j/b250ZW50L3YxLzYw/MzMyMjc5MzIxYzZm/NmNjODdjZjhmZS80/OWRkMjViYy0yMGI5/LTRkNzQtYjdhZC1h/ZGY1MjE5ZDQxNDkv/ZHVuZS5qcGc"),
-            new LibroPapel(5, "La rueda del tiempo", "Fantasía", [this.autores.listadoAutores[3]], 25, 4, "21x13x5", 0, "https://imgs.search.brave.com/FzulC8mngh0kk48h0Z-taduJjaeSm8ACYO8vA3CagBM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/YWRhemluZy5jb20v/d3AtY29udGVudC91/cGxvYWRzLzIwMjMv/MDEvd2hlZWwtb2Yt/dGltZS1ib29rLWNv/dmVycy1hLW1lbW9y/eS1vZi1saWdodC11/ay0xLmpwZw"),
+            new LibroPapel(5, "La rueda del tiempo", "Fantasía", [this.autores.listadoAutores[3], this.autores.listadoAutores[0]], 25, 4, "21x13x5", 0, "https://imgs.search.brave.com/FzulC8mngh0kk48h0Z-taduJjaeSm8ACYO8vA3CagBM/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly93d3cu/YWRhemluZy5jb20v/d3AtY29udGVudC91/cGxvYWRzLzIwMjMv/MDEvd2hlZWwtb2Yt/dGltZS1ib29rLWNv/dmVycy1hLW1lbW9y/eS1vZi1saWdodC11/ay0xLmpwZw"),
         ];
 
         this.libros.insertarLibros(librosPruebas);
