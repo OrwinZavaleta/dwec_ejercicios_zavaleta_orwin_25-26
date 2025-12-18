@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll('[data-bs-toggle="modal"]').forEach(modal => {
             modal.addEventListener("click", () => actualizarDatosModal(document.querySelector(".modal"), modal.querySelector("p").textContent, miTienda));
         });
+        document.querySelector("#filterForm").addEventListener("submit", (e) => cargarActualizarLibros(miTienda, document.querySelector("#bodyCatalogo"), this.buscador.value, e));
     } else if (currentUrl.search("02cliente") !== -1) {
         //==== Cliente =====
         document.querySelectorAll(".btn-detalle").forEach(detalle => {
@@ -61,12 +62,24 @@ function main() {
     return miTienda;
 }
 
-function cargarActualizarLibros(tienda, bodyTable) {
+function cargarActualizarLibros(tienda, bodyTable, query = "", e = null) {
+
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
     bodyTable.innerHTML = "";
 
     const libros = tienda.mostrarCatalogoLibrosDisponibles();
+    let librosFiltrados = libros;
+    query = query.trim().toLocaleLowerCase();
 
-    libros.forEach(libro => {
+    if (query) {
+        librosFiltrados = libros.filter(libro => libro.titulo.toLowerCase().includes(query) || libro.genero.toLowerCase().includes(query));
+    }
+
+    librosFiltrados.forEach(libro => {
         bodyTable.innerHTML += `
                 <tr>
                     <td>${libro.isbn}</td>
