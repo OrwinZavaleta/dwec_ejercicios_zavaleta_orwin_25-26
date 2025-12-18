@@ -21,10 +21,13 @@ console.log("T04P02 - Ejercicio 01 - Principal");
 // ====== ASIGNACION DE LOS EVENTOS ======
 document.addEventListener("DOMContentLoaded", () => {
     const currentUrl = location.pathname;
+    const miTienda = main();
 
     if (currentUrl.search("01catalogo") !== -1) {
         //==== Catalogo =====
-        
+        document.querySelectorAll('[data-bs-toggle="modal"]').forEach(modal => {
+            modal.addEventListener("click", () => actualizarDatosModal(document.querySelector(".modal"), modal.querySelector("p").textContent, miTienda));
+        });
     } else if (currentUrl.search("02cliente") !== -1) {
         //==== Cliente =====
         document.querySelectorAll(".btn-detalle").forEach(detalle => {
@@ -39,10 +42,8 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
         //==== Web no existente =====
     }
-    main();
 
     console.log(currentUrl);
-
 
 });
 
@@ -57,6 +58,7 @@ function main() {
     // } catch (error) {
     //     console.log("Error en la ejecución: " + error.message);
     // }
+    return miTienda;
 }
 
 function cargarActualizarLibros(tienda, bodyTable) {
@@ -75,13 +77,15 @@ function cargarActualizarLibros(tienda, bodyTable) {
                     <td>${(libro instanceof Ebook) ? "Ebook" : "Libro en Papel"}</td>
                     <td>${libro.stock ?? "Ilimitado (digital)"}</td>
                     <td>
-                        <button class="btn btn-warning" type="button" data-bs-toggle="modal" data-bs-target="#detalle"><i class="bi bi-eye-fill"></i></button>
+                        <button class="btn btn-warning" type="button" data-bs-toggle="modal" data-bs-target="#detalle"><i class="bi bi-eye-fill"></i><p class="d-none">${libro.isbn}</p></button>
                     </td>
                 </tr>
         `;
     });
 }
 
-function actualizarDatosModal(modal, libro) {
-    modal.querySelector(".modal-title").innerHTML = libro.titulo.toUpperCase();
+function actualizarDatosModal(modal, isbn, miTienda) {
+    const libro = miTienda.pedirLibroPorISBN(Number(isbn));
+    modal.querySelector(".modal-title").innerHTML = libro.titulo;
+    modal.querySelector(".modal-body").innerHTML = libro.mostrarDatosLibro();
 }
