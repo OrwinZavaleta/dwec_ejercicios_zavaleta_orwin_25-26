@@ -76,7 +76,7 @@ function cargarActualizarLibros(tienda, bodyTable, query = "", e = null) {
     query = query.trim().toLocaleLowerCase();
 
     if (query) {
-        librosFiltrados = libros.filter(libro => libro.titulo.toLowerCase().includes(query) || libro.genero.toLowerCase().includes(query));
+        librosFiltrados = libros.filter(libro => libro.titulo.toLowerCase().includes(query) || libro.genero.toLowerCase().includes(query) || (libro.autores.filter(autor => autor.nombre.toLowerCase().includes(query)).length != 0));
     }
 
     librosFiltrados.forEach(libro => {
