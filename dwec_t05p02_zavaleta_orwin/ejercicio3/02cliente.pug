@@ -1,0 +1,79 @@
+extends layout.pug
+
+block content
+    <form class="row g-3 needs-validation mb-3" action="#" method="post" novalidate>
+        <div class="col-md">
+            <label for="dni" class="form-label fs-5">DNI</label>
+            <input type="text" class="form-control" id="dni" name="dni" pattern="^[XYZ]?\d{7,8}[A-Z]$" maxlength="9" required>
+            <div class="invalid-feedback">
+                | Ingrese un DNI válido
+            </div>
+        </div>
+        <div class="col-md">
+            <label for="nombre" class="form-label fs-5">Nombre</label>
+            <input type="text" class="form-control" id="nombre" name="nombre" minlength="3" required>
+            <div class="invalid-feedback">
+                | Ingrese un Nombre válido
+            </div>
+        </div>
+        <div class="col-md">
+            <label for="direccion" class="form-label fs-5">Dirección</label>
+            <input type="text" class="form-control" id="direccion" name="direccion" minlength="3" required>
+            <div class="invalid-feedback">
+                | Ingrese una Dirección válido
+            </div>
+        </div>
+        <div class="col-md-1 align-self-end">
+            <button class="btn btn-primary" type="submit">Crear</button>
+        </div>
+    </form>
+    <div class="row">
+        <div class="table-responsive col-12 col-md">
+            <table class="table table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th scope="col">DNI</th>
+                        <th scope="col">NOMBRE</th>
+                        <th scope="col">DIRECCIÓN</th>
+                        <th scope="col">VER PEDIDO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Mark</td>
+                        <td>Otto</td>
+                        <td>Otto</td>
+                        <td>
+                            <button class="btn btn-warning btn-detalle" type="button" id="verDetalleBoton"><i class="bi bi-eye-fill"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Jacob</td>
+                        <td>Thornton</td>
+                        <td>@fat</td>
+                        <td>
+                            <button class="btn btn-warning btn-detalle" type="button" id="verDetalleBoton"><i class="bi bi-eye-fill"></i></button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>John</td>
+                        <td>Doe</td>
+                        <td>@social</td>
+                        <td>
+                            <button class="btn btn-warning btn-detalle" type="button" id="verDetalleBoton"><i class="bi bi-eye-fill"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-3 col-12 mt-3 d-none" id="detalleCard"> 
+            <div class="card">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div>
+        </div>
+    </div>

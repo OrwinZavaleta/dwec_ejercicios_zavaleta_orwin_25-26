@@ -1,0 +1,75 @@
+extends layout.pug
+
+block content
+    <form class="row g-3 needs-validation" action="#" method="post" novalidate>
+        <div class="col-md">
+            <label for="buscador" class="form-label fs-5">Buscar por título, género o autor</label>
+            <input type="text" class="form-control" id="buscador" name="buscador" required>
+            <div class="invalid-feedback">
+                | Ingrese un título, género o autor valido
+            </div>
+        </div>
+        <div class="col-md-1 align-self-end">
+            <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
+        </div>
+    </form>
+
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
+                <tr>
+                    <th scope="col">ISBN</th>
+                    <th scope="col">TÍTULO</th>
+                    <th scope="col">AUTOR</th>
+                    <th scope="col">GÉNERO</th>
+                    <th scope="col">PRECIO</th>
+                    <th scope="col">TIPO</th>
+                    <th scope="col">STOCK</th>
+                    <th scope="col">VER DETALLE</th>
+                </tr>
+            </thead>
+            <tbody id="bodyCatalogo">
+                <tr>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                    <td>@mdo</td>
+                    <td>@mdo</td>
+                    <td>@mdo</td>
+                    <td>@mdo</td>
+                    <td>
+                        <button class="btn btn-warning" type="button" data-bs-toggle="modal" data-bs-target="#detalle"><i class="bi bi-eye-fill"></i></button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Jacob</td>
+                    <td>Thornton</td>
+                    <td>@fat</td>
+                </tr>
+                <tr>
+                    <td>John</td>
+                    <td>Doe</td>
+                    <td>@social</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="detalle" tabindex="-1" aria-labelledby="detalleLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="detalleLabel">Modal title</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    |...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    //- <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>

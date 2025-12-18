@@ -47,7 +47,7 @@ logs/
 
 # ########## Archivos de Build y Producción ##########
 
-dist/
+# dist/
 build/
 public/build/
 .cache/

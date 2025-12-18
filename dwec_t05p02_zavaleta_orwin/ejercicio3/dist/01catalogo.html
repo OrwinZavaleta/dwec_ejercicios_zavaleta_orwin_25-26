@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DWEC - Ejercicios T0X - Orwin Zavaleta</title>
+<!-- Enlace al archivo CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+<link rel="stylesheet" href="../css/micss.css">
+</head>
+<body class="d-flex flex-column min-vh-100">
+<header class="bg-body-tertiary">
+<div class="container d-flex d-md-block">
+<div class="bg-body-tertiary text-center">
+<h4 class="pt-3 pb-1"><i class="bi bi-book"></i> Librería Vivanco Ordemar</h4>
+</div>
+<nav class="navbar navbar-expand-md bg-body-tertiary p-0 ms-auto">
+<div class="container-fluid justify-content-end">
+<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+<span class="navbar-toggler-icon"></span>
+</button>
+<div class="collapse navbar-collapse justify-content-md-center" id="navbarNav">
+<ul class="navbar-nav text-end">
+<li class="nav-item">
+<a class="nav-link" href="./01catalogo.html">Catalogo</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="./02cliente.html">Cliente</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="#">Nuevo Libro</a>
+</li>
+<li class="nav-item">
+<a class="nav-link" href="#">Crear Pedido</a>
+</li>
+</ul>
+</div>
+</div>
+</nav>
+</div>
+</header>
+<main class="flex-grow-1 container">
+<p>T04P02 - Ejercicio 01 - Orwin Zavaleta</p>
+<form class="row g-3 needs-validation" action="#" method="post" novalidate>
+<div class="col-md">
+<label for="buscador" class="form-label fs-5">Buscar por título, género o autor</label>
+<input type="text" class="form-control" id="buscador" name="buscador" required>
+<div class="invalid-feedback">Ingrese un título, género o autor valido</div>
+</div>
+<div class="col-md-1 align-self-end">
+<button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
+</div>
+</form>
+<div class="table-responsive">
+<table class="table table-striped align-middle">
+<thead>
+<tr>
+<th scope="col">ISBN</th>
+<th scope="col">TÍTULO</th>
+<th scope="col">AUTOR</th>
+<th scope="col">GÉNERO</th>
+<th scope="col">PRECIO</th>
+<th scope="col">TIPO</th>
+<th scope="col">STOCK</th>
+<th scope="col">VER DETALLE</th>
+</tr>
+</thead>
+<tbody id="bodyCatalogo">
+<tr>
+<td>Mark</td>
+<td>Otto</td>
+<td>@mdo</td>
+<td>@mdo</td>
+<td>@mdo</td>
+<td>@mdo</td>
+<td>@mdo</td>
+<td>
+<button class="btn btn-warning" type="button" data-bs-toggle="modal" data-bs-target="#detalle"><i class="bi bi-eye-fill"></i></button>
+</td>
+</tr>
+<tr>
+<td>Jacob</td>
+<td>Thornton</td>
+<td>@fat</td>
+</tr>
+<tr>
+<td>John</td>
+<td>Doe</td>
+<td>@social</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="detalle" tabindex="-1" aria-labelledby="detalleLabel" aria-hidden="true">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header">
+<h1 class="modal-title fs-5" id="detalleLabel">Modal title</h1>
+<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<div class="modal-body">...</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+</div>
+</div>
+</div>
+</div></main>
+<footer class="bg-body-tertiary mt-auto">
+<div class="container text-center p-4">&copy; 2025 Orwin Zavaleta</div>
+</footer>
+<!-- <button type="button" id="btn-comprar">Iniciar Programa</button> -->
+<!-- <p id="output"></p> -->
+<!-- Enlace al archivo JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+<script src="../js/ejercicio01_util.js"></script>
+<script src="../js/ejercicio01_leer_datos.js"></script>
+<script src="../js/ejercicio01_libro.js"></script>
+<script src="../js/ejercicio01_libros.js"></script>
+<script src="../js/ejercicio01_autor.js"></script>
+<script src="../js/ejercicio01_autores.js"></script>
+<script src="../js/ejercicio01_tipoEnvio.js"></script>
+<script src="../js/ejercicio01_tiposEnvios.js"></script>
+<script src="../js/ejercicio01_pedido.js"></script>
+<script src="../js/ejercicio01_pedidos.js"></script>
+<script src="../js/ejercicio01_cliente.js"></script>
+<script src="../js/ejercicio01_clientes.js"></script>
+<script src="../js/ejercicio01_tienda.js"></script>
+<script src="../js/ejercicio01_principal.js"></script>
+</body>
+</html>
