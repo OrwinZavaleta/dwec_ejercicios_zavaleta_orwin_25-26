@@ -1,6 +1,8 @@
 console.log("T04P02 - Ejercicio 01 - Principal");
 
+// ==========================================
 // ====== VALIDACION DE LOS FORMULARIO ======
+// ==========================================
 (() => {
     'use strict'
 
@@ -18,37 +20,46 @@ console.log("T04P02 - Ejercicio 01 - Principal");
     })
 })()
 
+// ==========================================
 // ====== ASIGNACION DE LOS EVENTOS ======
+// ==========================================
 document.addEventListener("DOMContentLoaded", () => {
     const currentUrl = location.pathname;
     const miTienda = main();
 
     if (currentUrl.search("01catalogo") !== -1) {
-        //==== Catalogo =====
+        // ==========================
+        // ==== Catalogo =====
+        // ==========================
         document.querySelectorAll('[data-bs-toggle="modal"]').forEach(modal => {
             modal.addEventListener("click", () => actualizarDatosModal(document.querySelector(".modal"), modal.querySelector("p").textContent, miTienda));
         });
         document.querySelector("#filterForm").addEventListener("submit", (e) => cargarActualizarLibros(miTienda, document.querySelector("#bodyCatalogo"), miTienda.lector.leerCadena(this, "buscador"), e));
     } else if (currentUrl.search("02cliente") !== -1) {
-        //==== Cliente =====
+        // ==========================
+        // ==== Cliente =====
+        // ==========================
         document.querySelectorAll(".btn-detalle").forEach(detalle => {
             detalle.addEventListener("click", () => {
                 document.querySelector("#detalleCard").classList.toggle("d-none");
             });
         });
     } else if (currentUrl.search("03nuevoLibro") !== -1) {
-        //==== Nuevo Libro =====
+        // ==========================
+        // ==== Nuevo Libro =====
+        // ==========================
     } else if (currentUrl.search("04crearPedido") !== -1) {
         //==== Crear un pedido =====
     } else {
-        //==== Web no existente =====
+        // ==========================
+        // ==== Web no existente =====
+        // ==========================
     }
-
-    // console.log(currentUrl);
-
 });
 
+// ==========================================
 // ====== FUNCION QUE CARGA LA APLICACION ======
+// ==========================================
 function main() {
     // try {
     const miTienda = Tienda.gerInstancia("El fede");
@@ -76,9 +87,9 @@ function cargarActualizarLibros(tienda, bodyTable, query = "", e = null) {
     query = query.trim().toLocaleLowerCase();
 
     if (query) {
-        librosFiltrados = libros.filter(libro => libro.titulo.toLowerCase().includes(query) || 
-                                                libro.genero.toLowerCase().includes(query) || 
-                                                (libro.autores.filter(autor => autor.nombre.toLowerCase().includes(query)).length != 0));
+        librosFiltrados = libros.filter(libro => libro.titulo.toLowerCase().includes(query) ||
+            libro.genero.toLowerCase().includes(query) ||
+            (libro.autores.filter(autor => autor.nombre.toLowerCase().includes(query)).length != 0));
     }
 
     librosFiltrados.forEach(libro => {
