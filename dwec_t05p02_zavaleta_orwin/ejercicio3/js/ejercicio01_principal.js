@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll('[data-bs-toggle="modal"]').forEach(modal => {
             modal.addEventListener("click", () => actualizarDatosModal(document.querySelector(".modal"), modal.querySelector("p").textContent, miTienda));
         });
-        document.querySelector("#filterForm").addEventListener("submit", (e) => cargarActualizarLibros(miTienda, document.querySelector("#bodyCatalogo"), this.buscador.value, e));
+        document.querySelector("#filterForm").addEventListener("submit", (e) => cargarActualizarLibros(miTienda, document.querySelector("#bodyCatalogo"), miTienda.lector.leerCadena(this, "buscador"), e));
     } else if (currentUrl.search("02cliente") !== -1) {
         //==== Cliente =====
         document.querySelectorAll(".btn-detalle").forEach(detalle => {
@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
         //==== Web no existente =====
     }
 
-    console.log(currentUrl);
+    // console.log(currentUrl);
 
 });
 
@@ -76,7 +76,9 @@ function cargarActualizarLibros(tienda, bodyTable, query = "", e = null) {
     query = query.trim().toLocaleLowerCase();
 
     if (query) {
-        librosFiltrados = libros.filter(libro => libro.titulo.toLowerCase().includes(query) || libro.genero.toLowerCase().includes(query) || (libro.autores.filter(autor => autor.nombre.toLowerCase().includes(query)).length != 0));
+        librosFiltrados = libros.filter(libro => libro.titulo.toLowerCase().includes(query) || 
+                                                libro.genero.toLowerCase().includes(query) || 
+                                                (libro.autores.filter(autor => autor.nombre.toLowerCase().includes(query)).length != 0));
     }
 
     librosFiltrados.forEach(libro => {
@@ -86,7 +88,7 @@ function cargarActualizarLibros(tienda, bodyTable, query = "", e = null) {
                     <td>${libro.titulo}</td>
                     <td>${libro.autores.map(au => au.nombre)}</td>
                     <td>${libro.genero}</td>
-                    <td>${libro.precio}</td>
+                    <td>${libro.precio} €</td>
                     <td>${(libro instanceof Ebook) ? "Ebook" : "Libro en Papel"}</td>
                     <td>${libro.stock ?? "Ilimitado (digital)"}</td>
                     <td>

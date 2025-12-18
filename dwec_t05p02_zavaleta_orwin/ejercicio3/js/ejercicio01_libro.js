@@ -71,7 +71,7 @@ class Libro {
         this.#autores = autores;
     }
 
-    get precio() { return this.#precio * this.descuento; }
+    get precio() { return this.#precio * (1 - this.descuento); }
     set precio(precio) {
         if (!Util.validarPrecio(precio)) {
             throw new Error("El precio ingresado no es valido.");
