@@ -59,6 +59,9 @@ document.addEventListener("DOMContentLoaded", () => {
         //==== Cliente =====
         //==================
         cargarActualizarClientes(miTienda, document.querySelector("#bodyClientes"));
+        document.querySelector("#cerrarCardDetalle").addEventListener("click", ()=>{
+            document.querySelector("#detalleCard").classList.add("d-none")
+        });
         // document.querySelector("#agregarClienteForm").addEventListener("submit", function (e) { agregarCliente(this, miTienda, e) });
     } else if (currentUrl.search("03nuevoLibro") !== -1) {
         //======================
@@ -91,7 +94,6 @@ function main() {
 }
 
 function cargarActualizarLibros(tienda, bodyTable, query = "", e = null) {
-
     if (e) {
         e.preventDefault();
         e.stopPropagation();
@@ -132,7 +134,7 @@ function cargarActualizarClientes(tienda, bodyTable) {
 
     const clientes = tienda.mostrarClientes();
 
-    clientes.forEach(cliente => {
+    clientes.toReversed().forEach(cliente => {
         bodyTable.innerHTML += `
                 <tr>
                     <td>${cliente.dni}</td>
@@ -147,27 +149,24 @@ function cargarActualizarClientes(tienda, bodyTable) {
 
     // Darle el listener a los botones para que abran la ventana de informacion lateral
     document.querySelectorAll(".btn-detalle").forEach(detalle => {
-        detalle.addEventListener("click", mostrarDetalle);
+        detalle.addEventListener("click", () => mostrarDetalle(detalle.querySelector("p").textContent, tienda));
     });
 }
 
-function mostrarDetalle() {
-    document.querySelector("#detalleCard").classList.toggle("d-none");
-    
+function mostrarDetalle(dni, miTienda) {
+    const cartDetalle = document.querySelector("#detalleCard");
+    cartDetalle.classList.remove("d-none");
+    const cliente = miTienda.pedirClientePorDni(Number(dni));
+
+    cartDetalle.querySelector(".card-title").textContent = cliente.nombreCompleto
+    cartDetalle.querySelector(".card-text").innerHTML = "DNI: "+cliente.dni + "<br>" +"Direccion: "+ cliente.direccion;
 }
 
 function agregarCliente(form, miTienda) {
-
-    // console.log(form.dni.value);
-    // console.log(form.nombreCompleto.value);
-    // console.log(form.direccion.value);
-
     const cliente = new Cliente(Number(form.dni.value), form.nombreCompleto.value, form.direccion.value);
-
 
     try {
         miTienda.agregarCliente(cliente);
-        console.error("Paso");
     } catch (error) {
         console.error(error);
     }
@@ -212,20 +211,6 @@ function realizarMiValidacion(form, miTienda) {
         //==== Web no existente =====
         //===========================
     }
-
-    // const passwordInput = form.querySelector("#password");
-    // const repasswordInput = form.querySelector("#repassword");
-
-    // if (!passwordInput || !repasswordInput) {
-    //     throw new Error("Campos de contraseña no encontrados");
-    // }
-
-    // const contrasenasValidas = mismaPwd(passwordInput,
-    //     repasswordInput);
-    // //Lo hacemos así porque luego vamos a añadir más validaciones.
-    // esValido = contrasenasValidas && esValido;
-
-    // ... otras validaciones ...
 
     return esValido;
 }

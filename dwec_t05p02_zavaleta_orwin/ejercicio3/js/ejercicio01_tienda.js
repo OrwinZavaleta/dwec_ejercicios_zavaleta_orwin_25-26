@@ -343,4 +343,8 @@ class Tienda {
 
         this.clientes.insertarClientes([cliente]);
     }
+
+    pedirClientePorDni(dni){
+        return this.clientes.buscarClientePorDNI(dni);
+    }
 }
