@@ -1,7 +1,7 @@
 extends layout.pug
 
 block content
-    <form class="row g-3 needs-validation mb-3" action="#" method="post" novalidate>
+    <form class="row g-3 needs-validation mb-3" id="agregarClienteForm" action="#" method="post" novalidate>
         <div class="col-md">
             <label for="dni" class="form-label fs-5">DNI</label>
             //- <input type="text" class="form-control" id="dni" name="dni" pattern="^[XYZ]?\d{7,8}[A-Z]$" maxlength="9" required>
@@ -11,8 +11,8 @@ block content
             </div>
         </div>
         <div class="col-md">
-            <label for="nombre" class="form-label fs-5">Nombre</label>
-            <input type="text" class="form-control" id="nombre" name="nombre" minlength="3" required>
+            <label for="nombreCompleto" class="form-label fs-5">Nombre Completo</label>
+            <input type="text" class="form-control" id="nombreCompleto" name="nombreCompleto" minlength="3" required>
             <div class="invalid-feedback">
                 | Ingrese un Nombre válido
             </div>

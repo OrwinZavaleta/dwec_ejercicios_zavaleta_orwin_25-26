@@ -91,10 +91,10 @@ class Tienda {
         autoresPrueba[3].insertarLibro(librosPruebas[3]);
 
         const clientesPrueba = [
-            new Cliente("1", "Juan Guillermo", "Av. los alamos"),
-            new Cliente("2", "Juan Rulfo", "Av. madrid"),
-            new Cliente("3", "Paco Jimenez", "Av. los reyes"),
-            new Cliente("4", "Rocio Gutierrez", "Av. los alamos")
+            new Cliente(1, "Juan Guillermo", "Av. los alamos"),
+            new Cliente(2, "Juan Rulfo", "Av. madrid"),
+            new Cliente(3, "Paco Jimenez", "Av. los reyes"),
+            new Cliente(4, "Rocio Gutierrez", "Av. los alamos")
         ];
 
         this.clientes.insertarClientes(clientesPrueba);
@@ -332,7 +332,15 @@ class Tienda {
         return this.libros.obtenerCatalogo();
     }
 
-    mostrarClientes(){
+    mostrarClientes() {
         return this.clientes.obtenerClientes();
+    }
+
+    agregarCliente(cliente) {
+        if (this.clientes.existeClientePorDNI(cliente.dni)) {
+            throw new Error("Un cliente con ese dni ya existe");
+        };
+
+        this.clientes.insertarClientes([cliente]);
     }
 }

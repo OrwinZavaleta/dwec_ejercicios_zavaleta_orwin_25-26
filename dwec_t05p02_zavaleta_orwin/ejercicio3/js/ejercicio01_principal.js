@@ -1,32 +1,49 @@
 console.log("T04P02 - Ejercicio 01 - Principal");
 
-// ==========================================
-// ====== VALIDACION DE LOS FORMULARIO ======
-// ==========================================
-(() => {
-    'use strict'
-    const forms = document.querySelectorAll('.needs-validation')
-    Array.from(forms).forEach(form => {
-        form.addEventListener("submit", function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-
-            let esValido = realizarMiValidacion(form);
-
-            if (form.checkValidity() && esValido) {
-                form.submit();
-            }
-            form.classList.add("was-validated");
-        }, false);
-    })
-})()
-
 // =======================================
 // ====== ASIGNACION DE LOS EVENTOS ======
 // =======================================
 document.addEventListener("DOMContentLoaded", () => {
     const currentUrl = location.pathname;
     const miTienda = main();
+
+    // ==========================================
+    // ====== VALIDACION DE LOS FORMULARIO ======
+    // ==========================================
+    (() => {
+        'use strict'
+        const forms = document.querySelectorAll('.needs-validation')
+        Array.from(forms).forEach(form => {
+            form.addEventListener("submit", function (event) {
+                event.preventDefault();
+                event.stopPropagation();
+
+                let esValido = realizarMiValidacion(form, miTienda);
+
+                if (form.checkValidity() && esValido) {
+                    // form.submit();
+                    console.log("Es valido");
+
+                    //===================================================
+                    //==== Funciones que necesitan de la validacion =====
+                    //===================================================
+                    if (currentUrl.search("02cliente") !== -1) {
+                        //==================
+                        //==== Cliente =====
+                        //==================
+                        agregarCliente(form, miTienda);
+                        cargarActualizarClientes(miTienda, document.querySelector("#bodyClientes"));
+                    }
+
+                    form.reset();
+                    form.classList.remove("was-validated");
+                } else {
+                    console.log("NO ES valido");
+                    form.classList.add("was-validated");
+                }
+            }, false);
+        })
+    })();
 
     if (currentUrl.search("01catalogo") !== -1) {
         //===================
@@ -42,11 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
         //==== Cliente =====
         //==================
         cargarActualizarClientes(miTienda, document.querySelector("#bodyClientes"));
-        document.querySelectorAll(".btn-detalle").forEach(detalle => {
-            detalle.addEventListener("click", () => {
-                document.querySelector("#detalleCard").classList.toggle("d-none");
-            });
-        });
+        // document.querySelector("#agregarClienteForm").addEventListener("submit", function (e) { agregarCliente(this, miTienda, e) });
     } else if (currentUrl.search("03nuevoLibro") !== -1) {
         //======================
         //==== Nuevo Libro =====
@@ -64,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // =============================================
 // ====== FUNCION QUE CARGA LA APLICACION ======
-// =============================================f0ced605118c4161921be6b6ee
+// =============================================
 function main() {
     // try {
     const miTienda = Tienda.gerInstancia("Vivanco Ordemar");
@@ -131,6 +144,33 @@ function cargarActualizarClientes(tienda, bodyTable) {
                 </tr>
         `;
     });
+
+    // Darle el listener a los botones para que abran la ventana de informacion lateral
+    document.querySelectorAll(".btn-detalle").forEach(detalle => {
+        detalle.addEventListener("click", mostrarDetalle);
+    });
+}
+
+function mostrarDetalle() {
+    document.querySelector("#detalleCard").classList.toggle("d-none");
+    
+}
+
+function agregarCliente(form, miTienda) {
+
+    // console.log(form.dni.value);
+    // console.log(form.nombreCompleto.value);
+    // console.log(form.direccion.value);
+
+    const cliente = new Cliente(Number(form.dni.value), form.nombreCompleto.value, form.direccion.value);
+
+
+    try {
+        miTienda.agregarCliente(cliente);
+        console.error("Paso");
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 function actualizarDatosModal(modal, isbn, miTienda) {
@@ -139,7 +179,7 @@ function actualizarDatosModal(modal, isbn, miTienda) {
     modal.querySelector(".modal-body").innerHTML = libro.mostrarDatosLibro();
 }
 
-function realizarMiValidacion(form) {
+function realizarMiValidacion(form, miTienda) {
     let esValido = true;
     const currentUrl = location.pathname;
 
@@ -151,11 +191,13 @@ function realizarMiValidacion(form) {
         //==================
         //==== Cliente =====
         //==================
-
-        // TODO: realizar las validaciones de dni
-        // dni tiene que ser unico
-        
-        
+        if (miTienda.clientes.existeClientePorDNI(Number(form.dni.value))) {
+            esValido = false;
+            form.dni.setCustomValidity("El dni ya existe"); // Para marcar como invalido un campo usando bootstrap
+        } else {
+            esValido = true;
+            form.dni.setCustomValidity("");
+        }
 
     } else if (currentUrl.search("03nuevoLibro") !== -1) {
         //======================
