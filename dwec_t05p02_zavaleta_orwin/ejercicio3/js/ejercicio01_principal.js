@@ -36,6 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll('[data-bs-toggle="modal"]').forEach(modal => {
             modal.addEventListener("click", () => actualizarDatosModal(document.querySelector(".modal"), modal.querySelector("p").textContent, miTienda));
         });
+        document.querySelector("#filterForm").addEventListener("submit", (e) => cargarActualizarLibros(miTienda, document.querySelector("#bodyCatalogo"), miTienda.lector.leerCadena(this, "buscador"), e));
     } else if (currentUrl.search("02cliente") !== -1) {
         //==================
         //==== Cliente =====
@@ -59,14 +60,11 @@ document.addEventListener("DOMContentLoaded", () => {
         //==== Web no existente =====
         //===========================
     }
-
-    console.log(currentUrl);
-
 });
 
 // =============================================
 // ====== FUNCION QUE CARGA LA APLICACION ======
-// =============================================
+// =============================================f0ced605118c4161921be6b6ee
 function main() {
     // try {
     const miTienda = Tienda.gerInstancia("Vivanco Ordemar");
@@ -79,23 +77,33 @@ function main() {
     return miTienda;
 }
 
-// =======================
-// ====== FUNCIONES ======
-// =======================
+function cargarActualizarLibros(tienda, bodyTable, query = "", e = null) {
 
-function cargarActualizarLibros(tienda, bodyTable) {
+    if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+    }
+
     bodyTable.innerHTML = "";
 
     const libros = tienda.mostrarCatalogoLibrosDisponibles();
+    let librosFiltrados = libros;
+    query = query.trim().toLocaleLowerCase();
 
-    libros.forEach(libro => {
+    if (query) {
+        librosFiltrados = libros.filter(libro => libro.titulo.toLowerCase().includes(query) ||
+            libro.genero.toLowerCase().includes(query) ||
+            (libro.autores.filter(autor => autor.nombre.toLowerCase().includes(query)).length != 0));
+    }
+
+    librosFiltrados.forEach(libro => {
         bodyTable.innerHTML += `
                 <tr>
                     <td>${libro.isbn}</td>
                     <td>${libro.titulo}</td>
                     <td>${libro.autores.map(au => au.nombre)}</td>
                     <td>${libro.genero}</td>
-                    <td>${libro.precio}</td>
+                    <td>${libro.precio} €</td>
                     <td>${(libro instanceof Ebook) ? "Ebook" : "Libro en Papel"}</td>
                     <td>${libro.stock ?? "Ilimitado (digital)"}</td>
                     <td>
