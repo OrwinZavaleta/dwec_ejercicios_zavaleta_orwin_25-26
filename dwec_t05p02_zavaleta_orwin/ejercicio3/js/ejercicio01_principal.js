@@ -164,10 +164,7 @@ function mostrarDetalle(dni, miTienda) {
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">${pedido.id + " - " + pedido.fecha}</h5>
-                    ${[...pedido.librosPedido].map(isbn => {
-                        const libro = miTienda.pedirLibroPorISBN(isbn[0]);
-                        return `<p class="card-text"> • ${libro.titulo}</p>`;
-                    }).join('')}
+                    ${pedido.obtenerLibrosPedidos(miTienda.libros).map(libro => `<p class="card-text"> • ${libro.titulo}</p>`).join('')}
                 </div>
             </div>`;
     })
@@ -191,6 +188,9 @@ function actualizarDatosModal(modal, isbn, miTienda) {
     modal.querySelector(".modal-body").innerHTML = libro.mostrarDatosLibro();
 }
 
+//========================
+//==== Mi Validacion =====
+//========================
 function realizarMiValidacion(form, miTienda) {
     let esValido = true;
     const currentUrl = location.pathname;

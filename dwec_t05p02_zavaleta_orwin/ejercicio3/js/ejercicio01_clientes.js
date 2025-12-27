@@ -30,7 +30,9 @@ class Clientes {
     borrarClientePorDNI(dniAborrar) {
         let indice = this.listadoClientes.findIndex(cliente => cliente.dni === dniAborrar);
 
-        this.listadoClientes.splice(indice, 1);
+        if (indice !== -1) {
+            this.listadoClientes.splice(indice, 1);
+        }
     }
 
     // No se pueden modificar los clientes

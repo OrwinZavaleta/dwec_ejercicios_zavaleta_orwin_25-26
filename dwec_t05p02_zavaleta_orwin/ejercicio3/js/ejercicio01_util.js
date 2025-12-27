@@ -47,7 +47,7 @@ class Util {
             const fecha = new Date(anyo, mes - 1, dia);
 
 
-            if (fecha.getMonth() === mes - 1 && fecha.getFullYear === anyo && fecha.getDate() === dia) {
+            if (fecha.getMonth() === mes - 1 && fecha.getFullYear() === anyo && fecha.getDate() === dia) {
                 valido = true;
             }
         }

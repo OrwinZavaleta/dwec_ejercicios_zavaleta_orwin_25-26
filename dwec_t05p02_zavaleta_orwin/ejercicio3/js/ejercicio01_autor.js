@@ -1,7 +1,7 @@
 console.log("T04P02 - Ejercicio 01 - Autor");
 
 class Autor {
-    static ultimoId;
+    static ultimoId=0;
 
     #id;
     #nombre;

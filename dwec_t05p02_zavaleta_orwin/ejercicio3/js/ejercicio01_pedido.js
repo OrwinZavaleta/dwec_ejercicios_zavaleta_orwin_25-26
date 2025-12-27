@@ -194,7 +194,7 @@ class Pedido { // TODO: solo un cliente puede hacer un pedido, una persona que n
     obtenerLibrosPedidos(catalogoLibro) {
         // return catalogoLibro.filter(libro => this.librosPedido.keys().some(isbn => isbn === libro.isbn));
         const aux = [];
-        this.librosPedido.forEach(isbn, cant => {
+        this.librosPedido.forEach((cant, isbn )=> {
             const libroEncontrado = catalogoLibro.buscarLibroPorIsbn(isbn);
             if (libroEncontrado) {
                 aux.push(libroEncontrado);

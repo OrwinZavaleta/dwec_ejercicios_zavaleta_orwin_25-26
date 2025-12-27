@@ -164,7 +164,7 @@ class Ebook extends Libro {
                 continue;
             }
 
-            if (this[key] !== undefined) {
+            if (this[key] !== undefined) { // TODO: revisar si funcionaria con los campos que no son suyos
                 this[key] = value;
             } else {
                 throw new Error(`Clave ${key} no es valida`);
