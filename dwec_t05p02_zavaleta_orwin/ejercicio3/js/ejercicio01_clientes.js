@@ -34,4 +34,8 @@ class Clientes {
     }
 
     // No se pueden modificar los clientes
+
+    obtenerClientes(){
+        return this.listadoClientes;
+    }
 }

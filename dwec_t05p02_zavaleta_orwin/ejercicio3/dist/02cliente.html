@@ -45,7 +45,7 @@
 <form class="row g-3 needs-validation mb-3" action="#" method="post" novalidate>
 <div class="col-md">
 <label for="dni" class="form-label fs-5">DNI</label>
-<input type="text" class="form-control" id="dni" name="dni" pattern="^[XYZ]?\d{7,8}[A-Z]$" maxlength="9" required>
+<input type="number" class="form-control" id="dni" name="dni" min="1" required>
 <div class="invalid-feedback">Ingrese un DNI válido</div>
 </div>
 <div class="col-md">
@@ -73,7 +73,7 @@
 <th scope="col">VER PEDIDO</th>
 </tr>
 </thead>
-<tbody>
+<tbody id="bodyClientes">
 <tr>
 <td>Mark</td>
 <td>Otto</td>
@@ -103,7 +103,6 @@
 </div>
 <div class="col-md-3 col-12 mt-3 d-none" id="detalleCard"> 
 <div class="card">
-<img src="..." class="card-img-top" alt="...">
 <div class="card-body">
 <h5 class="card-title">Card title</h5>
 <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>

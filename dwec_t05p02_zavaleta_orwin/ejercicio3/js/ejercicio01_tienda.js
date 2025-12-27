@@ -90,11 +90,14 @@ class Tienda {
         autoresPrueba[2].insertarLibro(librosPruebas[2]);
         autoresPrueba[3].insertarLibro(librosPruebas[3]);
 
+        const clientesPrueba = [
+            new Cliente("1", "Juan Guillermo", "Av. los alamos"),
+            new Cliente("2", "Juan Rulfo", "Av. madrid"),
+            new Cliente("3", "Paco Jimenez", "Av. los reyes"),
+            new Cliente("4", "Rocio Gutierrez", "Av. los alamos")
+        ];
 
-        // this.libros.listadoLibros[0].modificarLibro(new Map([
-        //     ["titulo", "juanma"],
-        //     ["genero", "Ensayo"]
-        // ]));
+        this.clientes.insertarClientes(clientesPrueba);
     }
 
     iniciar() {
@@ -327,5 +330,9 @@ class Tienda {
     mostrarCatalogoLibrosDisponibles() {
         // return this.libros.obtenerCadenaLibrosMenu();
         return this.libros.obtenerCatalogo();
+    }
+
+    mostrarClientes(){
+        return this.clientes.obtenerClientes();
     }
 }
