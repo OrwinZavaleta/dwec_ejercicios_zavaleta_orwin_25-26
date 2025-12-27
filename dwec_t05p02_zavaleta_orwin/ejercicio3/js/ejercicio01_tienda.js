@@ -98,6 +98,27 @@ class Tienda {
         ];
 
         this.clientes.insertarClientes(clientesPrueba);
+
+
+        const pedidosPrueba = [
+            new Pedido(clientesPrueba[0]),
+            new Pedido(clientesPrueba[1]),
+            new Pedido(clientesPrueba[2]),
+            new Pedido(clientesPrueba[3]),
+            new Pedido(clientesPrueba[0]),
+        ];
+
+        for (let i = 0; i < pedidosPrueba.length - 1; i++) {
+            clientesPrueba[i].agregarPedido(pedidosPrueba[i]);
+        }
+        clientesPrueba[0].agregarPedido(pedidosPrueba[4]);
+
+        pedidosPrueba.forEach(pedido => {
+            pedido.insertarLibro(librosPruebas[(Math.floor(Math.random() * 5))], (Math.floor(Math.random() * 5 + 1)));
+            pedido.insertarLibro(librosPruebas[(Math.floor(Math.random() * 5))], (Math.floor(Math.random() * 5 + 1)));
+        })
+
+        this.pedidos.insertarPedido(pedidosPrueba);
     }
 
     iniciar() {
@@ -344,7 +365,7 @@ class Tienda {
         this.clientes.insertarClientes([cliente]);
     }
 
-    pedirClientePorDni(dni){
+    pedirClientePorDni(dni) {
         return this.clientes.buscarClientePorDNI(dni);
     }
 }

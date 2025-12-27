@@ -59,9 +59,9 @@ document.addEventListener("DOMContentLoaded", () => {
         //==== Cliente =====
         //==================
         cargarActualizarClientes(miTienda, document.querySelector("#bodyClientes"));
-        document.querySelector("#cerrarCardDetalle").addEventListener("click", ()=>{
-            document.querySelector("#detalleCard").classList.add("d-none")
-        });
+        // document.querySelector("#cerrarCardDetalle").addEventListener("click", () => {
+        //     document.querySelector("#detalleCard").classList.add("d-none")
+        // });
         // document.querySelector("#agregarClienteForm").addEventListener("submit", function (e) { agregarCliente(this, miTienda, e) });
     } else if (currentUrl.search("03nuevoLibro") !== -1) {
         //======================
@@ -156,10 +156,23 @@ function cargarActualizarClientes(tienda, bodyTable) {
 function mostrarDetalle(dni, miTienda) {
     const cartDetalle = document.querySelector("#detalleCard");
     cartDetalle.classList.remove("d-none");
+    cartDetalle.innerHTML = "";
     const cliente = miTienda.pedirClientePorDni(Number(dni));
 
-    cartDetalle.querySelector(".card-title").textContent = cliente.nombreCompleto
-    cartDetalle.querySelector(".card-text").innerHTML = "DNI: "+cliente.dni + "<br>" +"Direccion: "+ cliente.direccion;
+    cliente.mostrarPedidosCliente().forEach(pedido => {
+        cartDetalle.innerHTML += `
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">${pedido.id + " - " + pedido.fecha}</h5>
+                    ${[...pedido.librosPedido].map(isbn => {
+                        const libro = miTienda.pedirLibroPorISBN(isbn[0]);
+                        return `<p class="card-text"> • ${libro.titulo}</p>`;
+                    }).join('')}
+                </div>
+            </div>`;
+    })
+    // cartDetalle.querySelector(".card-title").textContent = cliente.dni + " - " +cliente.nombreCompleto
+    // cartDetalle.querySelector(".card-text").innerHTML = cliente.mostrarPedidosCliente();
 }
 
 function agregarCliente(form, miTienda) {

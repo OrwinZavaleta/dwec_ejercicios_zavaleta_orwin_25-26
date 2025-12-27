@@ -58,4 +58,16 @@ class Cliente {
     static validarCliente(cliente) {
         return typeof cliente === "object" && cliente instanceof Cliente;
     }
+
+    mostrarPedidosCliente() {
+        return this.listaPedidosHechos;
+    }
+
+    agregarPedido(pedido) {
+        if (!Pedido.validarPedido(pedido)) {
+            throw new Error("El pedido enviado no es un pedido valido");
+        }
+
+        this.listaPedidosHechos.push(pedido);
+    }
 }

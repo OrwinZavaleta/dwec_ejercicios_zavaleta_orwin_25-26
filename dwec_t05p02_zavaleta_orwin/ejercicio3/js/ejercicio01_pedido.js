@@ -19,7 +19,7 @@ class Pedido { // TODO: solo un cliente puede hacer un pedido, una persona que n
         this.cliente = cliente;
         this.librosPedido = new Map();
         this.id = Pedido.obtenerSiguienteId()
-        this.fecha = new Date();
+        this.#fecha = new Date();
         this.precioTotalSinEnvioSinIVA = 0;
         this.precioTotalConEnvioSinIVA = 0;
         this.precioTotalConEnvioConIVA = 0;
