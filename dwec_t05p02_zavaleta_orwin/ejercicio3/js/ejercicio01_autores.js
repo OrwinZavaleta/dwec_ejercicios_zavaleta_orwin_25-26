@@ -49,4 +49,8 @@ class Autores {
         return listado;
     }
 
+    obtenerAutores(){
+        return this.listadoAutores;
+    }
+
 }

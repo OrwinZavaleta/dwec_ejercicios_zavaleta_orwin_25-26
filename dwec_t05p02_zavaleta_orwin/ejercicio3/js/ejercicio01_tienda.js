@@ -368,4 +368,8 @@ class Tienda {
     pedirClientePorDni(dni) {
         return this.clientes.buscarClientePorDNI(dni);
     }
+    
+    mostrarAutores(){
+        return this.autores.obtenerAutores();
+    }
 }

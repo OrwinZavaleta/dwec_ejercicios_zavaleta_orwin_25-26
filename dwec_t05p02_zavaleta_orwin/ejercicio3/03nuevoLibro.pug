@@ -1,0 +1,117 @@
+extends layout.pug
+
+block content
+    <form class="row g-3 needs-validation mb-3" id="agregarClienteForm" action="#" method="post" novalidate>
+        <div class="col-md-3 mb-3">
+            <label for="isbn" class="form-label fs-5">ISBN</label>
+            //- <input type="text" class="form-control" id="dni" name="dni" pattern="^[XYZ]?\d{7,8}[A-Z]$" maxlength="9" required>
+            <input type="number" class="form-control" id="isbn" name="isbn" min="1" required>
+            <div class="invalid-feedback">
+                | Ingrese un ISBN válido
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="titulo" class="form-label fs-5">Titulo</label>
+            <input type="text" class="form-control" id="titulo" name="titulo" minlength="3" required>
+            <div class="invalid-feedback">
+                | Ingrese un Titulo válido
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="genero" class="form-label fs-5">Genero</label>
+            <select class="form-select" id="genero" name="genero" required>
+                <option selected disabled value="">Choose...</option>
+            </select>
+            <div class="invalid-feedback">
+                | Ingrese un Genero Valido
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <label for="precio" class="form-label fs-5">Precio</label>
+            <input type="number" class="form-control" id="precio" name="precio" min="0.01" step="0.01" required>
+            <div class="invalid-feedback">
+                | Ingrese un precio válido
+            </div>
+        </div>
+
+        <div class="col-md-12 mb-3 row align-items-center">
+            <label class="form-label fs-5 col-md-1">
+                |Tipo:
+            </label>
+            <div class="form-check col-md-3">
+                <input class="form-check-input" type="radio" name="tipo" value="ebook" id="ebook">
+                <label class="form-check-label" for="ebook">
+                    |Ebook
+                </label>
+            </div>
+            <div class="form-check col-md-3">
+                <input class="form-check-input" type="radio" name="tipo" value="papel" id="papel">
+                <label class="form-check-label" for="papel">
+                    |Libro en papel
+                </label>
+            </div>
+        </div>
+
+        <div class="col-md-12 p-3 border border-terriary border-3 rounded mb-3 row d-none" id="ebookDetalles">
+            <div class="col-md-3 mb-3">
+                <label for="tamanoArchivo" class="form-label fs-5">Tamaño del archivo</label>
+                <input type="number" class="form-control" id="tamanoArchivo" name="tamanoArchivo" min="0.01" step="0.01" required>
+                <div class="invalid-feedback">
+                    | Ingrese un tamaño de archivo valido
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="formato" class="form-label fs-5">Formato</label>
+                <select class="form-select" id="formato" name="formato" required>
+                    <option selected disabled value="">Choose...</option>
+                </select>
+                <div class="invalid-feedback">
+                    | Ingrese un precio válido
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 p-3 border border-terriary border-3 rounded mb-3 row d-none" id="papelDetalles">
+            <div class="col-md-3 mb-3">
+                <label for="peso" class="form-label fs-5">Peso</label>
+                <input type="number" class="form-control" id="peso" name="peso" min="1" step="1" required>
+                <div class="invalid-feedback">
+                    | Ingrese un peso validas
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="dimensiones" class="form-label fs-5">Dimensiones (NNxNNxNN)</label>
+                <input type="text" class="form-control" id="dimensiones" name="dimensiones" pattern="^\d{1,2}x\d{1,2}x\d{1,2}$" required>
+                <div class="invalid-feedback">
+                    | Ingrese unas dimensiones validas
+                </div>
+            </div>
+            <div class="col-md-3 mb-3">
+                <label for="stock" class="form-label fs-5">Stock</label>
+                <input type="number" class="form-control" id="stock" name="stock" min="0" step="1" required>
+                <div class="invalid-feedback">
+                    | Ingrese un stock valido
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 border-end border-secondary mb-3 mt-0 px-3">
+            <label for="autor" class="form-label fs-5">Autor</label>
+            <select class="form-select" id="autor" name="autor" required multiple>
+                <option selected disabled value="">Choose...</option>
+            </select>
+            <div class="invalid-feedback">
+                | Seleccione autores validos
+            </div>
+        </div>
+        <div class="col-6 mb-3 mt-0 px-3">
+            <label for="nombreAutor" class="form-label fs-5">Nombre del Autor</label>
+            <input type="text" class="form-control" id="nombreAutor" name="nombreAutor" minlength="3">
+            <div class="invalid-feedback">
+                | Ingrese un nombre valido
+            </div>
+        </div>
+
+        <div class="col-md-12 align-self-end m-0">
+            <button class="btn btn-primary" type="submit">Insertar</button>
+        </div>
+    </form>

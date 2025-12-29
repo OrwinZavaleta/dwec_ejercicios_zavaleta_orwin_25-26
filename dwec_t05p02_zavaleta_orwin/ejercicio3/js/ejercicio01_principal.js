@@ -33,6 +33,12 @@ document.addEventListener("DOMContentLoaded", () => {
                         //==================
                         agregarCliente(form, miTienda);
                         cargarActualizarClientes(miTienda, document.querySelector("#bodyClientes"));
+                    }else if (currentUrl.search("03nuevoLibro") !== -1){
+                        //======================
+                        //==== Nuevo Libro =====
+                        //======================
+
+                        // TODO: crear el libro
                     }
 
                     form.reset();
@@ -67,6 +73,45 @@ document.addEventListener("DOMContentLoaded", () => {
         //======================
         //==== Nuevo Libro =====
         //======================
+        const selectGeneros = document.querySelector("#genero");
+        selectGeneros.innerHTML = "<option selected disabled value=''>Selecciona un genero</option>";
+        Libro.GENEROS_LITERARIOS.forEach(genero => {
+            selectGeneros.innerHTML += `<option value="${genero}">${genero}</option>`;
+        });
+
+        const tiposLibros = document.querySelectorAll("input[name='tipo']");
+        tiposLibros.forEach(tipo => tipo.addEventListener("change", (e) => {
+            const ebookDetalles = document.querySelector("#ebookDetalles");
+            const papelDetalles = document.querySelector("#papelDetalles");
+            if (e.target.value === "ebook") {
+                ebookDetalles.classList.remove("d-none");
+                papelDetalles.classList.add("d-none");
+
+                ebookDetalles.querySelectorAll("input").forEach(input => input.disabled = false);
+                ebookDetalles.querySelectorAll("select").forEach(select => select.disabled = false);
+                papelDetalles.querySelectorAll("input").forEach(input => input.disabled = true);
+
+            } else if (e.target.value === "papel") {
+                papelDetalles.classList.remove("d-none");
+                ebookDetalles.classList.add("d-none");
+
+                ebookDetalles.querySelectorAll("input").forEach(input => input.disabled = true);
+                ebookDetalles.querySelectorAll("select").forEach(select => select.disabled = true);
+                papelDetalles.querySelectorAll("input").forEach(input => input.disabled = false);
+            }
+        }));
+
+        const selectFormato = document.querySelector("#formato");
+        selectFormato.innerHTML = "<option selected disabled value=''>Selecciona un Formato</option>";
+        Ebook.FORMATOS.forEach(formato => {
+            selectFormato.innerHTML += `<option value="${formato}">${formato}</option>`;
+        })
+        const selectAutores = document.querySelector("#autor");
+        selectAutores.innerHTML = "<option selected disabled value=''>Selecciona un Autor</option>";
+        miTienda.mostrarAutores().sort((a,b)=>a.nombre.localeCompare(b.nombre)).forEach(autor => {
+            selectAutores.innerHTML += `<option value="${autor.id}">${autor.nombre}</option>`;
+        })
+
     } else if (currentUrl.search("04crearPedido") !== -1) {
         //==========================
         //==== Crear un pedido =====
@@ -204,17 +249,41 @@ function realizarMiValidacion(form, miTienda) {
         //==== Cliente =====
         //==================
         if (miTienda.clientes.existeClientePorDNI(Number(form.dni.value))) {
-            esValido = false;
+            esValido &= false;
             form.dni.setCustomValidity("El dni ya existe"); // Para marcar como invalido un campo usando bootstrap
         } else {
-            esValido = true;
+            esValido &= true;
             form.dni.setCustomValidity("");
         }
-
     } else if (currentUrl.search("03nuevoLibro") !== -1) {
         //======================
         //==== Nuevo Libro =====
         //======================
+
+        if (miTienda.libros.existeLibroPorIsbn(Number(form.isbn.value))) {
+            esValido &= false;
+            form.isbn.setCustomValidity("El isbn ya existe"); 
+        } else {
+            esValido &= true;
+            form.isbn.setCustomValidity("");
+        }
+
+        if (!Libro.validarGenero(form.genero.value)) {
+            esValido &= false;
+            form.genero.setCustomValidity("El genero ya existe"); 
+        } else {
+            esValido &= true;
+            form.genero.setCustomValidity("");
+        }
+
+        if (miTienda.autores.existeAutorPorNombre(form.nombreAutor.value)) {
+            esValido &= false;
+            form.nombreAutor.setCustomValidity("El autor ya existe"); 
+        } else {
+            esValido &= true;
+            form.nombreAutor.setCustomValidity("");
+        }
+
     } else if (currentUrl.search("04crearPedido") !== -1) {
         //==========================
         //==== Crear un pedido =====

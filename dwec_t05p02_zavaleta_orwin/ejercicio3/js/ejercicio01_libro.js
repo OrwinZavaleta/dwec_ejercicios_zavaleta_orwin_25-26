@@ -106,6 +106,10 @@ class Libro {
     static validarLibro(libro) {
         return typeof libro === "object" && libro instanceof Libro;
     }
+
+    static validarGenero(genero){
+        return Libro.GENEROS_LITERARIOS.has(genero);
+    }
 }
 
 
