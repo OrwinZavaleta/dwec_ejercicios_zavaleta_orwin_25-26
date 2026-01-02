@@ -2,6 +2,7 @@ console.log("T04P02 - Ejercicio 01 - Principal");
 
 //TODO: separar el codigo en funciones
 //TODO: usar las funciones de leerDatos
+//TODO: mudar todas las funciones necesarias a pedido y pedidos
 
 // =======================================
 // ====== ASIGNACION DE LOS EVENTOS ======
@@ -52,20 +53,30 @@ document.addEventListener("DOMContentLoaded", () => {
                             console.log(form.dni.value);
                             form.dni.disabled = true;
                             form.querySelector("#buscarCliente").disabled = true;
+                            document.querySelector("#deseleccionarCliente").disabled = false;
                             form.querySelector("#clienteSeleccionado").textContent = miTienda.pedirClientePorDni(Number(form.dni.value)).nombreCompleto;
 
+                            habilitarCamposPedido();
 
                         } else if (form.id === "buscarLibros") {
                             console.log(form.isbn.value);
                             form.isbn.disabled = true;
                             form.querySelector("#buscarLibro").disabled = true;
 
+                            const libroAux = miTienda.pedirLibroPorISBN(Number(form.isbn.value));
+
                             document.querySelector("#isbnLibroSeleccionado").value = form.isbn.value;
-                            document.querySelector("#libroSeleccionado").textContent = miTienda.pedirLibroPorISBN(Number(form.isbn.value)).titulo;
-                            document.querySelector("#cantidadLibros").disabled = false;
-                            document.querySelector("#deseleccionarLibro").disabled = false;
+                            if (libroAux instanceof Ebook) {
+                                document.querySelector("#cantidadLibros").value = 1;
+                                document.querySelector("#cantidadLibros").disabled = true;
+                                document.querySelector("#libroSeleccionado").textContent = libroAux.titulo + "(Ebook)";
+                            } else {
+                                document.querySelector("#cantidadLibros").disabled = false;
+                                document.querySelector("#libroSeleccionado").textContent = libroAux.titulo + "(Papel)";
+                            }
+                            document.querySelector("#agregarLibro").disabled = false;
                         } else if (form.id === "seleccionarLibros") {
-                            const librosEnPedido = JSON.parse(sessionStorage.getItem("librosPedidos")) ?? [];
+                            const librosEnPedido = optenerLibrosEnPedido()
                             librosEnPedido.push({ isbn: form.isbnLibroSeleccionado.value, cantidad: form.cantidadLibros.value });
                             sessionStorage.setItem("librosPedidos", JSON.stringify(librosEnPedido));
 
@@ -75,8 +86,12 @@ document.addEventListener("DOMContentLoaded", () => {
                             document.querySelector("#isbnLibroSeleccionado").value = "";
                             document.querySelector("#libroSeleccionado").textContent = "NNNNNN";
                             document.querySelector("#cantidadLibros").disabled = true;
-                            document.querySelector("#deseleccionarLibro").disabled = true;
+                            document.querySelector("#agregarLibro").disabled = true;
 
+                            cargarActualizarLibrosPedido(document.querySelector("#tbodyResumen"), document.querySelector("#precioFinalTotal"), miTienda);
+                        } else if (form.id === "seleccionarTipoEnvio") {
+                            document.querySelector("#tipoFinalEnvio").textContent = form.tipoEnvio.value;
+                            document.querySelector("#precioFinalEnvio").textContent = miTienda.pedirTipoEnvioPorNombre(form.tipoEnvio.value).precioSinIVA;
                         }
                     }
 
@@ -171,12 +186,9 @@ document.addEventListener("DOMContentLoaded", () => {
             tipoEnvio.innerHTML += `<option value="${tipo.nombre}">${tipo.nombre}</option>`;
         });
 
-        document.querySelector("#deseleccionarCliente").addEventListener("click", () => {
-            document.querySelector("#dni").disabled = false;
-            document.querySelector("#buscarCliente").disabled = false;
-            document.querySelector("#clienteSeleccionado").textContent = "NNNNNN";
-            //TODO: limpiar todo los formularios
-        });
+        document.querySelector("#deseleccionarCliente").addEventListener("click", reiniciarPedido);
+        document.querySelector("#cancelarPedido").addEventListener("click", reiniciarPedido);
+
 
     } else {
         //===========================
@@ -295,6 +307,88 @@ function actualizarDatosModal(modal, isbn, miTienda) {
     modal.querySelector(".modal-body").innerHTML = libro.mostrarDatosLibro();
 }
 
+function reiniciarPedido() {
+    document.querySelector("#dni").disabled = false;
+    document.querySelector("#buscarCliente").disabled = false;
+    document.querySelector("#clienteSeleccionado").textContent = "NNNNNN";
+    document.querySelector("#tipoFinalEnvio").textContent = "--";
+    document.querySelector("#precioFinalEnvio").textContent = "0";
+
+    const elementos1 = document.querySelector("#buscarLibros").elements;
+
+    for (let i = 0; i < elementos1.length; i++) {
+        elementos1[i].disabled = true;
+    }
+    const elementos2 = document.querySelector("#seleccionarTipoEnvio").elements;
+
+    for (let i = 0; i < elementos2.length; i++) {
+        elementos2[i].disabled = true;
+    }
+
+    sessionStorage.setItem("librosPedidos", "[]");
+
+    cargarActualizarLibrosPedido(document.querySelector("#tbodyResumen"), document.querySelector("#precioFinalTotal"));
+}
+
+function habilitarCamposPedido() {
+    const elementos1 = document.querySelector("#buscarLibros").elements;
+
+    for (let i = 0; i < elementos1.length; i++) {
+        elementos1[i].disabled = false;
+    }
+    const elementos2 = document.querySelector("#seleccionarTipoEnvio").elements;
+
+    for (let i = 0; i < elementos2.length; i++) {
+        elementos2[i].disabled = false;
+    }
+}
+
+
+function cargarActualizarLibrosPedido(tbody, totalSpan, miTienda = null) {
+    const librosEnPedido = optenerLibrosEnPedido()
+    let acumPrecioTotal = 0;
+    tbody.innerHTML = "";
+    if (miTienda) {
+        librosEnPedido.forEach(libroPed => {
+            const libro = miTienda.pedirLibroPorISBN(Number(libroPed.isbn));
+            acumPrecioTotal += libroPed.cantidad * libro.precio;
+            tbody.innerHTML += `
+                <tr>
+                    <th scope="row">${libroPed.isbn}</th>
+                    <td>${libro.titulo}</td>
+                    <td>${libroPed.cantidad}</td>
+                    <td>${libro.precio}</td>
+                    <td>${(libroPed.cantidad * libro.precio)}</td>
+                </tr>
+            `;
+        });
+    }
+    actualizarTotal(totalSpan, acumPrecioTotal);
+}
+
+function actualizarTotal(totalSpan, total) {
+    totalSpan.textContent = total;
+}
+
+function comprobarSiTodosLibrosEbook(miTienda) {
+    const librosEnPedido = optenerLibrosEnPedido()
+
+    let todosEbook = true;
+
+    for (let i = 0; i < librosEnPedido.length; i++) {
+        if (miTienda.pedirLibroPorISBN(Number(librosEnPedido[i].isbn)) instanceof LibroPapel) {
+            todosEbook = false;
+            break;
+        }
+    }
+
+    return todosEbook;
+}
+
+function optenerLibrosEnPedido() {
+    return JSON.parse(sessionStorage.getItem("librosPedidos")) ?? [];
+}
+
 //========================
 //==== Mi Validacion =====
 //========================
@@ -361,6 +455,21 @@ function realizarMiValidacion(form, miTienda) {
             } else {
                 esValido &= true;
                 form.isbn.setCustomValidity("");
+            }
+        } else if (form.id === "seleccionarTipoEnvio") {
+            if (!miTienda.tiposEnvio.existeTipoPorNombre(form.tipoEnvio.value)) {
+                esValido &= false;
+                form.tipoEnvio.setCustomValidity("El tipo de envio seleccionado no existe");
+            } else {
+                esValido &= true;
+                form.tipoEnvio.setCustomValidity("");
+            }
+            if (comprobarSiTodosLibrosEbook(miTienda)) {
+                esValido &= false;
+                form.tipoEnvio.setCustomValidity("Todos son ebooks");
+            } else {
+                esValido &= true;
+                form.tipoEnvio.setCustomValidity("");
             }
         }
 

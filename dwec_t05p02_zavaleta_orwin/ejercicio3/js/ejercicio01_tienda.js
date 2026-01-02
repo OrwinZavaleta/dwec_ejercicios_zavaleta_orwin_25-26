@@ -385,4 +385,8 @@ class Tienda {
     mostrarTiposEnvios(){
         return this.tiposEnvio.obtenerTipos();
     }
+
+    pedirTipoEnvioPorNombre(nombre){
+        return this.tiposEnvio.buscarTiposPorNombre(nombre);
+    }
 }
