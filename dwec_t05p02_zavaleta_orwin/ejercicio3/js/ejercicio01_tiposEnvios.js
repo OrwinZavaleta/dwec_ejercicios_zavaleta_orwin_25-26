@@ -38,5 +38,9 @@ class TiposEnvios {
         });
         return cadena;
     }
+
+    obtenerTipos(){
+        return this.listadoTiposEnvios;
+    }
 }
 

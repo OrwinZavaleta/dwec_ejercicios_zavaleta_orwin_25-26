@@ -1,0 +1,151 @@
+extends layout.pug
+
+block content
+    <div class="accordion mb-3" id="pedidoAcordion">
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            |Cliente
+          </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#pedidoAcordion">
+          <div class="accordion-body row">
+            <form class="row g-3 needs-validation m-0" id="seleccionarCliente" action="#" method="post" novalidate>
+              <div class="col-md-11 mb-3">
+                <label for="dni" class="form-label fs-5">DNI</label>
+                <input type="number" class="form-control" id="dni" name="dni" min="1" required>
+                <div class="invalid-feedback">
+                  | Ingrese un DNI válido
+                </div>
+              </div>
+              <div class="col-md-1 align-self-end mb-3">
+                <button class="btn btn-warning" type="submit" id="buscarCliente"><i class="bi bi-search"></i></button>
+              </div>
+
+              <div class="col-md-11 mb-3">
+                <p class="fs-5">Cliente Seleccionado: <span id="clienteSeleccionado">NNNNNN</span></p>
+              </div>
+              <div class="col-md-1 align-self-end mb-3">
+                <button class="btn btn-danger px-2 py-0" id="deseleccionarCliente" type="button"><i class="bi bi-x fs-3"></i></button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+            |Libros
+          </button>
+        </h2>
+        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#pedidoAcordion">
+          <div class="accordion-body row">
+            <form class="row g-3 needs-validation m-0" id="buscarLibros" action="#" method="post" novalidate>
+              <div class="col-md-11 mb-3">
+                <label for="isbn" class="form-label fs-5">ISBN</label>
+                <input type="number" class="form-control" id="isbn" name="isbn" min="1" required>
+                <div class="invalid-feedback">
+                  | Ingrese un ISBN válido
+                </div>
+              </div>
+              <div class="col-md-1 align-self-end mb-3">
+                <button class="btn btn-warning" id="buscarLibro" type="submit"><i class="bi bi-search"></i></button>
+              </div>
+            </form>
+            <form class="row g-3 needs-validation m-0" id="seleccionarLibros" action="#" method="post" novalidate>
+              <div class="col-md-7 mb-3">
+                <input type="hidden" name="isbnLibroSeleccionado" id="isbnLibroSeleccionado">
+                <p class="fs-5">Libro Seleccionado: <span id="libroSeleccionado">NNNNNN</span></p>
+              </div>
+              <div class="col-md-5 mb-3">
+                <label for="cantidadLibros" class="form-label fs-5">Cantidad de Libros</label>
+                <input type="number" class="form-control" id="cantidadLibros" name="cantidadLibros" min="1" required disabled>
+                <div class="invalid-feedback">
+                  | Ingrese una Cantidad de Libros válida
+                </div>
+              </div>
+              <div class="col-md-12 align-self-end mb-3">
+                <button class="btn btn-primary" id="deseleccionarLibro" type="submit" disabled>Añadir</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+            |Envio
+          </button>
+        </h2>
+        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#pedidoAcordion">
+          <div class="accordion-body">
+            <form class="row g-3 needs-validation m-0" id="seleccionarTipoEnvio" action="#" method="post" novalidate>
+              <label for="tipoEnvio" class="form-label fs-5">Tipo de Envio</label>
+              <select class="form-select" id="tipoEnvio" name="tipoEnvio" required>
+                  <option selected disabled value="">Choose...</option>
+              </select>
+              <div class="invalid-feedback">
+                  | Seleccione un Tipo de Envio valido
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="accordion-item">
+        <h2 class="accordion-header">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+            |Resumen
+          </button>
+        </h2>
+        <div id="collapseFour" class="accordion-collapse collapse" data-bs-parent="#pedidoAcordion">
+          <div class="accordion-body">
+            <p class="fs-4">Resumen</p>
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Handle</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">2</th>
+                    <td>Jacob</td>
+                    <td>Thornton</td>
+                    <td>@fat</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>John</td>
+                    <td>Doe</td>
+                    <td>@social</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <form id="datosPedido" action="#" method="post" novalidate>
+      <input type="hidden" name="dniPedido" id="dniPedido">
+      <input type="hidden" name="isbnPedido" id="isbnPedido">
+      <input type="hidden" name="cantidadPedido" id="cantidadPedido">
+      <p class="fs-5 mb-3 mt-0">Envio: <span id="precioFinalEnvio">NN €</span></p>
+      <p class="fs-5 mb-3 mt-0">Total: <span id="precioFinalTotal">NN €</span></p>
+
+      <div class="col-md-12 align-self-end m-0">
+        <button class="btn btn-primary" type="submit">Pagar</button>
+        <button class="btn btn-danger" type="button">Cancelar</button>
+      </div>
+    </form>

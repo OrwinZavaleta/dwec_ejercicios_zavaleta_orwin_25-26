@@ -119,6 +119,15 @@ class Tienda {
         })
 
         this.pedidos.insertarPedido(pedidosPrueba);
+
+        const tipoEnvioPrueba = [
+            new TipoEnvio("tipo de envio 1", 12, 12, 12),
+            new TipoEnvio("tipo de envio 2", 13, 13, 13),
+            new TipoEnvio("tipo de envio 3", 14, 14, 14),
+            new TipoEnvio("tipo de envio 4", 15, 15, 15),
+        ];
+
+        this.tiposEnvio.insertarTipos(tipoEnvioPrueba);
     }
 
     iniciar() {
@@ -166,7 +175,7 @@ class Tienda {
                 this.pedirYcrearClientes();
                 break;
             case 6:
-                this.mostrarPedidosAbiertoCliente(); // TODO: falta completar pedidos
+                this.mostrarPedidosAbiertoCliente(); 
                 break;
             case 7:
                 this.borrarCliente();
@@ -178,7 +187,7 @@ class Tienda {
                 this.mostrarPedidoPorID();
                 break;
             case 10:
-                //TODO: esta cual es
+                
                 break;
             case 11:
                 terminar = true;
@@ -288,7 +297,7 @@ class Tienda {
     }
     pedirYcrearVariosClientes() { }
     // pedirYcrearAutor(), pedirYcrearVariosAutores(), pedirYcrearClientes(), pedirYcrearVariosClientes(), …
-    actualizarStockLibros() { // TODO: que pueda actualizar varios
+    actualizarStockLibros() { 
         let titulo;
         let libro;
         let libroValido = false;
@@ -371,5 +380,9 @@ class Tienda {
     
     mostrarAutores(){
         return this.autores.obtenerAutores();
+    }
+
+    mostrarTiposEnvios(){
+        return this.tiposEnvio.obtenerTipos();
     }
 }

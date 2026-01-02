@@ -1,5 +1,8 @@
 console.log("T04P02 - Ejercicio 01 - Principal");
 
+//TODO: separar el codigo en funciones
+//TODO: usar las funciones de leerDatos
+
 // =======================================
 // ====== ASIGNACION DE LOS EVENTOS ======
 // =======================================
@@ -33,12 +36,46 @@ document.addEventListener("DOMContentLoaded", () => {
                         //==================
                         agregarCliente(form, miTienda);
                         cargarActualizarClientes(miTienda, document.querySelector("#bodyClientes"));
-                    }else if (currentUrl.search("03nuevoLibro") !== -1){
+                    } else if (currentUrl.search("03nuevoLibro") !== -1) {
                         //======================
                         //==== Nuevo Libro =====
                         //======================
 
                         // TODO: crear el libro
+                    } else if (currentUrl.search("04crearPedido") !== -1) {
+                        //==========================
+                        //==== Crear un pedido =====
+                        //==========================
+
+                        if (form.id === "seleccionarCliente") {
+                            console.log(form.dni.value);
+                            form.dni.disabled = true;
+                            form.querySelector("#buscarCliente").disabled = true;
+                            form.querySelector("#clienteSeleccionado").textContent = miTienda.pedirClientePorDni(Number(form.dni.value)).nombreCompleto;
+
+                            document.querySelector("#dniPedido").value = form.dni.value;
+
+                        } else if (form.id === "buscarLibros") {
+                            console.log(form.isbn.value);
+                            form.isbn.disabled = true;
+                            form.querySelector("#buscarLibro").disabled = true;
+
+                            document.querySelector("#isbnLibroSeleccionado").value = form.isbn.value;
+                            document.querySelector("#libroSeleccionado").textContent = miTienda.pedirLibroPorISBN(Number(form.isbn.value)).titulo;
+                            document.querySelector("#cantidadLibros").disabled = false;
+                            document.querySelector("#deseleccionarLibro").disabled = false;
+                        } else if (form.id === "seleccionarLibros") {
+                            document.querySelector("#isbn").disabled = false;
+                            document.querySelector("#buscarLibro").disabled = false;
+
+                            document.querySelector("#isbnLibroSeleccionado").value = "";
+                            document.querySelector("#libroSeleccionado").textContent = "NNNNNN";
+                            document.querySelector("#cantidadLibros").disabled = true;
+                            document.querySelector("#deseleccionarLibro").disabled = true;
+
+                            // TODO: agregarlo a los input hidden
+                            // Se puede hacer con locale storage
+                        }
                     }
 
                     form.reset();
@@ -46,6 +83,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 } else {
                     console.log("NO ES valido");
                     form.classList.add("was-validated");
+                    const invalidFields = form.querySelectorAll(':invalid');
+
+                    invalidFields.forEach(field => {
+                        console.log('Campo inválido detectado:');
+                        console.log('- Nombre/ID:', field.name || field.id);
+                        console.log('- Tipo:', field.type);
+                        console.log('- Razón del error:', field.validationMessage);
+                        console.log('- Elemento completo:', field);
+                    });
                 }
             }, false);
         })
@@ -108,7 +154,7 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         const selectAutores = document.querySelector("#autor");
         selectAutores.innerHTML = "<option selected disabled value=''>Selecciona un Autor</option>";
-        miTienda.mostrarAutores().sort((a,b)=>a.nombre.localeCompare(b.nombre)).forEach(autor => {
+        miTienda.mostrarAutores().sort((a, b) => a.nombre.localeCompare(b.nombre)).forEach(autor => {
             selectAutores.innerHTML += `<option value="${autor.id}">${autor.nombre}</option>`;
         })
 
@@ -116,6 +162,20 @@ document.addEventListener("DOMContentLoaded", () => {
         //==========================
         //==== Crear un pedido =====
         //==========================
+
+        const tipoEnvio = document.querySelector("#tipoEnvio");
+        tipoEnvio.innerHTML = "<option selected disabled value=''>Selecciona un tipo de envio</option>";;
+        miTienda.mostrarTiposEnvios().forEach(tipo => {
+            tipoEnvio.innerHTML += `<option value="${tipo.nombre}">${tipo.nombre}</option>`;
+        });
+
+        document.querySelector("#deseleccionarCliente").addEventListener("click", () => {
+            document.querySelector("#dni").disabled = false;
+            document.querySelector("#buscarCliente").disabled = false;
+            document.querySelector("#clienteSeleccionado").textContent = "NNNNNN";
+            //TODO: limpiar todo los formularios
+        });
+
     } else {
         //===========================
         //==== Web no existente =====
@@ -240,11 +300,7 @@ function realizarMiValidacion(form, miTienda) {
     let esValido = true;
     const currentUrl = location.pathname;
 
-    if (currentUrl.search("01catalogo") !== -1) {
-        //===================
-        //==== Catalogo =====
-        //===================
-    } else if (currentUrl.search("02cliente") !== -1) {
+    if (currentUrl.search("02cliente") !== -1) {
         //==================
         //==== Cliente =====
         //==================
@@ -262,7 +318,7 @@ function realizarMiValidacion(form, miTienda) {
 
         if (miTienda.libros.existeLibroPorIsbn(Number(form.isbn.value))) {
             esValido &= false;
-            form.isbn.setCustomValidity("El isbn ya existe"); 
+            form.isbn.setCustomValidity("El isbn ya existe");
         } else {
             esValido &= true;
             form.isbn.setCustomValidity("");
@@ -270,7 +326,7 @@ function realizarMiValidacion(form, miTienda) {
 
         if (!Libro.validarGenero(form.genero.value)) {
             esValido &= false;
-            form.genero.setCustomValidity("El genero ya existe"); 
+            form.genero.setCustomValidity("El genero ya existe");
         } else {
             esValido &= true;
             form.genero.setCustomValidity("");
@@ -278,7 +334,7 @@ function realizarMiValidacion(form, miTienda) {
 
         if (miTienda.autores.existeAutorPorNombre(form.nombreAutor.value)) {
             esValido &= false;
-            form.nombreAutor.setCustomValidity("El autor ya existe"); 
+            form.nombreAutor.setCustomValidity("El autor ya existe");
         } else {
             esValido &= true;
             form.nombreAutor.setCustomValidity("");
@@ -288,6 +344,24 @@ function realizarMiValidacion(form, miTienda) {
         //==========================
         //==== Crear un pedido =====
         //==========================
+        if (form.id === "seleccionarCliente") {
+            if (!miTienda.clientes.existeClientePorDNI(Number(form.dni.value))) {
+                esValido &= false;
+                form.dni.setCustomValidity("El dni ya existe");
+            } else {
+                esValido &= true;
+                form.dni.setCustomValidity("");
+            }
+        } else if (form.id === "buscarLibros") {
+            if (!miTienda.libros.existeLibroPorIsbn(Number(form.isbn.value))) {
+                esValido &= false;
+                form.isbn.setCustomValidity("El isbn no existe");
+            } else {
+                esValido &= true;
+                form.isbn.setCustomValidity("");
+            }
+        }
+
     } else {
         //===========================
         //==== Web no existente =====
