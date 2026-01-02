@@ -48,12 +48,12 @@ document.addEventListener("DOMContentLoaded", () => {
                         //==========================
 
                         if (form.id === "seleccionarCliente") {
+                            document.querySelector("#dniPedido").value = form.dni.value;
                             console.log(form.dni.value);
                             form.dni.disabled = true;
                             form.querySelector("#buscarCliente").disabled = true;
                             form.querySelector("#clienteSeleccionado").textContent = miTienda.pedirClientePorDni(Number(form.dni.value)).nombreCompleto;
 
-                            document.querySelector("#dniPedido").value = form.dni.value;
 
                         } else if (form.id === "buscarLibros") {
                             console.log(form.isbn.value);
@@ -65,6 +65,10 @@ document.addEventListener("DOMContentLoaded", () => {
                             document.querySelector("#cantidadLibros").disabled = false;
                             document.querySelector("#deseleccionarLibro").disabled = false;
                         } else if (form.id === "seleccionarLibros") {
+                            const librosEnPedido = JSON.parse(sessionStorage.getItem("librosPedidos")) ?? [];
+                            librosEnPedido.push({ isbn: form.isbnLibroSeleccionado.value, cantidad: form.cantidadLibros.value });
+                            sessionStorage.setItem("librosPedidos", JSON.stringify(librosEnPedido));
+
                             document.querySelector("#isbn").disabled = false;
                             document.querySelector("#buscarLibro").disabled = false;
 
@@ -73,8 +77,6 @@ document.addEventListener("DOMContentLoaded", () => {
                             document.querySelector("#cantidadLibros").disabled = true;
                             document.querySelector("#deseleccionarLibro").disabled = true;
 
-                            // TODO: agregarlo a los input hidden
-                            // Se puede hacer con locale storage
                         }
                     }
 
