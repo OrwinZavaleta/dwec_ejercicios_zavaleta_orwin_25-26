@@ -123,7 +123,7 @@ class LeerDatosForm extends LeerDatos {
     }
     // leerRealEntreHasta(form, name, min, max) {
     // }
-    leerCadena(form, name, funcionValidacion = () => true, longitud = 1, patron = LeerDatosPrompt.PATRON_VALIDAR_TODO) {
+    leerCadena(form, name, longitud = 1, funcionValidacion = () => true, patron = LeerDatosPrompt.PATRON_VALIDAR_TODO) {
         let entrada = form[name].value.trim();
         const pattern = new RegExp(patron);
 

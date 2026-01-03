@@ -14,7 +14,7 @@ class Tienda {
     #lector;
 
     // ==== Metodo estatico singleton ====
-    static gerInstancia(nombreTienda) {
+    static getInstancia(nombreTienda) {
         if (Tienda.instancia === null) {
             Tienda.instancia = new Tienda(nombreTienda);
         }
