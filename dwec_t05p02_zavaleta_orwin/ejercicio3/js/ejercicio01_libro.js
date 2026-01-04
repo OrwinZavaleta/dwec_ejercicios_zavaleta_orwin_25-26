@@ -23,7 +23,7 @@ class Libro {
 
     #descuento = 0;
 
-    constructor(isbn, titulo, genero, autores, precio, imgUrl) {
+    constructor(isbn, titulo, genero, autores, precio, imgUrl = null) {
         this.isbn = isbn;
         this.titulo = titulo;
         this.genero = genero;

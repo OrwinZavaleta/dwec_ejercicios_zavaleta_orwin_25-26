@@ -175,7 +175,7 @@ class Tienda {
                 this.pedirYcrearClientes();
                 break;
             case 6:
-                this.mostrarPedidosAbiertoCliente(); 
+                this.mostrarPedidosAbiertoCliente();
                 break;
             case 7:
                 this.borrarCliente();
@@ -187,7 +187,7 @@ class Tienda {
                 this.mostrarPedidoPorID();
                 break;
             case 10:
-                
+
                 break;
             case 11:
                 terminar = true;
@@ -297,7 +297,7 @@ class Tienda {
     }
     pedirYcrearVariosClientes() { }
     // pedirYcrearAutor(), pedirYcrearVariosAutores(), pedirYcrearClientes(), pedirYcrearVariosClientes(), …
-    actualizarStockLibros() { 
+    actualizarStockLibros() {
         let titulo;
         let libro;
         let libroValido = false;
@@ -374,19 +374,39 @@ class Tienda {
         this.clientes.insertarClientes([cliente]);
     }
 
+    pedirAutorPorId(id){
+        return this.autores.buscarAutoresPorId(id);
+    }
+
     pedirClientePorDni(dni) {
         return this.clientes.buscarClientePorDNI(dni);
     }
-    
-    mostrarAutores(){
+
+    mostrarAutores() {
         return this.autores.obtenerAutores();
     }
 
-    mostrarTiposEnvios(){
+    mostrarTiposEnvios() {
         return this.tiposEnvio.obtenerTipos();
     }
 
-    pedirTipoEnvioPorNombre(nombre){
+    pedirTipoEnvioPorNombre(nombre) {
         return this.tiposEnvio.buscarTiposPorNombre(nombre);
+    }
+
+    agregarLibro(libro) {
+        if (!Libro.validarLibro(libro)) {
+            throw new Error("El libro enviado no es una instancia de libro.");
+        }
+
+        this.libros.insertarLibros([libro]);
+    }
+
+    agregarAutor(autor){
+        if (!Autor.validarAutor(autor)) {
+            throw new Error("El autor ingresado no es una instancia de autor.");
+        }
+
+        this.autores.insertarAutores([autor]);
     }
 }
