@@ -136,7 +136,7 @@ class Pedido { // TODO: solo un cliente puede hacer un pedido, una persona que n
             console.log("El tipo de envio pasado no es valido o no es instancia de la clase.");
         }
 
-        if (comprobarTodosEbook(catalogoLibro)) return false;
+        if (this.comprobarTodosEbook(catalogoLibro)) return false;
 
         this.tipoEnvioPedido = tipoEnvio;
     }
@@ -152,14 +152,20 @@ class Pedido { // TODO: solo un cliente puede hacer un pedido, una persona que n
             this.aplicarDescuento(Pedido.DESCUENTO_FIN_ANYO);
         }
 
-        this.librosPedido.forEach(libro => precioTotal += libro.precio);
+        const miTienda = Tienda.getInstancia()
+
+        this.librosPedido.forEach((cant, isbn) => {
+            const libro = miTienda.pedirLibroPorISBN(isbn);
+            precioTotal += libro.precio*cant;
+        });
 
         this.precioTotalSinEnvioSinIVA = precioTotal;
 
-        if (!this.comprobarTodosEbook()) {
+        if (!this.comprobarTodosEbook(miTienda.libros) && this.tipoEnvioPedido) {
             this.precioTotalConEnvioSinIVA = this.precioTotalSinEnvioSinIVA + this.tipoEnvioPedido.precioSinIVA;
+        }else{
+            this.precioTotalConEnvioSinIVA = this.precioTotalSinEnvioSinIVA;
         }
-        this.precioTotalConEnvioSinIVA = this.precioTotalSinEnvioSinIVA;
 
         this.precioTotalConEnvioConIVA = this.precioTotalConEnvioSinIVA * (Tienda.IVA + 1);
     }

@@ -1,7 +1,7 @@
 console.log("T04P02 - Ejercicio 01 - Tienda");
 
 class Tienda {
-    static IVA;
+    static IVA = 0.21;
     // ===== Propiedad statica ====
     static instancia = null;
 
@@ -374,7 +374,7 @@ class Tienda {
         this.clientes.insertarClientes([cliente]);
     }
 
-    pedirAutorPorId(id){
+    pedirAutorPorId(id) {
         return this.autores.buscarAutoresPorId(id);
     }
 
@@ -402,7 +402,7 @@ class Tienda {
         this.libros.insertarLibros([libro]);
     }
 
-    agregarAutor(autor){
+    agregarAutor(autor) {
         if (!Autor.validarAutor(autor)) {
             throw new Error("El autor ingresado no es una instancia de autor.");
         }
@@ -410,19 +410,27 @@ class Tienda {
         this.autores.insertarAutores([autor]);
     }
 
-    existeClientePorDNI(dni){
+    existeClientePorDNI(dni) {
         return this.clientes.existeClientePorDNI(dni);
     }
 
-    existeAutorPorNombre(nombre){
+    existeAutorPorNombre(nombre) {
         return this.autores.existeAutorPorNombre(nombre);
     }
 
-    existeLibroPorIsbn(isbn){
+    existeLibroPorIsbn(isbn) {
         return this.libros.existeLibroPorIsbn(isbn);
     }
 
-    existeTipoPorNombre(tipoEnvio){
+    existeTipoPorNombre(tipoEnvio) {
         return this.tiposEnvio.existeTipoPorNombre(tipoEnvio);
+    }
+
+    agregarNuevoPedido(pedido) {
+        if (!Pedido.validarPedido(pedido)) {
+            throw new Error("El pedido enviado no es una instancia de pedido");
+        }
+
+        this.pedidos.insertarPedido([pedido]);
     }
 }

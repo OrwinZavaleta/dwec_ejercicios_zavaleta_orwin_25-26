@@ -83,7 +83,7 @@ function crearNuevoLibro(form, miTienda) {
     try {
         let isbn = miTienda.lector.leerEntero(form, "isbn");
         let titulo = miTienda.lector.leerCadena(form, "titulo", Util.validarTitulo);
-        let genero = miTienda.lector.leerCadena(form, "genero", (b) => Util.validarGenero(b, Libro.GENEROS_LITERARIOS));//TODO
+        let genero = miTienda.lector.leerCadena(form, "genero", (b) => Util.validarGenero(b, Libro.GENEROS_LITERARIOS));
         let precio = miTienda.lector.leerReal(form, "precio", Util.validarPrecio);
         let tipo = miTienda.lector.leerCadena(form, "tipo");
         const autores = [];
@@ -123,7 +123,7 @@ function crearNuevoLibro(form, miTienda) {
 
         console.log("Libro creado con exito");
 
-        activarAlert("LIBRO CREADO CON EXITO");
+        activarAlert("LIBRO CREADO CON EXITO", true);
 
     } catch (error) {
         activarAlert("Error en la creacion del libro: " + error.message);
@@ -133,13 +133,17 @@ function crearNuevoLibro(form, miTienda) {
 function seleccionarCliente(form, miTienda) {
     try {
         const dniCliente = miTienda.lector.leerEntero(form, "dni");
+        const cliente = miTienda.pedirClientePorDni(dniCliente);
+
+        // Uso miTienda para almacenar el pedido actual
+        miTienda.pedidoActual = new Pedido(cliente)
 
         document.querySelector("#dniPedido").value = dniCliente;
         // console.log(dniCliente);
         form.dni.disabled = true;
         form.querySelector("#buscarCliente").disabled = true;
         document.querySelector("#deseleccionarCliente").disabled = false;
-        form.querySelector("#clienteSeleccionado").textContent = miTienda.pedirClientePorDni(Number(dniCliente)).nombreCompleto;
+        form.querySelector("#clienteSeleccionado").textContent = cliente.nombreCompleto;
 
         habilitarCamposPedido();
     } catch (error) {
@@ -154,7 +158,7 @@ function buscarLibro(form, miTienda) {
         form.isbn.disabled = true;
         form.querySelector("#buscarLibro").disabled = true;
 
-        const libroAux = miTienda.pedirLibroPorISBN(Number(isbnLibroPedido));
+        const libroAux = miTienda.pedirLibroPorISBN(isbnLibroPedido);
 
         document.querySelector("#isbnLibroSeleccionado").value = isbnLibroPedido;
         if (libroAux instanceof Ebook) {
@@ -175,9 +179,9 @@ function seleccionarLibro(form, miTienda) {
     try {
         const isbnLibroSeleccionado = miTienda.lector.leerEntero(form, "isbnLibroSeleccionado");
         const cantidadLibrosSeleccionado = miTienda.lector.leerEntero(form, "cantidadLibros");
-        const librosEnPedido = obtenerLibrosEnPedido()
-        librosEnPedido.push({ isbn: isbnLibroSeleccionado, cantidad: cantidadLibrosSeleccionado });
-        sessionStorage.setItem("librosPedidos", JSON.stringify(librosEnPedido));
+
+        const libroAux = miTienda.pedirLibroPorISBN(isbnLibroSeleccionado);
+        miTienda.pedidoActual.insertarLibro(libroAux, cantidadLibrosSeleccionado)
 
         document.querySelector("#isbn").disabled = false;
         document.querySelector("#buscarLibro").disabled = false;
@@ -187,7 +191,7 @@ function seleccionarLibro(form, miTienda) {
         document.querySelector("#cantidadLibros").disabled = true;
         document.querySelector("#agregarLibro").disabled = true;
 
-        cargarActualizarLibrosPedido(document.querySelector("#tbodyResumen"), document.querySelector("#precioFinalTotal"), miTienda);
+        cargarActualizarLibrosPedido(document.querySelector("#tbodyResumen"), document.querySelector("#precioFinalTotalSinIVA"), document.querySelector("#precioFinalTotalConIVA"), miTienda);
     } catch (error) {
         activarAlert("Error al guardar el Libro: " + error.message);
     }
@@ -196,8 +200,13 @@ function seleccionarLibro(form, miTienda) {
 function seleccionarTipoEnvio(form, miTienda) {
     try {
         const tipoEnvioSeleccionado = miTienda.lector.leerCadena(form, "tipoEnvio");
+        const tipoEnvio = miTienda.pedirTipoEnvioPorNombre(tipoEnvioSeleccionado)
+
+        miTienda.pedidoActual.establecerTipoEnvio(tipoEnvio, miTienda.libros)
+        actualizarTotal(document.querySelector("#precioFinalTotalSinIVA"), document.querySelector("#precioFinalTotalConIVA"));
+
         document.querySelector("#tipoFinalEnvio").textContent = tipoEnvioSeleccionado;
-        document.querySelector("#precioFinalEnvio").textContent = miTienda.pedirTipoEnvioPorNombre(tipoEnvioSeleccionado).precioSinIVA;
+        document.querySelector("#precioFinalEnvio").textContent = tipoEnvio.precioSinIVA;
     } catch (error) {
         activarAlert("Error al seleccionar el Tipo de Envio: " + error.message);
     }
@@ -283,8 +292,41 @@ function initPaginaCrearPedido(miTienda) {
 
     document.querySelector("#deseleccionarCliente").addEventListener("click", reiniciarPedido);
     document.querySelector("#cancelarPedido").addEventListener("click", reiniciarPedido);
+    document.querySelector("#pagarPedido").addEventListener("click", pagarPedido);
 
 
+}
+
+function pagarPedido() {
+    const miTienda = Tienda.getInstancia();
+    const pedidoActual = miTienda.pedidoActual;
+
+    try {
+
+        if (!pedidoActual.comprobarTodosEbook(miTienda.libros) && !pedidoActual.tipoEnvioPedido) {
+            document.querySelector("#tipoEnvio").setCustomValidity("debe elegir uno");
+            document.querySelector("#seleccionarTipoEnvio").classList.add("was-validated");
+            activarAlert("Debe elegir un tipo de envio");
+        } else {
+            console.log(pedidoActual.librosPedido.size);
+            console.log(pedidoActual.librosPedido.size<1);
+            
+            if (pedidoActual.librosPedido.size < 1) {
+                activarAlert("Debe seleccionar al menos un libro");
+            } else {
+                try {
+                    miTienda.agregarNuevoPedido(pedidoActual);
+                    console.log("Pedido insertado con exito");
+                    activarAlert("PEDIDO INSERTADO CON EXITO", true);
+                    reiniciarPedido();
+                } catch (error) {
+                    activarAlert("Error al agregar el pedido: " + error.message);
+                }
+            }
+        }
+    } catch (error) {
+        activarAlert("No hay pedido activo");
+    }
 }
 
 // =============================================
@@ -293,6 +335,7 @@ function initPaginaCrearPedido(miTienda) {
 function main() {
     try {
         const miTienda = Tienda.getInstancia("Vivanco Ordemar");
+        miTienda.pedidoActual = null;
         // miTienda.iniciar();
         miTienda.cargarDatosPrueba();
 
@@ -407,8 +450,17 @@ function actualizarDatosModal(modal, isbn, miTienda) {
     modal.querySelector(".modal-body").innerHTML = libro.mostrarDatosLibro();
 }
 
-function activarAlert(mensaje) {
+function activarAlert(mensaje, success) {
     const alert = document.querySelector(".alert");
+
+    if (success) {
+        alert.classList.remove("alert-danger");
+        alert.classList.add("alert-success");
+    }else{
+        alert.classList.add("alert-danger");
+        alert.classList.remove("alert-success");
+
+    }
 
     alert.classList.remove("d-none");
     alert.textContent = mensaje;
@@ -419,12 +471,16 @@ function activarAlert(mensaje) {
 }
 
 function reiniciarPedido() {
+    const miTienda = Tienda.getInstancia();
+    miTienda.pedidoActual = null;
+
     document.querySelector("#dni").disabled = false;
     document.querySelector("#deseleccionarCliente").disabled = true;
     document.querySelector("#buscarCliente").disabled = false;
     document.querySelector("#clienteSeleccionado").textContent = "NNNNNN";
     document.querySelector("#tipoFinalEnvio").textContent = "--";
-    document.querySelector("#precioFinalEnvio").textContent = "0";
+    document.querySelector("#precioFinalTotalSinIVA").textContent = "0";
+    document.querySelector("#precioFinalTotalConIVA").textContent = "0";
 
     const elementos1 = document.querySelector("#buscarLibros").elements;
 
@@ -437,9 +493,7 @@ function reiniciarPedido() {
         elementos2[i].disabled = true;
     }
 
-    sessionStorage.setItem("librosPedidos", "[]");
-
-    cargarActualizarLibrosPedido(document.querySelector("#tbodyResumen"), document.querySelector("#precioFinalTotal"));
+    cargarActualizarLibrosPedido(document.querySelector("#tbodyResumen"), document.querySelector("#precioFinalTotalSinIVA"), document.querySelector("#precioFinalTotalConIVA"), miTienda);
 }
 
 function habilitarCamposPedido() {
@@ -456,49 +510,33 @@ function habilitarCamposPedido() {
 }
 
 
-function cargarActualizarLibrosPedido(tbody, totalSpan, miTienda = null) {
-    const librosEnPedido = obtenerLibrosEnPedido()
-    let acumPrecioTotal = 0;
+function cargarActualizarLibrosPedido(tbody, totalSpanSinIva, totalSpanConIva, miTienda) {
+    const librosEnPedido = miTienda.pedidoActual?.librosPedido ?? new Map();
+
     tbody.innerHTML = "";
-    if (miTienda) {
-        librosEnPedido.forEach(libroPed => {
-            const libro = miTienda.pedirLibroPorISBN(Number(libroPed.isbn));
-            acumPrecioTotal += libroPed.cantidad * libro.precio;
-            tbody.innerHTML += `
+    librosEnPedido.forEach((cantidad, isbn) => {
+        const libro = miTienda.pedirLibroPorISBN(Number(isbn));
+        tbody.innerHTML += `
                 <tr>
-                    <th scope="row">${libroPed.isbn}</th>
+                    <th scope="row">${isbn}</th>
                     <td>${libro.titulo}</td>
-                    <td>${libroPed.cantidad}</td>
+                    <td>${cantidad}</td>
                     <td>${libro.precio}</td>
-                    <td>${(libroPed.cantidad * libro.precio)}</td>
+                    <td>${(cantidad * libro.precio)}</td>
                 </tr>
             `;
-        });
-    }
-    actualizarTotal(totalSpan, acumPrecioTotal);
+    });
+    console.log(librosEnPedido);
+    
+    if (librosEnPedido.size > 0) actualizarTotal(totalSpanSinIva, totalSpanConIva);
 }
 
-function actualizarTotal(totalSpan, total) {
-    totalSpan.textContent = total;
-}
+function actualizarTotal(totalSpanSinIva, totalSpanConIva) {
+    const miTienda = Tienda.getInstancia();
+    miTienda.pedidoActual.calcularTotal();
 
-function comprobarSiTodosLibrosEbook(miTienda) {
-    const librosEnPedido = obtenerLibrosEnPedido()
-
-    let todosEbook = true;
-
-    for (let i = 0; i < librosEnPedido.length; i++) {
-        if (miTienda.pedirLibroPorISBN(Number(librosEnPedido[i].isbn)) instanceof LibroPapel) {
-            todosEbook = false;
-            break;
-        }
-    }
-
-    return todosEbook;
-}
-
-function obtenerLibrosEnPedido() {
-    return JSON.parse(sessionStorage.getItem("librosPedidos")) ?? [];
+    totalSpanSinIva.textContent = miTienda.pedidoActual.precioTotalConEnvioSinIVA;
+    totalSpanConIva.textContent = miTienda.pedidoActual.precioTotalConEnvioConIVA;
 }
 
 //========================
@@ -647,7 +685,7 @@ function validarFormularioSeleccionarTipoEnvio(form, miTienda) {
         esValido &= true;
         form.tipoEnvio.setCustomValidity("");
     }
-    if (comprobarSiTodosLibrosEbook(miTienda)) {
+    if (miTienda.pedidoActual.comprobarTodosEbook(miTienda.libros)) {
         esValido &= false;
         form.tipoEnvio.setCustomValidity("Todos son ebooks");
     } else {
