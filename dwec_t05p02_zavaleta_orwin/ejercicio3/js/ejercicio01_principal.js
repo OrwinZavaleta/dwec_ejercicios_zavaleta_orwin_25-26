@@ -508,122 +508,151 @@ function realizarMiValidacion(form, miTienda) {
     let esValido = true;
     const currentUrl = location.pathname;
 
-    if (currentUrl.includes("02cliente")) {
-        //==================
-        //==== Cliente =====
-        //==================
-        try {
-            const dni = miTienda.lector.leerEntero(form, "dni");
+    if (currentUrl.includes("02cliente")) esValido &= validarFormularioCliente(form, miTienda);
+    else if (currentUrl.includes("03nuevoLibro")) esValido &= validarFormularioNuevoLibro(form, miTienda);
+    else if (currentUrl.includes("04crearPedido")) esValido &= validarFormularioCrearPedido(form, miTienda);
 
-            if (miTienda.existeClientePorDNI(dni)) {
+    return esValido;
+}
+
+//==================
+//==== Cliente =====
+//==================
+function validarFormularioCliente(form, miTienda) {
+    let esValido = true;
+    try {
+        const dni = miTienda.lector.leerEntero(form, "dni");
+
+        if (miTienda.existeClientePorDNI(dni)) {
+            esValido &= false;
+            form.dni.setCustomValidity("El dni ya existe"); // Para marcar como invalido un campo usando bootstrap
+        } else {
+            esValido &= true;
+            form.dni.setCustomValidity("");
+        }
+    } catch (error) {
+        activarAlert("Error la validacion del dni: " + error.message);
+        esValido &= false;
+    }
+    return esValido;
+}
+
+//======================
+//==== Nuevo Libro =====
+//======================
+function validarFormularioNuevoLibro(form, miTienda) {
+    let esValido = true;
+    try {
+        const isbn = miTienda.lector.leerEntero(form, "isbn");
+        const genero = miTienda.lector.leerCadena(form, "genero");
+        try {
+            const nombreAutor = miTienda.lector.leerCadena(form, "nombreAutor");
+            console.log("valida input text");
+
+            if (miTienda.existeAutorPorNombre(nombreAutor)) {
                 esValido &= false;
-                form.dni.setCustomValidity("El dni ya existe"); // Para marcar como invalido un campo usando bootstrap
+                form.nombreAutor.setCustomValidity("El autor ya existe");
             } else {
                 esValido &= true;
-                form.dni.setCustomValidity("");
+                form.nombreAutor.setCustomValidity("");
             }
         } catch (error) {
-            activarAlert("Error la validacion del dni: " + error.message);
-            esValido &= false;
-        }
-    } else if (currentUrl.includes("03nuevoLibro")) {
-        //======================
-        //==== Nuevo Libro =====
-        //======================
-        try {
-            const isbn = miTienda.lector.leerEntero(form, "isbn");
-            const genero = miTienda.lector.leerCadena(form, "genero");
-            try {
-                const nombreAutor = miTienda.lector.leerCadena(form, "nombreAutor");
-                console.log("valida input text");
 
-                if (miTienda.existeAutorPorNombre(nombreAutor)) {
-                    esValido &= false;
-                    form.nombreAutor.setCustomValidity("El autor ya existe");
-                } else {
-                    esValido &= true;
-                    form.nombreAutor.setCustomValidity("");
-                }
-            } catch (error) {
+            const autores = Array.from(form.autor.selectedOptions);
+            console.log("valida select");
+            console.log(autores);
 
-                const autores = Array.from(form.autor.selectedOptions);
-                console.log("valida select");
-                console.log(autores);
-
-                if (autores.length < 1) {
-                    esValido &= false;
-                    form.nombreAutor.setCustomValidity("Seleccione al menos un autor");
-                } else {
-                    esValido &= true;
-                    form.nombreAutor.setCustomValidity("");
-                }
-            }
-
-            if (miTienda.existeLibroPorIsbn(isbn)) {
+            if (autores.length < 1) {
                 esValido &= false;
-                form.isbn.setCustomValidity("El isbn ya existe");
+                form.nombreAutor.setCustomValidity("Seleccione al menos un autor");
             } else {
                 esValido &= true;
-                form.isbn.setCustomValidity("");
+                form.nombreAutor.setCustomValidity("");
             }
-
-            if (!Libro.validarGenero(genero)) {
-                esValido &= false;
-                form.genero.setCustomValidity("El genero ya existe");
-            } else {
-                esValido &= true;
-                form.genero.setCustomValidity("");
-            }
-
-        } catch (error) {
-            // activarAlert("Error la validacion del nuevo libro: " + error.message);
-            console.error("Error la validacion del nuevo libro: " + error.message)
-            esValido &= false;
         }
-    } else if (currentUrl.includes("04crearPedido")) {
-        //==========================
-        //==== Crear un pedido =====
-        //==========================
-        try {
-            if (form.id === "seleccionarCliente") {
-                const dni = miTienda.lector.leerEntero(form, "dni");
-                if (!miTienda.existeClientePorDNI(dni)) {
-                    esValido &= false;
-                    form.dni.setCustomValidity("El dni ya existe");
-                } else {
-                    esValido &= true;
-                    form.dni.setCustomValidity("");
-                }
-            } else if (form.id === "buscarLibros") {
-                const isbn = miTienda.lector.leerEntero(form, "isbn");
-                if (!miTienda.existeLibroPorIsbn(isbn)) {
-                    esValido &= false;
-                    form.isbn.setCustomValidity("El isbn no existe");
-                } else {
-                    esValido &= true;
-                    form.isbn.setCustomValidity("");
-                }
-            } else if (form.id === "seleccionarTipoEnvio") {
-                const tipoEnvio = miTienda.lector.leerCadena(form, "tipoEnvio");
-                if (!miTienda.existeTipoPorNombre(tipoEnvio)) {
-                    esValido &= false;
-                    form.tipoEnvio.setCustomValidity("El tipo de envio seleccionado no existe");
-                } else {
-                    esValido &= true;
-                    form.tipoEnvio.setCustomValidity("");
-                }
-                if (comprobarSiTodosLibrosEbook(miTienda)) {
-                    esValido &= false;
-                    form.tipoEnvio.setCustomValidity("Todos son ebooks");
-                } else {
-                    esValido &= true;
-                    form.tipoEnvio.setCustomValidity("");
-                }
-            }
-        } catch (error) {
-            activarAlert("Error la validacion del dni: " + error.message);
+
+        if (miTienda.existeLibroPorIsbn(isbn)) {
             esValido &= false;
+            form.isbn.setCustomValidity("El isbn ya existe");
+        } else {
+            esValido &= true;
+            form.isbn.setCustomValidity("");
         }
+
+        if (!Libro.validarGenero(genero)) {
+            esValido &= false;
+            form.genero.setCustomValidity("El genero ya existe");
+        } else {
+            esValido &= true;
+            form.genero.setCustomValidity("");
+        }
+
+    } catch (error) {
+        // activarAlert("Error la validacion del nuevo libro: " + error.message);
+        console.error("Error la validacion del nuevo libro: " + error.message)
+        esValido &= false;
+    }
+    return esValido;
+}
+
+//==========================
+//==== Crear un pedido =====
+//==========================
+function validarFormularioCrearPedido(form, miTienda) {
+    let esValido = true;
+    try {
+        if (form.id === "seleccionarCliente") esValido &= validarFormularioSeleccionarCliente(form, miTienda);
+        else if (form.id === "buscarLibros") esValido &= validarFormularioBuscarLibros(form, miTienda);
+        else if (form.id === "seleccionarTipoEnvio") esValido &= validarFormularioSeleccionarTipoEnvio(form, miTienda);
+
+    } catch (error) {
+        activarAlert("Error la validacion del dni: " + error.message);
+        esValido &= false;
+    }
+    return esValido;
+}
+
+function validarFormularioSeleccionarCliente(form, miTienda) {
+    let esValido = true;
+    const dni = miTienda.lector.leerEntero(form, "dni");
+    if (!miTienda.existeClientePorDNI(dni)) {
+        esValido &= false;
+        form.dni.setCustomValidity("El dni ya existe");
+    } else {
+        esValido &= true;
+        form.dni.setCustomValidity("");
+    }
+    return esValido;
+}
+
+function validarFormularioBuscarLibros(form, miTienda) {
+    let esValido = true;
+    const isbn = miTienda.lector.leerEntero(form, "isbn");
+    if (!miTienda.existeLibroPorIsbn(isbn)) {
+        esValido &= false;
+        form.isbn.setCustomValidity("El isbn no existe");
+    } else {
+        esValido &= true;
+        form.isbn.setCustomValidity("");
+    }
+    return esValido;
+}
+function validarFormularioSeleccionarTipoEnvio(form, miTienda) {
+    let esValido = true;
+    const tipoEnvio = miTienda.lector.leerCadena(form, "tipoEnvio");
+    if (!miTienda.existeTipoPorNombre(tipoEnvio)) {
+        esValido &= false;
+        form.tipoEnvio.setCustomValidity("El tipo de envio seleccionado no existe");
+    } else {
+        esValido &= true;
+        form.tipoEnvio.setCustomValidity("");
+    }
+    if (comprobarSiTodosLibrosEbook(miTienda)) {
+        esValido &= false;
+        form.tipoEnvio.setCustomValidity("Todos son ebooks");
+    } else {
+        esValido &= true;
+        form.tipoEnvio.setCustomValidity("");
     }
     return esValido;
 }
