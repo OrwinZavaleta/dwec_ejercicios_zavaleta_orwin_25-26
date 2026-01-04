@@ -409,4 +409,20 @@ class Tienda {
 
         this.autores.insertarAutores([autor]);
     }
+
+    existeClientePorDNI(dni){
+        return this.clientes.existeClientePorDNI(dni);
+    }
+
+    existeAutorPorNombre(nombre){
+        return this.autores.existeAutorPorNombre(nombre);
+    }
+
+    existeLibroPorIsbn(isbn){
+        return this.libros.existeLibroPorIsbn(isbn);
+    }
+
+    existeTipoPorNombre(tipoEnvio){
+        return this.tiposEnvio.existeTipoPorNombre(tipoEnvio);
+    }
 }

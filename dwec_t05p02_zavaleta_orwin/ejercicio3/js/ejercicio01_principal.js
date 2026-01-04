@@ -515,7 +515,7 @@ function realizarMiValidacion(form, miTienda) {
         try {
             const dni = miTienda.lector.leerEntero(form, "dni");
 
-            if (miTienda.clientes.existeClientePorDNI(dni)) {
+            if (miTienda.existeClientePorDNI(dni)) {
                 esValido &= false;
                 form.dni.setCustomValidity("El dni ya existe"); // Para marcar como invalido un campo usando bootstrap
             } else {
@@ -537,7 +537,7 @@ function realizarMiValidacion(form, miTienda) {
                 const nombreAutor = miTienda.lector.leerCadena(form, "nombreAutor");
                 console.log("valida input text");
 
-                if (miTienda.autores.existeAutorPorNombre(nombreAutor)) {
+                if (miTienda.existeAutorPorNombre(nombreAutor)) {
                     esValido &= false;
                     form.nombreAutor.setCustomValidity("El autor ya existe");
                 } else {
@@ -559,7 +559,7 @@ function realizarMiValidacion(form, miTienda) {
                 }
             }
 
-            if (miTienda.libros.existeLibroPorIsbn(isbn)) {
+            if (miTienda.existeLibroPorIsbn(isbn)) {
                 esValido &= false;
                 form.isbn.setCustomValidity("El isbn ya existe");
             } else {
@@ -587,7 +587,7 @@ function realizarMiValidacion(form, miTienda) {
         try {
             if (form.id === "seleccionarCliente") {
                 const dni = miTienda.lector.leerEntero(form, "dni");
-                if (!miTienda.clientes.existeClientePorDNI(dni)) {
+                if (!miTienda.existeClientePorDNI(dni)) {
                     esValido &= false;
                     form.dni.setCustomValidity("El dni ya existe");
                 } else {
@@ -596,7 +596,7 @@ function realizarMiValidacion(form, miTienda) {
                 }
             } else if (form.id === "buscarLibros") {
                 const isbn = miTienda.lector.leerEntero(form, "isbn");
-                if (!miTienda.libros.existeLibroPorIsbn(isbn)) {
+                if (!miTienda.existeLibroPorIsbn(isbn)) {
                     esValido &= false;
                     form.isbn.setCustomValidity("El isbn no existe");
                 } else {
@@ -605,7 +605,7 @@ function realizarMiValidacion(form, miTienda) {
                 }
             } else if (form.id === "seleccionarTipoEnvio") {
                 const tipoEnvio = miTienda.lector.leerCadena(form, "tipoEnvio");
-                if (!miTienda.tiposEnvio.existeTipoPorNombre(tipoEnvio)) {
+                if (!miTienda.existeTipoPorNombre(tipoEnvio)) {
                     esValido &= false;
                     form.tipoEnvio.setCustomValidity("El tipo de envio seleccionado no existe");
                 } else {
