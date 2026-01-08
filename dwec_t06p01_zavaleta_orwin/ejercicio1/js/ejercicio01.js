@@ -1,9 +1,10 @@
 console.log("T06P01 - Ejercicio 01");
 
 const BASE_URL = "https://hp-api.onrender.com/api";
-const PERSONAJES_TABLA_LIMITE = 10;
-const PERSONAJES_POR_CASA=2;
+const PERSONAJES_TABLA_LIMITE = 5;
+const PERSONAJES_POR_CASA = 2;
 const HOUSES = ["gryffindor", "slytherin", "ravenclaw", "hufflepuff"];
+const IMAGEN_POR_DEFECTO = "img/dementor.jpg";
 let ALL_CHARACTERS = null;
 
 
@@ -30,11 +31,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function cargarTodosPersonajes() {
     try {
-        const responese = await fetch(BASE_URL + "/characters");
-        const data = await responese.json();
+        const response = await fetch(BASE_URL + "/characters");
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
+        }
+        const data = await response.json();
+
 
         ALL_CHARACTERS = data;
-        console.log(data);
+        // console.log(data);
 
     } catch (error) {
         console.error("Error al pedir los datos: " + error);
@@ -42,9 +47,12 @@ async function cargarTodosPersonajes() {
 }
 async function cargarPersonajesCasa(casa) {
     try {
-        const responese = await fetch(BASE_URL + "/characters/house/" + casa);
-        const data = await responese.json();
-        console.log(data);
+        const response = await fetch(BASE_URL + "/characters/house/" + casa);
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
+        }
+        const data = await response.json();
+        // console.log(data);
 
         return data;
     } catch (error) {
@@ -93,9 +101,9 @@ function actualizarTablaPersonajes(query = "") {
             const textoCasa = document.createTextNode(personaje.house);
             const iFav = document.createElement("i");
 
-            imgImagen.src = personaje.image;
+            imgImagen.src = (personaje.image && personaje.image !== "" && personaje.image !== null) ? personaje.image : IMAGEN_POR_DEFECTO;
             imgImagen.alt = personaje.name
-            imgImagen.classList.add("rounded", "img-square");
+            imgImagen.classList.add("rounded", "img-square-10");
 
             iFav.classList.add("bi", "bi-heart");
 
@@ -115,38 +123,55 @@ function actualizarTablaPersonajes(query = "") {
 }
 
 async function cargarCardsBienvenida() {
-
     const personajesAleatorios = [];
 
-    HOUSES.forEach(casa => {
-        const houseCargada = cargarPersonajesCasa(casa);
+    for (let i = 0; i < HOUSES.length; i++) {
+        const casa = HOUSES[i];
+
+        const houseCargada = await cargarPersonajesCasa(casa);
 
         for (let i = 0; i < PERSONAJES_POR_CASA; i++) {
             const personaje = houseCargada[numeroAleatorio(houseCargada.length)];
-            
-            personajesAleatorios.push();
-        }
-        
-    })
 
-        `
-    <div class="row row-cols-2 row-cols-md-4 g-4">
-        //
-        <div class="col">
-            <div class="card">
-                <img src="..." class="card-img-top" alt="...">
-                <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">This is a longer card with supporting text below as a natural lead-in to
-                        additional content. This content is a little bit longer.</p>
+            personajesAleatorios.push(personaje);
+        }
+    }
+    // console.log(personajesAleatorios);
+
+    document.querySelector("#cardsBienvenida").innerHTML = "";
+    personajesAleatorios.forEach(personaje => crearCardPersonaje(personaje, document.querySelector("#cardsBienvenida")));
+}
+
+function crearCardPersonaje(personaje, domElement) {
+    domElement.innerHTML += `
+            <div class="col">
+                <div class="card border-${colorCasa(personaje.house)} border-2">
+                    <img src="${(personaje.image && personaje.image !== "" && personaje.image !== null) ? personaje.image : IMAGEN_POR_DEFECTO}" class="card-img-top img-square" alt="${personaje.name}">
+                    <div class="card-body">
+                        <h5 class="card-title">${personaje.name ?? "Unknown"}</h5>
+                        <p class="card-text">Casa: ${personaje.house ?? "Unknown"}</p>
+                        <p class="card-text">Patronus: ${personaje.patronus ?? "Unknown"}</p>
+                        <p class="card-text">Especie: ${personaje.species ?? "Unknown"}</p>
+                        <p class="card-text">Nacimiento: ${personaje.yearOfBirth ?? "Unknown"}</p>
+                    </div>
                 </div>
             </div>
-        </div>
-        //
-    </div>
-    `
+            `;
 }
 
 function numeroAleatorio(max, min = 0) {
     return Math.floor(Math.random() * (max - min) + min);
+}
+
+function colorCasa(casa) {
+    switch (casa.toLowerCase()) {
+        case HOUSES[0]:
+            return "danger";
+        case HOUSES[1]:
+            return "success";
+        case HOUSES[2]:
+            return "primary";
+        case HOUSES[3]:
+            return "warning";
+    }
 }
