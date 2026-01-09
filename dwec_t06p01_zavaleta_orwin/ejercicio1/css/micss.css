@@ -17,3 +17,10 @@ p {
     aspect-ratio: 1/1;
     object-fit: cover;
 }
+
+#map {
+    height: 400px; 
+    width: 100%;
+    border-radius: 10px; 
+    margin-bottom: 1rem;
+}

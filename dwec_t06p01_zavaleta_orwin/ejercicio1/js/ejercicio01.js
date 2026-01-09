@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector("#aceptarCookies").addEventListener("click", aceptarCookies);
     cargarCardsBienvenida();
     cargarCookies();
+    cargarMapa();
 });
 
 async function cargarTodosPersonajes() {
@@ -190,5 +191,31 @@ function aceptarCookies() {
     document.querySelector("#cookie-banner").classList.add("d-none");
     if (!cookie) {
         sessionStorage.setItem("cookie", true);
+    }
+}
+
+function cargarMapa() {
+    const map = L.map('map');
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: 'OpenStreetMap'
+    }).addTo(map);
+    if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                let lat = position.coords.latitude;
+                let lng = position.coords.longitude;
+                map.setView([lat, lng], 13);
+                L.marker([lat, lng]).addTo(map)
+                    .bindPopup('Te encuentras aquí')
+                    .openPopup();
+            },
+            (error) => {
+                console.error("Error al obtener la ubicación:", error.message);
+                map.setView([40.4167, -3.7033], 13);
+            });
+    } else {
+        console.log("No se puede usar la ubicacion");
+        map.setView([40.4167, -3.7033], 13);
     }
 }
