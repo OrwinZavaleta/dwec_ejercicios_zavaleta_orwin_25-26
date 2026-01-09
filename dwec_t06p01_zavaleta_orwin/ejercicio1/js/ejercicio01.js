@@ -85,7 +85,7 @@ function actualizarTablaPersonajes(query = "") {
 
     if (personajesBuscados.length === 0 && !query) {
         tablaBodyPersonajes.innerHTML = `<td colspan="4" class="text-center">Realize su busqueda</td>`;
-    } if (personajesBuscados.length === 0 && query) {
+    } else if (personajesBuscados.length === 0 && query) {
         tablaBodyPersonajes.innerHTML = `<td colspan="4" class="text-center">No hay personajes que coincidan con la busqueda</td>`;
     } else {
         for (let i = 0; i < PERSONAJES_TABLA_LIMITE; i++) {
@@ -108,7 +108,10 @@ function actualizarTablaPersonajes(query = "") {
             imgImagen.alt = personaje.name
             imgImagen.classList.add("rounded", "img-square-10");
 
-            iFav.classList.add("bi", "bi-heart");
+            iFav.classList.add("bi", "bi-heart"); // TODO: si el id esta en favoritos poner el corazon rellenado
+
+            iFav.addEventListener("click", handleFavoritos);
+            iFav.dataset.perId = personaje.id;
 
             tdImagen.appendChild(imgImagen);
             tdNombre.appendChild(textoNombre);
@@ -122,6 +125,23 @@ function actualizarTablaPersonajes(query = "") {
 
             tablaBodyPersonajes.appendChild(tr);
         }
+    }
+}
+
+function handleFavoritos(event) {
+    event.target.classList.toggle("bi-heart");
+    event.target.classList.toggle("bi-heart-fill");
+
+    const favoritos = JSON.parse(localStorage.getItem("favoritos") ?? "[]");
+
+    if (event.target.classList.contains("bi-heart-fill")) {
+        favoritos.push(event.target.dataset.perId);
+
+        localStorage.setItem("favoritos", JSON.stringify(favoritos));
+    } else if (event.target.classList.contains("bi-heart")) {
+        let indice = favoritos.indexOf(event.target.dataset.perId);
+        if (indice !== -1) favoritos.splice(indice, 1);
+        localStorage.setItem("favoritos", JSON.stringify(favoritos));
     }
 }
 
