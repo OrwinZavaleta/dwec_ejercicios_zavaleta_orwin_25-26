@@ -26,7 +26,9 @@ document.addEventListener("DOMContentLoaded", () => {
         })
     })();
     document.querySelector("#nombreQuery").addEventListener("input", (e) => buscarPersonajePorNombre(e.target.value));
+    document.querySelector("#aceptarCookies").addEventListener("click", aceptarCookies);
     cargarCardsBienvenida();
+    cargarCookies();
 });
 
 async function cargarTodosPersonajes() {
@@ -173,5 +175,20 @@ function colorCasa(casa) {
             return "primary";
         case HOUSES[3]:
             return "warning";
+    }
+}
+
+function cargarCookies() {
+    if (!sessionStorage.getItem("cookie")) {
+        document.querySelector("#cookie-banner").classList.remove("d-none");
+    }
+
+}
+
+function aceptarCookies() {
+    let cookie = sessionStorage.getItem("cookie");
+    document.querySelector("#cookie-banner").classList.add("d-none");
+    if (!cookie) {
+        sessionStorage.setItem("cookie", true);
     }
 }
