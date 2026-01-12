@@ -13,6 +13,11 @@ p {
     object-fit: cover;
     width: 10rem;
 }
+.img-square-6{
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    width: 6rem;
+}
 .img-square{
     aspect-ratio: 1/1;
     object-fit: cover;

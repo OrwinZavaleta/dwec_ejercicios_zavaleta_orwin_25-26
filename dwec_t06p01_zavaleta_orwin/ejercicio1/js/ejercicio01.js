@@ -27,12 +27,13 @@ document.addEventListener("DOMContentLoaded", () => {
     })();
     document.querySelector("#nombreQuery").addEventListener("input", (e) => buscarPersonajePorNombre(e.target.value));
     document.querySelector("#aceptarCookies").addEventListener("click", aceptarCookies);
-    cargarCardsBienvenida();
+    setTimeout(() => { cargarCardsBienvenida() }, 1000);
     cargarCookies();
     cargarMapa();
+    setTimeout(() => { actualizarFavoritos() }, 1000);
 });
 
-async function cargarTodosPersonajes() {
+async function pedirTodosPersonajes() {
     try {
         const response = await fetch(BASE_URL + "/characters");
         if (!response.ok) {
@@ -48,7 +49,7 @@ async function cargarTodosPersonajes() {
         console.error("Error al pedir los datos: " + error);
     }
 }
-async function cargarPersonajesCasa(casa) {
+async function pedirPersonajesCasa(casa) {
     try {
         const response = await fetch(BASE_URL + "/characters/house/" + casa);
         if (!response.ok) {
@@ -66,10 +67,52 @@ async function cargarPersonajesCasa(casa) {
 
 async function buscarPersonajePorNombre(nombre) {
     if (ALL_CHARACTERS === null) {
-        await cargarTodosPersonajes();
+        await pedirTodosPersonajes();
     }
 
     actualizarTablaPersonajes(nombre);
+}
+
+async function actualizarFavoritos() {
+    const fav = obtenerFavoritosStorage();
+    const favElement = document.querySelector("#cardsFavoritos");
+    favElement.innerHTML = "";
+    console.log(fav);
+
+    if (fav.length === 0) document.querySelector("#cardsFavoritos").innerHTML = "<p class='fs-5'>No tiene favoritos.</p>";
+
+    for (let i = 0; i < fav.length; i++) {
+        const personaje = fav[i];
+
+        const personajeFav = await pedirUnPersonaje(personaje);
+
+        favElement.innerHTML += `
+        <div class="list-group-item list-group-item-action d-flex justify-content-around align-items-center fs-5">
+            <div><img src="${returnImg(personajeFav)}" alt="${personajeFav.name}" class="rounded img-square-6">
+            </div>
+            <div>${personajeFav.name}</div>
+            <div>${personajeFav.house ?? "Unknown"}</div>
+            <div class="fs-3" id="per${personajeFav.id}"><i class="bi ${returnCorrectFavIcon(personaje)}" data-per-id="${personajeFav.id}"></i></div>
+        </div>
+        `;
+
+        asignarEventoFavoritos(favElement.querySelector("#per" + personajeFav.id));
+    }
+}
+
+async function pedirUnPersonaje(id) {
+    try {
+        const response = await fetch(BASE_URL + "/character/" + id);
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status} - ${response.statusText}`);
+        }
+        const data = await response.json();
+
+        return data[0];
+    } catch (error) {
+        console.error("Error al pedir los datos: " + error);
+    }
+    return null;
 }
 
 function actualizarTablaPersonajes(query = "") {
@@ -88,7 +131,7 @@ function actualizarTablaPersonajes(query = "") {
     } else if (personajesBuscados.length === 0 && query) {
         tablaBodyPersonajes.innerHTML = `<td colspan="4" class="text-center">No hay personajes que coincidan con la busqueda</td>`;
     } else {
-        for (let i = 0; i < PERSONAJES_TABLA_LIMITE; i++) {
+        for (let i = 0; i < Math.min(PERSONAJES_TABLA_LIMITE, personajesBuscados.length); i++) {
             const personaje = personajesBuscados[i];
             const tr = document.createElement("tr");
 
@@ -101,16 +144,16 @@ function actualizarTablaPersonajes(query = "") {
 
             const imgImagen = document.createElement("img");
             const textoNombre = document.createTextNode(personaje.name);
-            const textoCasa = document.createTextNode(personaje.house);
+            const textoCasa = document.createTextNode(personaje.house ?? "Unknown");
             const iFav = document.createElement("i");
 
-            imgImagen.src = (personaje.image && personaje.image !== "" && personaje.image !== null) ? personaje.image : IMAGEN_POR_DEFECTO;
+            imgImagen.src = returnImg(personaje);
             imgImagen.alt = personaje.name
             imgImagen.classList.add("rounded", "img-square-10");
 
-            iFav.classList.add("bi", "bi-heart"); // TODO: si el id esta en favoritos poner el corazon rellenado
+            iFav.classList.add("bi", returnCorrectFavIcon(personaje.id));
 
-            iFav.addEventListener("click", handleFavoritos);
+            asignarEventoFavoritos(iFav);
             iFav.dataset.perId = personaje.id;
 
             tdImagen.appendChild(imgImagen);
@@ -128,21 +171,43 @@ function actualizarTablaPersonajes(query = "") {
     }
 }
 
+function returnImg(personaje) {
+    return (personaje.image && personaje.image !== "" && personaje.image !== null) ? personaje.image : IMAGEN_POR_DEFECTO;
+}
+
+function returnCorrectFavIcon(id) {
+    return ((verificarFavorito(id)) ? "bi-heart-fill" : "bi-heart");
+}
+
 function handleFavoritos(event) {
     event.target.classList.toggle("bi-heart");
     event.target.classList.toggle("bi-heart-fill");
 
-    const favoritos = JSON.parse(localStorage.getItem("favoritos") ?? "[]");
+    const favoritos = obtenerFavoritosStorage();
 
     if (event.target.classList.contains("bi-heart-fill")) {
         favoritos.push(event.target.dataset.perId);
 
-        localStorage.setItem("favoritos", JSON.stringify(favoritos));
+        guardarFavoritosStorage(favoritos);
     } else if (event.target.classList.contains("bi-heart")) {
         let indice = favoritos.indexOf(event.target.dataset.perId);
         if (indice !== -1) favoritos.splice(indice, 1);
-        localStorage.setItem("favoritos", JSON.stringify(favoritos));
+        guardarFavoritosStorage(favoritos);
     }
+    actualizarFavoritos();
+}
+
+function obtenerFavoritosStorage() {
+    return JSON.parse(localStorage.getItem("favoritos") ?? "[]");
+}
+
+function guardarFavoritosStorage(json) {
+    localStorage.setItem("favoritos", JSON.stringify(json));
+}
+
+function verificarFavorito(id) {
+    const fav = obtenerFavoritosStorage();
+    return fav.includes(id);
 }
 
 async function cargarCardsBienvenida() {
@@ -151,7 +216,7 @@ async function cargarCardsBienvenida() {
     for (let i = 0; i < HOUSES.length; i++) {
         const casa = HOUSES[i];
 
-        const houseCargada = await cargarPersonajesCasa(casa);
+        const houseCargada = await pedirPersonajesCasa(casa);
 
         for (let i = 0; i < PERSONAJES_POR_CASA; i++) {
             const personaje = houseCargada[numeroAleatorio(houseCargada.length)];
@@ -238,4 +303,8 @@ function cargarMapa() {
         console.log("No se puede usar la ubicacion");
         map.setView([40.4167, -3.7033], 13);
     }
+}
+
+function asignarEventoFavoritos(domElement) {
+    domElement.addEventListener("click", handleFavoritos);
 }
