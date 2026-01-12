@@ -124,6 +124,8 @@ function crearNuevoLibro(form, miTienda) {
         console.log("Libro creado con exito");
 
         activarAlert("LIBRO CREADO CON EXITO", true);
+        console.log(libroCreado);
+
 
     } catch (error) {
         activarAlert("Error en la creacion del libro: " + error.message);
@@ -309,8 +311,8 @@ function pagarPedido() {
             activarAlert("Debe elegir un tipo de envio");
         } else {
             console.log(pedidoActual.librosPedido.size);
-            console.log(pedidoActual.librosPedido.size<1);
-            
+            console.log(pedidoActual.librosPedido.size < 1);
+
             if (pedidoActual.librosPedido.size < 1) {
                 activarAlert("Debe seleccionar al menos un libro");
             } else {
@@ -318,6 +320,7 @@ function pagarPedido() {
                     miTienda.agregarNuevoPedido(pedidoActual);
                     console.log("Pedido insertado con exito");
                     activarAlert("PEDIDO INSERTADO CON EXITO", true);
+                    console.log(pedidoActual);
                     reiniciarPedido();
                 } catch (error) {
                     activarAlert("Error al agregar el pedido: " + error.message);
@@ -456,7 +459,7 @@ function activarAlert(mensaje, success) {
     if (success) {
         alert.classList.remove("alert-danger");
         alert.classList.add("alert-success");
-    }else{
+    } else {
         alert.classList.add("alert-danger");
         alert.classList.remove("alert-success");
 
@@ -480,6 +483,7 @@ function reiniciarPedido() {
     document.querySelector("#clienteSeleccionado").textContent = "NNNNNN";
     document.querySelector("#tipoFinalEnvio").textContent = "--";
     document.querySelector("#precioFinalTotalSinIVA").textContent = "0";
+    document.querySelector("#precioFinalEnvio").textContent = "0";
     document.querySelector("#precioFinalTotalConIVA").textContent = "0";
 
     const elementos1 = document.querySelector("#buscarLibros").elements;
@@ -527,7 +531,7 @@ function cargarActualizarLibrosPedido(tbody, totalSpanSinIva, totalSpanConIva, m
             `;
     });
     console.log(librosEnPedido);
-    
+
     if (librosEnPedido.size > 0) actualizarTotal(totalSpanSinIva, totalSpanConIva);
 }
 
