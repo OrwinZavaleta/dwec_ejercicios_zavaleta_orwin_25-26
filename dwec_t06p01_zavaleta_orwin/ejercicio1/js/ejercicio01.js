@@ -212,14 +212,18 @@ function verificarFavorito(id) {
 
 async function cargarCardsBienvenida() {
     const personajesAleatorios = [];
+    console.log("hols");
+    
 
     for (let i = 0; i < HOUSES.length; i++) {
         const casa = HOUSES[i];
 
         const houseCargada = await pedirPersonajesCasa(casa);
 
-        for (let i = 0; i < PERSONAJES_POR_CASA; i++) {
-            const personaje = houseCargada[numeroAleatorio(houseCargada.length)];
+        const aleatorios = pedirNaleatoriosCasa(houseCargada.length);
+
+        for (let i = 0; i < aleatorios.length; i++) {
+            const personaje = houseCargada[aleatorios[i]];
 
             personajesAleatorios.push(personaje);
         }
@@ -247,6 +251,19 @@ function crearCardPersonaje(personaje, domElement) {
             `;
 }
 
+function pedirNaleatoriosCasa(lengthCasa) {
+    const aleatorios = [];
+    for (let i = 0; i < PERSONAJES_POR_CASA; i++) {
+        let ale = numeroAleatorio(lengthCasa);
+        while (aleatorios.includes(ale)) {
+            ale = numeroAleatorio(lengthCasa);
+        }
+
+        aleatorios.push(ale);
+    }
+    return aleatorios;
+}
+
 function numeroAleatorio(max, min = 0) {
     return Math.floor(Math.random() * (max - min) + min);
 }
@@ -265,8 +282,8 @@ function colorCasa(casa) {
 }
 
 function cargarCookies() {
-    if (!sessionStorage.getItem("cookie")) {
-        document.querySelector("#cookie-banner").classList.remove("d-none");
+    if (sessionStorage.getItem("cookie")) {
+        document.querySelector("#cookie-banner").classList.add("d-none");
     }
 
 }
